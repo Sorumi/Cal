@@ -11,7 +11,6 @@
 @implementation SRMMonthViewFlowLayout
 
 
-
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -58,12 +57,21 @@
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
     NSMutableArray* attributes = [NSMutableArray arrayWithArray:[super layoutAttributesForElementsInRect:rect].copy];
-    
+    NSMutableArray* answer = [NSMutableArray arrayWithArray:[super layoutAttributesForElementsInRect:rect].copy];
+
     for (UICollectionViewLayoutAttributes *attr in attributes) {
-        [self applyLayoutAttributes:attr];
+//        [self applyLayoutAttributes:attr];
+        if (attr.representedElementCategory == UICollectionElementCategoryCell) {
+            UICollectionViewLayoutAttributes *newAttr = [self layoutAttributesForItemAtIndexPath:attr.indexPath];
+            [answer addObject:newAttr];
+        }
     }
-    return attributes;
+    return answer;
 }
+
+
+
+
 //- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 //{
 //    NSMutableArray* attributes = [NSMutableArray arrayWithArray:[super layoutAttributesForElementsInRect:rect].copy];

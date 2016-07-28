@@ -15,11 +15,14 @@
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (nonatomic, strong) SRMCalendarTool *tool;
+@property (nonatomic, strong) NSDate *date;
 @property (nonatomic) NSInteger selectedYear;
 @property (nonatomic) NSInteger selectedMonth;
 @property (nonatomic) NSInteger selectedDay;
 
 @property (weak, nonatomic) IBOutlet SRMMonthHeaderView *headerView;
+
+@property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
 
 @end
 
@@ -55,11 +58,17 @@ static NSString * const reuseIdentifier = @"MonthDateCell";
 
 - (void) initialize
 {
+//    SRMMonthViewFlowLayout *layout = [[SRMMonthViewFlowLayout alloc] init];
+//    CGFloat width = self.view.frame.size.width;
+//    CGRect frame = CGRectMake(-width, 70, width * 3, width / 7 * 6);
+//    self.monthCollectionView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
+//    [self.view addSubview:self.monthCollectionView];
+//    
     _tool = [[SRMCalendarTool alloc] init];
-    NSDate *today = [NSDate date];
-    _selectedMonth = [_tool monthOfDate:today];
-    _selectedYear = [_tool yearOfDate:today];
-    _selectedDay = [_tool dayOfDate:today];
+    _date = [NSDate date];
+    _selectedMonth = [_tool monthOfDate:_date];
+    _selectedYear = [_tool yearOfDate:_date];
+    _selectedDay = [_tool dayOfDate:_date];
     
     NSLog(@"%d %d %d", _selectedYear, _selectedMonth, _selectedDay);
 }
@@ -81,34 +90,87 @@ static NSString * const reuseIdentifier = @"MonthDateCell";
     
     self.monthCollectionView.delegate = self;
     self.monthCollectionView.dataSource = self;
+
+    self.isFirstTimeViewDidLayoutSubviews = YES;
+
 }
 
+- (void)viewDidLayoutSubviews
+{
+    if (self.isFirstTimeViewDidLayoutSubviews) {
+        
+        SRMCalendarTool *tool = self.tool;
+//        NSDate *date = [tool dateWithYear:self.selectedYear month:self.selectedMonth day:self.selectedDay];
+//        NSInteger monthCount = [tool monthsFromDate:tool.minimumDate toDate:date];
+//        
+//        CGFloat width = self.view.frame.size.width * monthCount;
+//        [self.monthCollectionView setContentOffset:CGPointMake(width, 0) animated:NO];
+        [self scrollToDate:self.date animated:NO];
+        self.isFirstTimeViewDidLayoutSubviews = NO;
+    }
+}
+
+#pragma mark - Private
+
+- (void)scrollToDate:(NSDate *)date animated:(BOOL)animated
+{
+    SRMCalendarTool *tool = self.tool;
+    if ([tool monthsFromDate:tool.minimumDate toDate:date] > 0 && [tool monthsFromDate:date toDate:tool.maximumDate] > 0 ) {
+        NSInteger monthCount = [tool monthsFromDate:tool.minimumDate toDate:date];
+        CGFloat offsetX = self.view.frame.size.width * monthCount;
+        [self.monthCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:animated];
+    }
+}
+
+- (void)scrollToDateDidEnd
+{
+    CGFloat width = self.view.frame.size.width;
+    NSInteger page = self.monthCollectionView.contentOffset.x / width;
+    
+    SRMCalendarTool *tool = self.tool;
+    NSDate *date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+    self.date = date;
+    self.selectedYear = [tool yearOfDate:self.date];
+    self.selectedMonth = [tool monthOfDate:self.date];
+    self.selectedDay = [tool dayOfDate:self.date];
+    NSLog(@"%lu %lu %lu", self.selectedYear, self.selectedMonth, self.selectedDay);
+    self.date = date;
+    self.headerView.dateLabel.text = [NSString stringWithFormat:@"%ld %ld", self.selectedYear, self.selectedMonth];
+}
 
 #pragma mark - Action
 
-- (IBAction)setPrevMonth:(id)sender {
-    
-    if (self.selectedMonth > 1) {
-        self.selectedMonth--;
-    } else {
-        self.selectedYear--;
-        self.selectedMonth = 12;
-    }
-    [self.monthCollectionView reloadData];
-    
+- (IBAction)setPrevMonth:(id)sender
+{
+    NSDate *date = [self.tool dateByAddingMonths:-1 toDate:self.date];
+    [self scrollToDate:date animated:YES];
 }
 
-- (IBAction)setNextMonth:(id)sender {
-    
-    if (self.selectedMonth <12) {
-        self.selectedMonth++;
-    } else {
-        self.selectedYear++;
-        self.selectedMonth = 1;
-    }
-    [self.monthCollectionView reloadData];
-    
+- (IBAction)setNextMonth:(id)sender
+{
+    NSDate *date = [self.tool dateByAddingMonths:1 toDate:self.date];
+    [self scrollToDate:date animated:YES];
 }
+
+#pragma mark - <UIScrollViewDelegate>
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    
+    CGFloat width = self.view.frame.size.width;
+    NSInteger page = round(self.monthCollectionView.contentOffset.x / width);
+    
+    SRMCalendarTool *tool = self.tool;
+    NSDate *date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+    self.date = date;
+    self.selectedYear = [tool yearOfDate:self.date];
+    self.selectedMonth = [tool monthOfDate:self.date];
+    self.selectedDay = [tool dayOfDate:self.date];
+//    NSLog(@"%lu %lu %lu", self.selectedYear, self.selectedMonth, self.selectedDay);
+    self.date = date;
+    self.headerView.dateLabel.text = [NSString stringWithFormat:@"%ld %ld", self.selectedYear, self.selectedMonth];
+}
+
 
 #pragma mark - <UICollectionViewDataSource>
 

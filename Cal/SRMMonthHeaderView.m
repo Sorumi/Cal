@@ -32,7 +32,7 @@
         label.text = self.weekday[i];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor whiteColor];
-        label.font = [UIFont fontWithName:@"Courier New" size:12];
+        label.font = [UIFont fontWithName:@"Courier New" size:14];
         [self addSubview:label];
         labelRect.origin.x += width;
     }

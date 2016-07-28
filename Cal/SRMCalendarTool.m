@@ -76,7 +76,7 @@
 - (NSInteger)weekdayOfDate:(NSDate *)date
 {
     NSDateComponents *component = [self.calendar components:NSCalendarUnitWeekday fromDate:date];
-    return component.weekday-1;
+    return component.weekday - 1;
 }
 
 - (NSInteger)weekOfDate:(NSDate *)date
