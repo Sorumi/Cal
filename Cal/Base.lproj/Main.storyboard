@@ -1,158 +1,189 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="yuS-yN-XZj">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ZNe-Lb-uvi">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
-        <!--Month View Controller-->
-        <scene sceneID="Pxt-Ye-v5D">
+        <!--Calendar View Controller-->
+        <scene sceneID="BNN-HH-TJl">
             <objects>
-                <collectionViewController id="yuS-yN-XZj" customClass="SRMMonthViewController" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" dataMode="prototypes" id="tuF-5E-EHl">
+                <viewController id="ZNe-Lb-uvi" customClass="SRMCalendarViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="d4o-aZ-uw9"/>
+                        <viewControllerLayoutGuide type="bottom" id="jCc-tS-paE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="QqA-qU-dd9">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="0dl-bn-Am5" customClass="SRMMonthViewFlowLayout">
-                            <size key="itemSize" width="50" height="50"/>
-                            <size key="headerReferenceSize" width="50" height="70"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" tag="8" contentMode="center" reuseIdentifier="MonthDateCell" id="g4I-S7-itA" customClass="SRMMonthDayCell">
-                                <rect key="frame" x="0.0" y="50" width="50" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCF-gk-ych">
-                                            <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                            <size key="shadowOffset" width="0.0" height="0.0"/>
-                                        </label>
-                                    </subviews>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VGO-i8-Jik">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="XCF-gk-ych" firstAttribute="top" secondItem="g4I-S7-itA" secondAttribute="topMargin" id="l8k-vI-Xot"/>
-                                    <constraint firstItem="XCF-gk-ych" firstAttribute="leading" secondItem="g4I-S7-itA" secondAttribute="leadingMargin" id="lUF-s9-DR6"/>
+                                    <constraint firstAttribute="height" constant="300" id="KLM-m9-WCj"/>
+                                    <constraint firstAttribute="width" secondItem="VGO-i8-Jik" secondAttribute="height" multiplier="7:6" id="O3v-0k-D2i"/>
+                                    <constraint firstAttribute="height" constant="300" id="V13-9z-JdA"/>
+                                    <constraint firstAttribute="width" constant="400" id="i8T-ch-ZD7"/>
+                                    <constraint firstAttribute="height" constant="300" id="vll-Po-3Tz"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="PEy-Dq-KuS" customClass="SRMMonthViewFlowLayout">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="KLM-m9-WCj"/>
+                                        <exclude reference="O3v-0k-D2i"/>
+                                        <exclude reference="V13-9z-JdA"/>
+                                        <exclude reference="i8T-ch-ZD7"/>
+                                        <exclude reference="vll-Po-3Tz"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="KLM-m9-WCj"/>
+                                        <include reference="O3v-0k-D2i"/>
+                                        <exclude reference="V13-9z-JdA"/>
+                                        <exclude reference="i8T-ch-ZD7"/>
+                                        <exclude reference="vll-Po-3Tz"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="dataSource" destination="ZNe-Lb-uvi" id="O15-jb-nDE"/>
+                                    <outlet property="delegate" destination="ZNe-Lb-uvi" id="QMe-Wa-WzO"/>
+                                </connections>
+                            </collectionView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F3C-Zo-w14" customClass="SRMMonthHeaderView">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="dateLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bke-hb-a9h">
+                                        <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                        <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="16"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PL9-2p-viR">
+                                        <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                        <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="15"/>
+                                        <state key="normal" title="&gt;">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setNextMonth:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="oGC-kS-D8l"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Tz-34-AxF">
+                                        <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                        <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="15"/>
+                                        <state key="normal" title="&lt;">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="setPrevMonth:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="CuK-YW-Zvd"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="PL9-2p-viR" firstAttribute="baseline" secondItem="Bke-hb-a9h" secondAttribute="baseline" id="4yw-Is-rxa"/>
+                                    <constraint firstAttribute="height" constant="70" id="DvZ-3w-UUU"/>
+                                    <constraint firstAttribute="trailing" secondItem="PL9-2p-viR" secondAttribute="trailing" constant="8" id="O2A-Lq-Sy6"/>
+                                    <constraint firstItem="0Tz-34-AxF" firstAttribute="centerY" secondItem="Bke-hb-a9h" secondAttribute="centerY" id="SFu-4l-H2e"/>
+                                    <constraint firstItem="Bke-hb-a9h" firstAttribute="centerX" secondItem="F3C-Zo-w14" secondAttribute="centerX" id="Sy9-K8-iOm"/>
+                                    <constraint firstItem="Bke-hb-a9h" firstAttribute="top" secondItem="F3C-Zo-w14" secondAttribute="top" constant="8" id="kFE-Tu-rHV">
+                                        <variation key="widthClass=compact" constant="15"/>
+                                    </constraint>
+                                    <constraint firstItem="0Tz-34-AxF" firstAttribute="leading" secondItem="F3C-Zo-w14" secondAttribute="leading" constant="8" id="ztL-l3-KAu"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="subviews">
-                                        <exclude reference="XCF-gk-ych"/>
+                                        <exclude reference="Bke-hb-a9h"/>
+                                        <exclude reference="PL9-2p-viR"/>
+                                        <exclude reference="0Tz-34-AxF"/>
                                     </mask>
                                     <mask key="constraints">
-                                        <exclude reference="l8k-vI-Xot"/>
-                                        <exclude reference="lUF-s9-DR6"/>
+                                        <exclude reference="DvZ-3w-UUU"/>
+                                        <exclude reference="SFu-4l-H2e"/>
+                                        <exclude reference="ztL-l3-KAu"/>
+                                        <exclude reference="Sy9-K8-iOm"/>
+                                        <exclude reference="kFE-Tu-rHV"/>
+                                        <exclude reference="4yw-Is-rxa"/>
+                                        <exclude reference="O2A-Lq-Sy6"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
                                     <mask key="subviews">
-                                        <include reference="XCF-gk-ych"/>
+                                        <include reference="Bke-hb-a9h"/>
+                                        <include reference="PL9-2p-viR"/>
+                                        <include reference="0Tz-34-AxF"/>
                                     </mask>
                                     <mask key="constraints">
-                                        <include reference="l8k-vI-Xot"/>
-                                        <include reference="lUF-s9-DR6"/>
+                                        <include reference="DvZ-3w-UUU"/>
+                                        <include reference="SFu-4l-H2e"/>
+                                        <include reference="ztL-l3-KAu"/>
+                                        <include reference="Sy9-K8-iOm"/>
+                                        <include reference="kFE-Tu-rHV"/>
+                                        <include reference="4yw-Is-rxa"/>
+                                        <include reference="O2A-Lq-Sy6"/>
                                     </mask>
                                 </variation>
                                 <connections>
-                                    <outlet property="dateLabel" destination="XCF-gk-ych" id="uUK-2m-1FG"/>
+                                    <outlet property="dateLabel" destination="Bke-hb-a9h" id="HtF-4u-HRn"/>
                                 </connections>
-                            </collectionViewCell>
-                        </cells>
-                        <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MonthHeader" id="e8R-7S-KIs" customClass="SRMMonthHeaderView">
-                            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                            <subviews>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2016年7月" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QdX-Cz-S8X">
-                                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fRm-wQ-noR">
-                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                    <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
-                                    <state key="normal" title="&lt;">
-                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="setPrevMonth:" destination="yuS-yN-XZj" eventType="touchUpInside" id="XCE-T3-SuX"/>
-                                    </connections>
-                                </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kjV-dM-lpv">
-                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
-                                    <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="17"/>
-                                    <state key="normal" title="&gt;">
-                                        <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    </state>
-                                    <connections>
-                                        <action selector="setNextMonth:" destination="yuS-yN-XZj" eventType="touchUpInside" id="Pvx-rB-nah"/>
-                                    </connections>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" red="0.20000000300000001" green="0.20000000300000001" blue="0.20000000300000001" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstItem="QdX-Cz-S8X" firstAttribute="centerY" secondItem="e8R-7S-KIs" secondAttribute="centerY" constant="-10" id="40M-Lf-zhq"/>
-                                <constraint firstItem="QdX-Cz-S8X" firstAttribute="centerX" secondItem="e8R-7S-KIs" secondAttribute="centerX" id="5qM-5V-Gqt"/>
-                                <constraint firstItem="fRm-wQ-noR" firstAttribute="leading" secondItem="e8R-7S-KIs" secondAttribute="leadingMargin" id="TXp-H7-R56"/>
-                                <constraint firstItem="fRm-wQ-noR" firstAttribute="centerY" secondItem="e8R-7S-KIs" secondAttribute="centerY" constant="-10" id="Yqu-og-I0f"/>
-                                <constraint firstItem="kjV-dM-lpv" firstAttribute="centerY" secondItem="e8R-7S-KIs" secondAttribute="centerY" constant="-10" id="w7Q-is-SxW"/>
-                                <constraint firstItem="kjV-dM-lpv" firstAttribute="trailing" secondItem="e8R-7S-KIs" secondAttribute="trailingMargin" id="yab-iE-bHB"/>
-                            </constraints>
-                            <variation key="default">
-                                <mask key="subviews">
-                                    <exclude reference="QdX-Cz-S8X"/>
-                                    <exclude reference="fRm-wQ-noR"/>
-                                    <exclude reference="kjV-dM-lpv"/>
-                                </mask>
-                                <mask key="constraints">
-                                    <exclude reference="TXp-H7-R56"/>
-                                    <exclude reference="Yqu-og-I0f"/>
-                                    <exclude reference="40M-Lf-zhq"/>
-                                    <exclude reference="5qM-5V-Gqt"/>
-                                    <exclude reference="w7Q-is-SxW"/>
-                                    <exclude reference="yab-iE-bHB"/>
-                                </mask>
-                            </variation>
-                            <variation key="widthClass=compact">
-                                <mask key="subviews">
-                                    <include reference="QdX-Cz-S8X"/>
-                                    <include reference="fRm-wQ-noR"/>
-                                    <include reference="kjV-dM-lpv"/>
-                                </mask>
-                                <mask key="constraints">
-                                    <include reference="TXp-H7-R56"/>
-                                    <include reference="Yqu-og-I0f"/>
-                                    <include reference="40M-Lf-zhq"/>
-                                    <include reference="5qM-5V-Gqt"/>
-                                    <include reference="w7Q-is-SxW"/>
-                                    <include reference="yab-iE-bHB"/>
-                                </mask>
-                            </variation>
-                            <connections>
-                                <outlet property="dateLabel" destination="QdX-Cz-S8X" id="KTZ-5k-ITY"/>
-                            </connections>
-                        </collectionReusableView>
-                        <connections>
-                            <outlet property="dataSource" destination="yuS-yN-XZj" id="uH5-sh-sn4"/>
-                            <outlet property="delegate" destination="yuS-yN-XZj" id="H9J-n7-5s1"/>
-                        </connections>
-                    </collectionView>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="VGO-i8-Jik" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="1yR-v9-mOz"/>
+                            <constraint firstItem="VGO-i8-Jik" firstAttribute="top" secondItem="F3C-Zo-w14" secondAttribute="bottom" id="6li-d8-h4u"/>
+                            <constraint firstItem="F3C-Zo-w14" firstAttribute="trailing" secondItem="VGO-i8-Jik" secondAttribute="trailing" id="A9o-Z5-4HX"/>
+                            <constraint firstItem="F3C-Zo-w14" firstAttribute="top" secondItem="QqA-qU-dd9" secondAttribute="top" id="AXO-VU-0cB"/>
+                            <constraint firstItem="F3C-Zo-w14" firstAttribute="leading" secondItem="VGO-i8-Jik" secondAttribute="leading" id="FTG-vt-l0j"/>
+                            <constraint firstItem="VGO-i8-Jik" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="qNt-c3-aEX"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="VGO-i8-Jik"/>
+                                <exclude reference="F3C-Zo-w14"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="A9o-Z5-4HX"/>
+                                <exclude reference="AXO-VU-0cB"/>
+                                <exclude reference="FTG-vt-l0j"/>
+                                <exclude reference="1yR-v9-mOz"/>
+                                <exclude reference="6li-d8-h4u"/>
+                                <exclude reference="qNt-c3-aEX"/>
+                            </mask>
+                        </variation>
+                        <variation key="widthClass=compact">
+                            <mask key="subviews">
+                                <include reference="VGO-i8-Jik"/>
+                                <include reference="F3C-Zo-w14"/>
+                            </mask>
+                            <mask key="constraints">
+                                <include reference="A9o-Z5-4HX"/>
+                                <include reference="AXO-VU-0cB"/>
+                                <include reference="FTG-vt-l0j"/>
+                                <include reference="1yR-v9-mOz"/>
+                                <include reference="6li-d8-h4u"/>
+                                <include reference="qNt-c3-aEX"/>
+                            </mask>
+                        </variation>
+                    </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
-                        <outlet property="collectionView" destination="tuF-5E-EHl" id="Cbz-cQ-fgu"/>
+                        <outlet property="headerView" destination="F3C-Zo-w14" id="sSX-HW-Ne7"/>
+                        <outlet property="monthCollectionView" destination="VGO-i8-Jik" id="vXz-qg-NY9"/>
                     </connections>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="zpB-fG-n75" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Eu9-zh-TXs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-355.5" y="387"/>
+            <point key="canvasLocation" x="-1108.5" y="387"/>
         </scene>
     </scenes>
 </document>

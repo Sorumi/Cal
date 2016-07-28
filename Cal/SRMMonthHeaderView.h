@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SRMMonthHeaderView : UICollectionReusableView
+@interface SRMMonthHeaderView : UIView
 
-@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 
 @end

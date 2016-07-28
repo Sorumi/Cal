@@ -15,10 +15,11 @@
 		4D1E5CAB1D44EAED0057DC76 /* CalTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5CAA1D44EAED0057DC76 /* CalTests.m */; };
 		4D1E5CB61D44EAED0057DC76 /* CalUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5CB51D44EAED0057DC76 /* CalUITests.m */; };
 		4D1E5CC81D44EC740057DC76 /* SRMMonthDayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5CC71D44EC740057DC76 /* SRMMonthDayCell.m */; };
-		4D1E5CCB1D44ECEF0057DC76 /* SRMMonthViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5CCA1D44ECEF0057DC76 /* SRMMonthViewController.m */; };
 		4D1E5D5F1D46E5990057DC76 /* SRMMonthViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D5E1D46E5990057DC76 /* SRMMonthViewFlowLayout.m */; };
 		4D1E5D621D46F95A0057DC76 /* SRMCalendarTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D611D46F95A0057DC76 /* SRMCalendarTool.m */; };
 		4D1E5D651D4705BE0057DC76 /* SRMMonthHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D641D4705BE0057DC76 /* SRMMonthHeaderView.m */; };
+		4D1E5D6B1D4891880057DC76 /* SRMCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D6A1D4891880057DC76 /* SRMCalendarViewController.m */; };
+		4D1E5D6D1D48D6B70057DC76 /* SRMMonthDayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,14 +56,15 @@
 		4D1E5CB71D44EAED0057DC76 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4D1E5CC61D44EC740057DC76 /* SRMMonthDayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthDayCell.h; sourceTree = "<group>"; };
 		4D1E5CC71D44EC740057DC76 /* SRMMonthDayCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMMonthDayCell.m; sourceTree = "<group>"; };
-		4D1E5CC91D44ECEF0057DC76 /* SRMMonthViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthViewController.h; sourceTree = "<group>"; };
-		4D1E5CCA1D44ECEF0057DC76 /* SRMMonthViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMMonthViewController.m; sourceTree = "<group>"; };
 		4D1E5D5D1D46E5990057DC76 /* SRMMonthViewFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthViewFlowLayout.h; sourceTree = "<group>"; };
 		4D1E5D5E1D46E5990057DC76 /* SRMMonthViewFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMMonthViewFlowLayout.m; sourceTree = "<group>"; };
 		4D1E5D601D46F95A0057DC76 /* SRMCalendarTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMCalendarTool.h; sourceTree = "<group>"; };
 		4D1E5D611D46F95A0057DC76 /* SRMCalendarTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMCalendarTool.m; sourceTree = "<group>"; };
 		4D1E5D631D4705BE0057DC76 /* SRMMonthHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthHeaderView.h; sourceTree = "<group>"; };
 		4D1E5D641D4705BE0057DC76 /* SRMMonthHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMMonthHeaderView.m; sourceTree = "<group>"; };
+		4D1E5D691D4891880057DC76 /* SRMCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMCalendarViewController.h; sourceTree = "<group>"; };
+		4D1E5D6A1D4891880057DC76 /* SRMCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMCalendarViewController.m; sourceTree = "<group>"; };
+		4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMMonthDayCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,11 +117,12 @@
 			children = (
 				4D1E5D601D46F95A0057DC76 /* SRMCalendarTool.h */,
 				4D1E5D611D46F95A0057DC76 /* SRMCalendarTool.m */,
-				4D1E5CC91D44ECEF0057DC76 /* SRMMonthViewController.h */,
-				4D1E5CCA1D44ECEF0057DC76 /* SRMMonthViewController.m */,
+				4D1E5D691D4891880057DC76 /* SRMCalendarViewController.h */,
+				4D1E5D6A1D4891880057DC76 /* SRMCalendarViewController.m */,
 				4D1E5D631D4705BE0057DC76 /* SRMMonthHeaderView.h */,
 				4D1E5D641D4705BE0057DC76 /* SRMMonthHeaderView.m */,
 				4D1E5CC61D44EC740057DC76 /* SRMMonthDayCell.h */,
+				4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */,
 				4D1E5CC71D44EC740057DC76 /* SRMMonthDayCell.m */,
 				4D1E5C931D44EAED0057DC76 /* AppDelegate.h */,
 				4D1E5C941D44EAED0057DC76 /* AppDelegate.m */,
@@ -268,6 +271,7 @@
 			files = (
 				4D1E5CA01D44EAED0057DC76 /* LaunchScreen.storyboard in Resources */,
 				4D1E5C9D1D44EAED0057DC76 /* Assets.xcassets in Resources */,
+				4D1E5D6D1D48D6B70057DC76 /* SRMMonthDayCell.xib in Resources */,
 				4D1E5C9B1D44EAED0057DC76 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,7 +298,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D1E5D651D4705BE0057DC76 /* SRMMonthHeaderView.m in Sources */,
-				4D1E5CCB1D44ECEF0057DC76 /* SRMMonthViewController.m in Sources */,
+				4D1E5D6B1D4891880057DC76 /* SRMCalendarViewController.m in Sources */,
 				4D1E5CC81D44EC740057DC76 /* SRMMonthDayCell.m in Sources */,
 				4D1E5D5F1D46E5990057DC76 /* SRMMonthViewFlowLayout.m in Sources */,
 				4D1E5C951D44EAED0057DC76 /* AppDelegate.m in Sources */,

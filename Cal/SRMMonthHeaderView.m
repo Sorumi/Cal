@@ -20,23 +20,31 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    
+        
     self.weekday = @[@"Sun",@"Mon",@"Tues",@"Wed",@"Thur",@"Fri",@"Sat"];
     
     int width = [UIScreen mainScreen].bounds.size.width/7;
-//    NSLog(@"%f", self.bounds.size.height);
-//    double y = self.bounds.size.height - 30;
-    CGRect labelRect = CGRectMake(2, 40, width, 30);
-    
+
+    CGRect labelRect = CGRectMake(2, 50, width, 20);
     
     for (int i=0; i<7; i++) {
         UILabel *label = [[UILabel alloc] initWithFrame:labelRect];
         label.text = self.weekday[i];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [UIColor whiteColor];
+        label.font = [UIFont fontWithName:@"Courier New" size:12];
         [self addSubview:label];
         labelRect.origin.x += width;
     }
 
+}
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        //
+    }
+    return self;
 }
 @end
