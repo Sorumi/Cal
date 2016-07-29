@@ -20,6 +20,7 @@
 		4D1E5D651D4705BE0057DC76 /* SRMMonthHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D641D4705BE0057DC76 /* SRMMonthHeaderView.m */; };
 		4D1E5D6B1D4891880057DC76 /* SRMCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D6A1D4891880057DC76 /* SRMCalendarViewController.m */; };
 		4D1E5D6D1D48D6B70057DC76 /* SRMMonthDayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */; };
+		4D3513A51D4ACB0900D2B128 /* SRMCalendarConstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513A41D4ACB0900D2B128 /* SRMCalendarConstance.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		4D1E5D691D4891880057DC76 /* SRMCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMCalendarViewController.h; sourceTree = "<group>"; };
 		4D1E5D6A1D4891880057DC76 /* SRMCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMCalendarViewController.m; sourceTree = "<group>"; };
 		4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMMonthDayCell.xib; sourceTree = "<group>"; };
+		4D3513A31D4ACB0900D2B128 /* SRMCalendarConstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMCalendarConstance.h; sourceTree = "<group>"; };
+		4D3513A41D4ACB0900D2B128 /* SRMCalendarConstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMCalendarConstance.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +118,8 @@
 		4D1E5C8F1D44EAED0057DC76 /* Cal */ = {
 			isa = PBXGroup;
 			children = (
+				4D3513A31D4ACB0900D2B128 /* SRMCalendarConstance.h */,
+				4D3513A41D4ACB0900D2B128 /* SRMCalendarConstance.m */,
 				4D1E5D601D46F95A0057DC76 /* SRMCalendarTool.h */,
 				4D1E5D611D46F95A0057DC76 /* SRMCalendarTool.m */,
 				4D1E5D691D4891880057DC76 /* SRMCalendarViewController.h */,
@@ -122,8 +127,8 @@
 				4D1E5D631D4705BE0057DC76 /* SRMMonthHeaderView.h */,
 				4D1E5D641D4705BE0057DC76 /* SRMMonthHeaderView.m */,
 				4D1E5CC61D44EC740057DC76 /* SRMMonthDayCell.h */,
-				4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */,
 				4D1E5CC71D44EC740057DC76 /* SRMMonthDayCell.m */,
+				4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */,
 				4D1E5C931D44EAED0057DC76 /* AppDelegate.h */,
 				4D1E5C941D44EAED0057DC76 /* AppDelegate.m */,
 				4D1E5C991D44EAED0057DC76 /* Main.storyboard */,
@@ -300,6 +305,7 @@
 				4D1E5D651D4705BE0057DC76 /* SRMMonthHeaderView.m in Sources */,
 				4D1E5D6B1D4891880057DC76 /* SRMCalendarViewController.m in Sources */,
 				4D1E5CC81D44EC740057DC76 /* SRMMonthDayCell.m in Sources */,
+				4D3513A51D4ACB0900D2B128 /* SRMCalendarConstance.m in Sources */,
 				4D1E5D5F1D46E5990057DC76 /* SRMMonthViewFlowLayout.m in Sources */,
 				4D1E5C951D44EAED0057DC76 /* AppDelegate.m in Sources */,
 				4D1E5D621D46F95A0057DC76 /* SRMCalendarTool.m in Sources */,

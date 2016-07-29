@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 
 @interface SRMCalendarViewController : UIViewController
+
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
+
+- (void)MonthToWeek:(UISwipeGestureRecognizer *)gesture;
 
 @end

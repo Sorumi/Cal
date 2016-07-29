@@ -16,7 +16,17 @@
 
 }
 
+- (void)setCurrentMonthDate:(NSInteger)day
+{
+    self.dateLabel.text = [NSString stringWithFormat:@"%lu", day];
+    self.dateLabel.textColor = [UIColor darkGrayColor];
+}
 
+- (void)setOtherMonthDate:(NSInteger)day
+{
+    self.dateLabel.text = [NSString stringWithFormat:@"%lu", day];
+    self.dateLabel.textColor = [UIColor lightGrayColor];
+}
 
 
 @end

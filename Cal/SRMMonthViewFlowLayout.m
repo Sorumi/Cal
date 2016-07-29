@@ -8,13 +8,22 @@
 
 #import "SRMMonthViewFlowLayout.h"
 
-@implementation SRMMonthViewFlowLayout
+@interface SRMMonthViewFlowLayout ()
 
+@property (nonatomic) CGFloat viewWidth;
+@property (nonatomic) CGFloat viewHeight;
+
+@end
+
+@implementation SRMMonthViewFlowLayout
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        
+        _viewWidth = [UIScreen mainScreen].bounds.size.width;
+        _viewHeight = _viewWidth / 7 * 6;
         
         self.scrollDirection = UICollectionViewScrollDirectionHorizontal;
         
@@ -22,13 +31,14 @@
         self.minimumInteritemSpacing = 0;
         
         self.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
-           }
+//        self.headerReferenceSize = CGSizeMake(self.viewWidth/2, self.viewHeight/2);
+    }
     return self;
 }
 
 - (CGSize)itemSize
 {
-    CGFloat width = self.collectionView.frame.size.width/7;
+    CGFloat width = self.collectionView.frame.size.width / 7;
     return CGSizeMake(width, width);
 }
 
@@ -42,7 +52,7 @@
         
     CGFloat xPageOffset = attributes.indexPath.section * collectionView.frame.size.width;
     CGFloat xCellOffset = xPageOffset + (attributes.indexPath.item % 7) * self.itemSize.width;
-    CGFloat yCellOffset = self.headerReferenceSize.height + (attributes.indexPath.item / 7) * self.itemSize.width;
+    CGFloat yCellOffset = (attributes.indexPath.item / 7) * self.itemSize.width;
     attributes.frame = CGRectMake(xCellOffset, yCellOffset, self.itemSize.width, self.itemSize.height);
 }
 
@@ -54,16 +64,27 @@
     return attrs;
 }
 
+//- (UICollectionViewLayoutAttributes *)layoutAttributesForSupplementaryViewOfKind:(NSString *)elementKind atIndexPath:(NSIndexPath *)indexPath
+//{
+//    UICollectionViewLayoutAttributes *attrs = [super layoutAttributesForSupplementaryViewOfKind:elementKind atIndexPath:indexPath].copy;
+//    attrs.zIndex = 1024;
+//    attrs.frame = CGRectMake(attrs.indexPath.section * self.viewWidth, 0, self.viewWidth/2, self.viewHeight/2);
+//    return attrs;
+//}
+
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
 {
     NSMutableArray* attributes = [NSMutableArray arrayWithArray:[super layoutAttributesForElementsInRect:rect].copy];
-    NSMutableArray* answer = [NSMutableArray arrayWithArray:[super layoutAttributesForElementsInRect:rect].copy];
+    NSMutableArray* answer = [[NSMutableArray alloc] init];
 
     for (UICollectionViewLayoutAttributes *attr in attributes) {
-//        [self applyLayoutAttributes:attr];
         if (attr.representedElementCategory == UICollectionElementCategoryCell) {
             UICollectionViewLayoutAttributes *newAttr = [self layoutAttributesForItemAtIndexPath:attr.indexPath];
             [answer addObject:newAttr];
+        
+//        } else if (attr.representedElementKind == UICollectionElementKindSectionHeader) {
+//            UICollectionViewLayoutAttributes *newAttr = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:attr.indexPath];
+//            [answer addObject:newAttr];
         }
     }
     return answer;

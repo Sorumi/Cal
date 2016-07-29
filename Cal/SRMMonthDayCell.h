@@ -12,4 +12,7 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 
+- (void)setCurrentMonthDate:(NSInteger)day;
+- (void)setOtherMonthDate:(NSInteger)day;
+
 @end
