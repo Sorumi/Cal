@@ -30,7 +30,7 @@
 - (NSDate *)maximumDate
 {
     if (!_maximumDate) {
-        _maximumDate = [self dateWithYear:2020 month:12 day:31];
+        _maximumDate = [self dateWithYear:2030 month:12 day:31];
     }
     return _maximumDate;
 }
@@ -194,6 +194,13 @@
 
 #pragma mrak -
 
+- (NSDate *)dateByIgnoringTimeComponentsOfDate:(NSDate *)date
+{
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour fromDate:date];
+    components.hour = 0;
+    return [self.calendar dateFromComponents:components];
+}
+
 - (NSInteger)dayCountOfMonthofDate:(NSDate *)date
 {
     NSRange range = [self.calendar rangeOfUnit:NSCalendarUnitDay inUnit:NSCalendarUnitMonth forDate:date];
@@ -205,6 +212,18 @@
     NSDateComponents *components = [self.calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour fromDate:date];
     components.day = 1;
     return [self.calendar dateFromComponents:components];
+}
+
+- (NSDate *)beginingOfWeekOfDate:(NSDate *)date
+{
+    NSDateComponents *weekdayComponents = [self.calendar components:NSCalendarUnitWeekday fromDate:date];
+    NSDateComponents *components = self.components;
+    components.day = - (weekdayComponents.weekday - self.calendar.firstWeekday);
+    components.day = (components.day-7) % 7;
+    NSDate *beginningOfWeek = [self.calendar dateByAddingComponents:components toDate:date options:0];
+    beginningOfWeek = [self dateByIgnoringTimeComponentsOfDate:beginningOfWeek];
+    components.day = NSIntegerMax;
+    return beginningOfWeek;
 }
 
 @end

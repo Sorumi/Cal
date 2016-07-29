@@ -8,6 +8,7 @@
 
 #import "SRMCalendarViewController.h"
 #import "SRMMonthDayCell.h"
+#import "SRMWeekDayCell.h"
 #import "SRMMonthViewFlowLayout.h"
 #import "SRMCalendarTool.h"
 #import "SRMMonthHeaderView.h"
@@ -18,22 +19,28 @@
 
 @property (nonatomic, strong) SRMCalendarTool *tool;
 @property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) NSDate *today;
 @property (nonatomic) NSInteger selectedYear;
 @property (nonatomic) NSInteger selectedMonth;
 @property (nonatomic) NSInteger selectedDay;
 
 @property (weak, nonatomic) IBOutlet SRMMonthHeaderView *headerView;
+@property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
+@property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
+
 @property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
 
-#pragma mark - Animation
+#pragma mark - Constraint
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthViewTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekViewBottom;
 
 @end
 
 @implementation SRMCalendarViewController
 
-static NSString * const reuseCellIdentifier = @"MonthDateCell";
+static NSString * const reuseMonthCellIdentifier = @"MonthDateCell";
+static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 
 #pragma mark - Properties
 
@@ -61,8 +68,7 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
 {
     _tool = [[SRMCalendarTool alloc] init];
     self.date = [NSDate date];
-
-//    NSLog(@"%lu %lu %lu", _selectedYear, _selectedMonth, _selectedDay);
+    self.today = self.date;
 }
 
 - (void)viewDidLoad {
@@ -73,11 +79,12 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
     //const
     self.viewWidth = self.view.frame.size.width;
 
-    [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthDayCell" bundle:nil] forCellWithReuseIdentifier:reuseCellIdentifier];
+    [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthDayCell" bundle:nil] forCellWithReuseIdentifier:reuseMonthCellIdentifier];
+    [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
+    
 //    [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthClipboardView" bundle:nil] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseClipboardIdentifier];
     
     self.monthCollectionView.bounces = NO;
-    
     self.monthCollectionView.pagingEnabled = YES;
     self.monthCollectionView.showsVerticalScrollIndicator = NO;
     self.monthCollectionView.showsHorizontalScrollIndicator = NO;
@@ -85,12 +92,22 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
     self.monthCollectionView.delegate = self;
     self.monthCollectionView.dataSource = self;
     
-    [self.view bringSubviewToFront:self.headerView];
+    self.weekCollectionView.bounces = NO;
+    self.weekCollectionView.pagingEnabled = YES;
+    self.weekCollectionView.showsVerticalScrollIndicator = NO;
+    self.weekCollectionView.showsHorizontalScrollIndicator = NO;
+    
+    self.weekCollectionView.delegate = self;
+    self.weekCollectionView.dataSource = self;
     
     // add custum gesture
-    UISwipeGestureRecognizer *swipe = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(MonthToWeek:)];
-    swipe.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.monthCollectionView addGestureRecognizer:swipe];
+    UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(MonthToWeek:)];
+    monthToWeek.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.monthCollectionView addGestureRecognizer:monthToWeek];
+    
+    UISwipeGestureRecognizer *weekToMonth = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(WeekToMonth:)];
+    weekToMonth.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.weekCollectionView addGestureRecognizer:weekToMonth];
     
     self.isFirstTimeViewDidLayoutSubviews = YES;
 
@@ -102,6 +119,9 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
         
         [self scrollToDate:self.date animated:NO];
         self.headerView.dateLabel.text = [NSString stringWithFormat:@"%ld %ld", self.selectedYear, self.selectedMonth];
+        
+        self.date = self.today;
+        NSLog(@"%ld %ld %ld", self.selectedYear, self.selectedMonth, self.selectedDay);
         self.isFirstTimeViewDidLayoutSubviews = NO;
     }
 }
@@ -115,6 +135,7 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
         NSInteger monthCount = [tool monthsFromDate:tool.minimumDate toDate:date];
         CGFloat offsetX = self.viewWidth * monthCount;
         [self.monthCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:animated];
+        
     }
 }
 
@@ -135,8 +156,33 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
 
 - (void)MonthToWeek:(UISwipeGestureRecognizer *)gesture
 {
+    SRMCalendarTool *tool = self.tool;
+    NSDate *date = [tool beginingOfWeekOfDate:self.date];
+    NSDate *beginDate = [tool beginingOfWeekOfDate:tool.minimumDate];
+    NSInteger weekCount = [tool weeksFromDate:beginDate toDate:date];
+    CGFloat offsetX = self.viewWidth * weekCount;
+    [self.weekCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:NO];
+    
     [self.view bringSubviewToFront:self.headerView];
     self.monthViewTop.constant = - self.monthCollectionView.frame.size.height + self.viewWidth / 7;
+    self.weekViewBottom.constant = self.weekCollectionView.frame.size.height;
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         [self.view layoutIfNeeded];
+                     }];
+}
+
+- (void)WeekToMonth:(UISwipeGestureRecognizer *)gesture
+{
+    SRMCalendarTool *tool = self.tool;
+
+    NSInteger monthCount = [tool monthsFromDate:tool.minimumDate toDate:self.date];
+    CGFloat offsetX = self.viewWidth * monthCount;
+    [self.monthCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:NO];
+    
+    [self.view bringSubviewToFront:self.headerView];
+    self.monthViewTop.constant = 0;
+    self.weekViewBottom.constant = 0;
     [UIView animateWithDuration:0.5
                      animations:^{
                          [self.view layoutIfNeeded];
@@ -147,58 +193,113 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
-    NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
-    
+    NSDate *date;
     SRMCalendarTool *tool = self.tool;
-    NSDate *date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+    
+    if (scrollView == self.monthCollectionView) {
+        NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
+    
+        date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        
+    } else if (scrollView == self.weekCollectionView) {
+               
+        NSInteger page = round(self.weekCollectionView.contentOffset.x / self.viewWidth);
+
+        date = [tool dateByAddingWeeks:page toDate:tool.minimumDate];
+        
+        [self scrollToDate:date animated:NO];
+    }
+    
     self.date = date;
     self.selectedYear = [tool yearOfDate:self.date];
     self.selectedMonth = [tool monthOfDate:self.date];
     self.selectedDay = [tool dayOfDate:self.date];
     
+    //    NSLog(@"%ld %ld %ld", self.selectedYear, self.selectedMonth, self.selectedDay);
     self.headerView.dateLabel.text = [NSString stringWithFormat:@"%ld %ld", self.selectedYear, self.selectedMonth];
+
 }
 
 
 #pragma mark - <UICollectionViewDataSource>
 
-- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
-    SRMCalendarTool *tool = self.tool;
-    return [tool monthsFromDate:tool.minimumDate toDate:tool.maximumDate] + 1;
-}
-
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return 42;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    SRMMonthDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseCellIdentifier forIndexPath:indexPath];
-    
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
     SRMCalendarTool *tool = self.tool;
     
-    NSDate *date = [tool dateByAddingMonths:indexPath.section toDate:tool.minimumDate];
-
-    NSInteger blankDayCount = [self.tool weekdayOfDate:[self.tool beginningOfMonthOfDate:date]];
-    NSInteger currentMonthDayCount = [self.tool dayCountOfMonthofDate:date];
-    
-    date = [tool dateByAddingMonths:-1 toDate:date];
-    NSInteger previousMonthDayCount = [self.tool dayCountOfMonthofDate:date];
-
-    if (indexPath.row < blankDayCount) {
-        [cell setOtherMonthDate:previousMonthDayCount - blankDayCount + indexPath.row + 1];
+    if (collectionView == self.monthCollectionView) {
         
-    } else if (indexPath.row > blankDayCount + currentMonthDayCount - 1) {
-        [cell setOtherMonthDate:indexPath.row - blankDayCount - currentMonthDayCount + 1];
+        return [tool monthsFromDate:tool.minimumDate toDate:tool.maximumDate] + 1;
         
-    } else {
-        [cell setCurrentMonthDate:indexPath.row - blankDayCount + 1];
+    } else if (collectionView == self.weekCollectionView) {
+        
+        return [tool weeksFromDate:tool.minimumDate toDate:tool.maximumDate] + 1;
     }
- 
-    cell.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    cell.layer.borderWidth = 0.3;
     
-    return cell;
+    return 0;
+}
+
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    if (collectionView == self.monthCollectionView) {
+        
+        return 42;
+        
+    } else if (collectionView == self.weekCollectionView) {
+        
+        return 7;
+        
+    }
+    return 0;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (collectionView == self.monthCollectionView) {
+        SRMMonthDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseMonthCellIdentifier forIndexPath:indexPath];
+        
+        SRMCalendarTool *tool = self.tool;
+        
+        NSDate *date = [tool dateByAddingMonths:indexPath.section toDate:tool.minimumDate];
+        
+        NSInteger blankDayCount = [self.tool weekdayOfDate:[self.tool beginningOfMonthOfDate:date]];
+        NSInteger currentMonthDayCount = [self.tool dayCountOfMonthofDate:date];
+        
+        date = [tool dateByAddingMonths:-1 toDate:date];
+        NSInteger previousMonthDayCount = [self.tool dayCountOfMonthofDate:date];
+        
+        if (indexPath.row < blankDayCount) {
+            [cell setOtherMonthDate:previousMonthDayCount - blankDayCount + indexPath.row + 1];
+            
+        } else if (indexPath.row > blankDayCount + currentMonthDayCount - 1) {
+            [cell setOtherMonthDate:indexPath.row - blankDayCount - currentMonthDayCount + 1];
+            
+        } else {
+            [cell setCurrentMonthDate:indexPath.row - blankDayCount + 1];
+        }
+        
+        cell.selected = YES;
+        [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+        
+        return cell;
+        
+    } else if (collectionView == self.weekCollectionView) {
+        SRMWeekDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseWeekCellIdentifier forIndexPath:indexPath];
+        
+        SRMCalendarTool *tool = self.tool;
+        NSDate *date = [tool dateByAddingWeeks:indexPath.section toDate:tool.minimumDate];
+        date = [tool beginingOfWeekOfDate:date];
+        date = [tool dateByAddingDays:indexPath.row toDate:date];
+        
+//        NSLog(@"%lu %lu %lu %lu",[tool yearOfDate:date], [tool monthOfDate:date], [tool dayOfDate:date], [tool weekdayOfDate:date]);
+        
+        [cell setWeekDate:[tool dayOfDate:date]];
+
+        return cell;
+    }
+    
+    return nil;
 }
 
 #pragma mark - <UICollectionViewDelegate>
@@ -211,6 +312,55 @@ static NSString * const reuseCellIdentifier = @"MonthDateCell";
 
     return size;
 }
+
+/*
+// 允许选中时，高亮
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%s", __FUNCTION__);
+    return YES;
+}
+// 高亮完成后回调
+- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%s", __FUNCTION__);
+}
+// 由高亮转成非高亮完成时的回调
+- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%s", __FUNCTION__);
+}
+// 设置是否允许选中
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%s", __FUNCTION__);
+    return YES;
+}
+// 设置是否允许取消选中
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%s", __FUNCTION__);
+    return YES;
+}
+// 选中操作
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%s", __FUNCTION__);
+    
+    UICollectionViewCell *cell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.backgroundColor = [UIColor redColor];
+    [self.monthCollectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+}
+
+// 取消选中操作
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSLog(@"%s", __FUNCTION__);
+    
+    UICollectionViewCell *cell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.backgroundColor = [UIColor whiteColor];
+}
+*/
 
 //- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 //{

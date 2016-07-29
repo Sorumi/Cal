@@ -18,6 +18,84 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VGO-i8-Jik">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="300" id="KLM-m9-WCj"/>
+                                    <constraint firstAttribute="width" secondItem="VGO-i8-Jik" secondAttribute="height" multiplier="7:6" id="O3v-0k-D2i"/>
+                                    <constraint firstAttribute="height" constant="300" id="V13-9z-JdA"/>
+                                    <constraint firstAttribute="width" constant="400" id="i8T-ch-ZD7"/>
+                                    <constraint firstAttribute="height" constant="300" id="vll-Po-3Tz"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="PEy-Dq-KuS" customClass="SRMMonthViewFlowLayout">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="KLM-m9-WCj"/>
+                                        <exclude reference="O3v-0k-D2i"/>
+                                        <exclude reference="V13-9z-JdA"/>
+                                        <exclude reference="i8T-ch-ZD7"/>
+                                        <exclude reference="vll-Po-3Tz"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <exclude reference="KLM-m9-WCj"/>
+                                        <include reference="O3v-0k-D2i"/>
+                                        <exclude reference="V13-9z-JdA"/>
+                                        <exclude reference="i8T-ch-ZD7"/>
+                                        <exclude reference="vll-Po-3Tz"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="dataSource" destination="ZNe-Lb-uvi" id="O15-jb-nDE"/>
+                                    <outlet property="delegate" destination="ZNe-Lb-uvi" id="QMe-Wa-WzO"/>
+                                </connections>
+                            </collectionView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dpK-xs-UIc">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="dpK-xs-UIc" secondAttribute="height" multiplier="7:1.01" id="axu-bF-a4q"/>
+                                </constraints>
+                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="XLa-Gf-Unp" customClass="SRMWeekViewFlowLayout">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="k7u-SV-BN1">
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="axu-bF-a4q"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="axu-bF-a4q"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <outlet property="dataSource" destination="ZNe-Lb-uvi" id="3s7-cm-5Ml"/>
+                                    <outlet property="delegate" destination="ZNe-Lb-uvi" id="9aY-ws-mGJ"/>
+                                </connections>
+                            </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F3C-Zo-w14" customClass="SRMMonthHeaderView">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <subviews>
@@ -96,65 +174,34 @@
                                     <outlet property="dateLabel" destination="Bke-hb-a9h" id="HtF-4u-HRn"/>
                                 </connections>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VGO-i8-Jik">
-                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="KLM-m9-WCj"/>
-                                    <constraint firstAttribute="width" secondItem="VGO-i8-Jik" secondAttribute="height" multiplier="7:6" id="O3v-0k-D2i"/>
-                                    <constraint firstAttribute="height" constant="300" id="V13-9z-JdA"/>
-                                    <constraint firstAttribute="width" constant="400" id="i8T-ch-ZD7"/>
-                                    <constraint firstAttribute="height" constant="300" id="vll-Po-3Tz"/>
-                                </constraints>
-                                <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="PEy-Dq-KuS" customClass="SRMMonthViewFlowLayout">
-                                    <size key="itemSize" width="50" height="50"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
-                                <cells/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="KLM-m9-WCj"/>
-                                        <exclude reference="O3v-0k-D2i"/>
-                                        <exclude reference="V13-9z-JdA"/>
-                                        <exclude reference="i8T-ch-ZD7"/>
-                                        <exclude reference="vll-Po-3Tz"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact">
-                                    <mask key="constraints">
-                                        <exclude reference="KLM-m9-WCj"/>
-                                        <include reference="O3v-0k-D2i"/>
-                                        <exclude reference="V13-9z-JdA"/>
-                                        <exclude reference="i8T-ch-ZD7"/>
-                                        <exclude reference="vll-Po-3Tz"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <outlet property="dataSource" destination="ZNe-Lb-uvi" id="O15-jb-nDE"/>
-                                    <outlet property="delegate" destination="ZNe-Lb-uvi" id="QMe-Wa-WzO"/>
-                                </connections>
-                            </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="VGO-i8-Jik" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="1yR-v9-mOz"/>
                             <constraint firstItem="VGO-i8-Jik" firstAttribute="top" secondItem="F3C-Zo-w14" secondAttribute="bottom" id="6li-d8-h4u"/>
                             <constraint firstItem="F3C-Zo-w14" firstAttribute="top" secondItem="QqA-qU-dd9" secondAttribute="top" id="AXO-VU-0cB"/>
+                            <constraint firstItem="dpK-xs-UIc" firstAttribute="bottom" secondItem="F3C-Zo-w14" secondAttribute="bottom" constant="120" id="e74-X1-NxH">
+                                <variation key="widthClass=compact" constant="0.0"/>
+                            </constraint>
+                            <constraint firstItem="dpK-xs-UIc" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="iJM-Nv-60o"/>
                             <constraint firstItem="F3C-Zo-w14" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="iL9-wf-GfH"/>
                             <constraint firstItem="VGO-i8-Jik" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="qNt-c3-aEX"/>
                             <constraint firstItem="F3C-Zo-w14" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="vso-go-Eix"/>
+                            <constraint firstItem="dpK-xs-UIc" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="zCM-UV-ogD"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="F3C-Zo-w14"/>
                                 <exclude reference="VGO-i8-Jik"/>
+                                <exclude reference="dpK-xs-UIc"/>
+                                <exclude reference="F3C-Zo-w14"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="AXO-VU-0cB"/>
                                 <exclude reference="iL9-wf-GfH"/>
                                 <exclude reference="vso-go-Eix"/>
+                                <exclude reference="e74-X1-NxH"/>
+                                <exclude reference="iJM-Nv-60o"/>
+                                <exclude reference="zCM-UV-ogD"/>
                                 <exclude reference="1yR-v9-mOz"/>
                                 <exclude reference="6li-d8-h4u"/>
                                 <exclude reference="qNt-c3-aEX"/>
@@ -162,13 +209,17 @@
                         </variation>
                         <variation key="widthClass=compact">
                             <mask key="subviews">
-                                <include reference="F3C-Zo-w14"/>
                                 <include reference="VGO-i8-Jik"/>
+                                <include reference="dpK-xs-UIc"/>
+                                <include reference="F3C-Zo-w14"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="AXO-VU-0cB"/>
                                 <include reference="iL9-wf-GfH"/>
                                 <include reference="vso-go-Eix"/>
+                                <include reference="e74-X1-NxH"/>
+                                <include reference="iJM-Nv-60o"/>
+                                <include reference="zCM-UV-ogD"/>
                                 <include reference="1yR-v9-mOz"/>
                                 <include reference="6li-d8-h4u"/>
                                 <include reference="qNt-c3-aEX"/>
@@ -180,6 +231,8 @@
                         <outlet property="headerView" destination="F3C-Zo-w14" id="sSX-HW-Ne7"/>
                         <outlet property="monthCollectionView" destination="VGO-i8-Jik" id="vXz-qg-NY9"/>
                         <outlet property="monthViewTop" destination="6li-d8-h4u" id="abc-Es-s95"/>
+                        <outlet property="weekCollectionView" destination="dpK-xs-UIc" id="hEc-xp-9RN"/>
+                        <outlet property="weekViewBottom" destination="e74-X1-NxH" id="6lV-OD-0bg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eu9-zh-TXs" userLabel="First Responder" sceneMemberID="firstResponder"/>
