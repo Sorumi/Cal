@@ -122,7 +122,7 @@
 {
     SRMEvent *event = [[SRMEvent alloc] initWithSystemEvent:systemEvent];
     [self.events addObject:event];
-    NSLog([NSString stringWithFormat:@"%@ %@ %@", systemEvent.title, systemEvent.calendar.title, systemEvent.startDate]);
+
 }
 
 

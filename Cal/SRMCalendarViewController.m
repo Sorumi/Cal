@@ -15,9 +15,13 @@
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
+#import "SRMEvent.h"
 #import "SRMEventStore.h"
+#import "SRMEventCell.h"
 
-@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
 
 @property (nonatomic) CGFloat const viewWidth;
 
@@ -36,7 +40,10 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
 
-@property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
+#pragma mark - Table
+
+@property (weak, nonatomic) IBOutlet UITableView *monthItemTableView;
+
 
 #pragma mark - Constraint
 
@@ -50,6 +57,7 @@
 
 static NSString * const reuseMonthCellIdentifier = @"MonthDateCell";
 static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
+static NSString * const reuseEventCellIdentifier = @"EventCell";
 
 #pragma mark - Properties
 
@@ -86,9 +94,10 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     // Do any additional setup after loading the view.
     [self.view reloadInputViews];
     
-    //const
+    // const
     self.viewWidth = self.view.frame.size.width;
 
+    // collection
     [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthDayCell" bundle:nil] forCellWithReuseIdentifier:reuseMonthCellIdentifier];
     [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
     
@@ -110,6 +119,14 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     
     self.viewMode = SRMCalendarMonthViewMode;
     
+    // table
+    [self.monthItemTableView registerNib:[UINib nibWithNibName:@"SRMEventCell" bundle:nil] forCellReuseIdentifier:reuseEventCellIdentifier];
+    
+//    self.monthItemTableView.scrollEnabled = NO;
+    
+    self.monthItemTableView.delegate = self;
+    self.monthItemTableView.dataSource = self;
+    
     // add custum gesture
     UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(MonthToWeek:)];
     monthToWeek.direction = UISwipeGestureRecognizerDirectionUp;
@@ -130,7 +147,6 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     // event
     
     [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
-    NSLog([SRMEventStore sharedStore].isGranted ? @"Yes" : @"No");
     if ([SRMEventStore sharedStore].isGranted) {
         [[SRMEventStore sharedStore] fetchEventsFromDate:[self.tool dateWithYear:2016 month:1 day:1]
                                                   toDate:[self.tool dateWithYear:2016 month:12 day:31]];
@@ -139,7 +155,6 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 
 - (void)viewDidLayoutSubviews
 {
-    
     if (self.isFirstTimeViewDidLayoutSubviews) {
         
         [self monthScrollToDate:self.today animated:NO];
@@ -148,6 +163,12 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         
         self.date = self.today;
         self.isFirstTimeViewDidLayoutSubviews = NO;
+        
+        CALayer *layer = self.monthCollectionView.layer;
+        layer.shadowOffset = CGSizeMake(0, 0);
+        layer.shadowRadius = 1;
+        layer.shadowColor = [UIColor darkGrayColor].CGColor;
+        layer.shadowOpacity = 0.3;
 
     }
 }
@@ -225,6 +246,31 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
                          self.headerView.weekHeader.alpha = 0;
                          [self.view layoutIfNeeded];
                      }];
+}
+
+#pragma mark - <UITableViewDateSource>
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [[SRMEventStore sharedStore] allEvents].count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
+    NSArray *items = [[SRMEventStore sharedStore] allEvents];
+    SRMEvent *item = items[indexPath.row];
+    
+    cell.titleLable.text = [NSString stringWithFormat:@"%@", item.systemEvent.title];
+    
+    return cell;
+}
+
+#pragma mark - <UITableViewDelegate>
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return SRMEventCellHeight + SRMEventCellSpacing;
 }
 
 #pragma mark - <UIScrollViewDelegate>
@@ -470,20 +516,11 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 }
 
 #pragma mark - Others
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

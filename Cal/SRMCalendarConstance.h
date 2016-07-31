@@ -15,6 +15,9 @@ UIKIT_EXTERN CGFloat const SRMMonthViewWeekdayHeight;
 UIKIT_EXTERN CGFloat const SRMWeekViewWeekdayHeight;
 UIKIT_EXTERN CGFloat const SRMWeekViewDayCircleRadius;
 
+UIKIT_EXTERN CGFloat const SRMEventCellHeight;
+UIKIT_EXTERN CGFloat const SRMEventCellSpacing;
+
 typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
     SRMCalendarMonthViewMode    = 0,
     SRMCalendarWeekViewMode     = 1

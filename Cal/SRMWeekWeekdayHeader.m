@@ -24,7 +24,7 @@
 
 - (void)awakeFromNib
 {
-    CALayer *layer =  self.layer;
+    CALayer *layer = self.layer;
     layer.shadowOffset = CGSizeMake(0, 0);
     layer.shadowRadius = 1;
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
