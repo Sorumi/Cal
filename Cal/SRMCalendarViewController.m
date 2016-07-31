@@ -13,6 +13,7 @@
 #import "SRMCalendarHeader.h"
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
+#import "SRMWeekWeekdayHeader.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
@@ -28,6 +29,7 @@
 @property (nonatomic) SRMCalendarViewMode viewMode;
 
 @property (weak, nonatomic) IBOutlet SRMCalendarHeader *headerView;
+@property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
 
@@ -37,8 +39,7 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthWeekdayViewTop;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekViewBottom;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthHeaderTop;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekHeaderTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekHeaderTrailing;
 
 @end
 
@@ -162,7 +163,6 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     }
 }
 
-
 #pragma mark - Action
 
 - (IBAction)setPrevMonth:(id)sender
@@ -185,16 +185,12 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     [self.view bringSubviewToFront:self.headerView];
     self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight + self.viewWidth / 7;
     self.weekViewBottom.constant = self.weekCollectionView.frame.size.height;
-    self.monthHeaderTop.constant = - SRMHeaderHeight;
-    self.weekHeaderTop.constant = - SRMHeaderHeight;
+    self.weekHeaderTrailing.constant = self.headerView.weekHeader.frame.size.width;
 
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.5
                      animations:^{
                          self.headerView.monthHeader.alpha = 0;
                          self.headerView.weekHeader.alpha = 1;
-                     }];
-    [UIView animateWithDuration:0.5
-                     animations:^{
                          [self.view layoutIfNeeded];
                      }];
 }
@@ -207,16 +203,12 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     [self.view bringSubviewToFront:self.headerView];
     self.monthWeekdayViewTop.constant = 0;
     self.weekViewBottom.constant = 0;
-    self.monthHeaderTop.constant = 0;
-    self.weekHeaderTop.constant = 0;
+    self.weekHeaderTrailing.constant = 0;
 
-    [UIView animateWithDuration:0.3
+    [UIView animateWithDuration:0.5
                      animations:^{
                          self.headerView.monthHeader.alpha = 1;
                          self.headerView.weekHeader.alpha = 0;
-                     }];
-    [UIView animateWithDuration:0.5
-                     animations:^{
                          [self.view layoutIfNeeded];
                      }];
 }
@@ -277,6 +269,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         
         if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
             self.date = currentBeginningDate;
+            [self.weekWeekdayHeader setCirclePos:[tool weekdayOfDate:self.date] animated:YES];
             [self monthScrollToDate:self.date animated:NO];
         }
     }
@@ -298,20 +291,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
             [self weekScrollToDate:self.date animated:NO];
         }
         
-    } else if (scrollView == self.weekCollectionView && self.viewMode == SRMCalendarWeekViewMode) {
-        
-        SRMCalendarTool *tool = self.tool;
-        NSInteger page = self.weekCollectionView.contentOffset.x / self.viewWidth;
-        NSDate *currentBeginningDate = [tool beginningOfWeekOfDate:tool.minimumDate];
-        currentBeginningDate = [tool dateByAddingWeeks:page toDate:currentBeginningDate];
-        NSDate *selfBeginningDate = [tool beginningOfWeekOfDate:self.date];
-        
-        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
-            self.date = currentBeginningDate;
-            [self monthScrollToDate:self.date animated:NO];
-        }
     }
-
 }
 
 
@@ -360,8 +340,12 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         NSInteger blankDayCount = [self.tool weekdayOfDate:[self.tool beginningOfMonthOfDate:date]];
         NSInteger currentMonthDayCount = [self.tool dayCountOfMonthofDate:date];
         
-        date = [tool dateByAddingMonths:-1 toDate:date];
-        NSInteger previousMonthDayCount = [self.tool dayCountOfMonthofDate:date];
+        
+        NSDate *prevDate = [tool dateByAddingMonths:-1 toDate:date];
+        NSInteger previousMonthDayCount = [self.tool dayCountOfMonthofDate:prevDate];
+
+        date = [tool dateByAddingDays:(indexPath.row - blankDayCount) toDate:date];
+        cell.date = date;
         
         if (indexPath.row < blankDayCount) {
             [cell setOtherMonthDate:previousMonthDayCount - blankDayCount + indexPath.row + 1];
@@ -376,6 +360,9 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         
+//        if (cell.selected) {
+//            cell.backgroundColor = [UIColor whiteColor]; // highlight selection
+//        }
         return cell;
         
     } else if (collectionView == self.weekCollectionView) {
@@ -386,9 +373,11 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         date = [tool beginningOfWeekOfDate:date];
         date = [tool dateByAddingDays:indexPath.row toDate:date];
         
-//        NSLog(@"%lu %lu %lu %lu",[tool yearOfDate:date], [tool monthOfDate:date], [tool dayOfDate:date], [tool weekdayOfDate:date]);
-        
+        cell.date = date;
         [cell setWeekDate:[tool dayOfDate:date]];
+        
+        cell.selected = YES;
+        [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
 
         return cell;
     }
@@ -411,50 +400,62 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 // 允许选中时，高亮
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s", __FUNCTION__);
     return YES;
 }
 // 高亮完成后回调
 - (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s", __FUNCTION__);
+    
 }
 // 由高亮转成非高亮完成时的回调
 - (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s", __FUNCTION__);
+
 }
+*/
 // 设置是否允许选中
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s", __FUNCTION__);
     return YES;
 }
 // 设置是否允许取消选中
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s", __FUNCTION__);
     return YES;
 }
 // 选中操作
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s", __FUNCTION__);
-    
-    UICollectionViewCell *cell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    cell.backgroundColor = [UIColor redColor];
-    [self.monthCollectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+    if (collectionView == self.monthCollectionView) {
+        SRMMonthDayCell *cell = (SRMMonthDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//        cell.backgroundColor = [UIColor redColor];
+        if ([self.tool monthOfDate:cell.date] != self.selectedMonth) {
+            [self monthScrollToDate:cell.date animated:YES];
+        } else {
+            self.date = cell.date;
+            [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:NO];
+            [self weekScrollToDate:self.date animated:NO];
+            [self MonthToWeek:nil];
+        }
+        
+    } else if (collectionView == self.weekCollectionView) {
+        SRMWeekDayCell *cell = (SRMWeekDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
+        
+        self.date = cell.date;
+        [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:YES];
+        [self monthScrollToDate:self.date animated:NO];
+    }
 }
 
 // 取消选中操作
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s", __FUNCTION__);
-    
-    UICollectionViewCell *cell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    cell.backgroundColor = [UIColor whiteColor];
+//    if (collectionView == self.monthCollectionView) {
+//        UICollectionViewCell *cell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//        cell.backgroundColor = [UIColor whiteColor];
+//    }
 }
-*/
+
 
 //- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 //{

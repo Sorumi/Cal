@@ -11,6 +11,7 @@
 @interface SRMWeekDayCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (nonatomic, strong) NSDate *date;
 
 - (void)setWeekDate:(NSInteger)day;
 

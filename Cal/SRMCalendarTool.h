@@ -12,11 +12,6 @@
 
 @property (nonatomic, strong) NSDate *minimumDate;
 @property (nonatomic, strong) NSDate *maximumDate;
-//@property (nonatomic, strong) NSDateComponents *components;
-
-//- (NSUInteger)dayCount;
-//- (NSUInteger)firstWeekDay;
-
 
 - (NSInteger)yearOfDate:(NSDate *)date;
 - (NSInteger)monthOfDate:(NSDate *)date;

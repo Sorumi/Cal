@@ -11,6 +11,7 @@
 @interface SRMMonthDayCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (nonatomic, strong) NSDate *date;
 
 - (void)setCurrentMonthDate:(NSInteger)day;
 - (void)setOtherMonthDate:(NSInteger)day;

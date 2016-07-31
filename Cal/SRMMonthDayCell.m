@@ -15,8 +15,7 @@
 - (void)awakeFromNib
 {
     
-    SRMCalendarAppearance *appearance = [[SRMCalendarAppearance alloc] init];
-    self.layer.borderColor = appearance.calendarMonthBorderColor.CGColor;
+    self.layer.borderColor = [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"CalendarMonthBorderColor"].CGColor;
     self.layer.borderWidth = 0.3;
 }
 

@@ -10,4 +10,5 @@
 
 CGFloat const SRMHeaderHeight = 60;
 CGFloat const SRMMonthViewWeekdayHeight = 40;
-
+CGFloat const SRMWeekViewWeekdayHeight = 26;
+CGFloat const SRMWeekViewDayCircleRadius = 14;

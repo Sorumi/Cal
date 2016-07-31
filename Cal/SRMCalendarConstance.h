@@ -12,6 +12,8 @@
 
 UIKIT_EXTERN CGFloat const SRMHeaderHeight;
 UIKIT_EXTERN CGFloat const SRMMonthViewWeekdayHeight;
+UIKIT_EXTERN CGFloat const SRMWeekViewWeekdayHeight;
+UIKIT_EXTERN CGFloat const SRMWeekViewDayCircleRadius;
 
 typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
     SRMCalendarMonthViewMode    = 0,

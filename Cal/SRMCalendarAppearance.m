@@ -8,6 +8,12 @@
 
 #import "SRMCalendarAppearance.h"
 
+@interface SRMCalendarAppearance ()
+
+@property (nonatomic, strong) NSMutableDictionary *privateDictionary;
+
+@end
+
 @implementation SRMCalendarAppearance
 
 #define UIColorFromRGB(rgbValue) \
@@ -15,16 +21,46 @@
                 green:((float)((rgbValue & 0x00FF00) >>  8))/255.0 \
                  blue:((float)((rgbValue & 0x0000FF) >>  0))/255.0 \
                 alpha:1.0]
-- (instancetype)init
+
++ (instancetype)appearanceDictionary
+{
+    static SRMCalendarAppearance *appearanceStore = nil;
+    
+    if (!appearanceStore) {
+        appearanceStore = [[self alloc] initPrivate];
+    }
+    return appearanceStore;
+}
+
+- (instancetype)initPrivate
 {
     self = [super init];
     if (self) {
-        self.calendarHeaderColor = UIColorFromRGB(0xD1E6E2);
-        self.calendarMonthBorderColor = UIColorFromRGB(0xD1E6E2);
-        self.monthWeekdayFontColor = UIColorFromRGB(0xDFEBE9);
-        self.weekViewDateFontColor = UIColorFromRGB(0x808080);
+        _privateDictionary = [[NSMutableDictionary alloc] initWithDictionary:@{@"CalendarHeaderColor": UIColorFromRGB(0xD1E6E2),
+                                                                               @"CalendarMonthBorderColor": UIColorFromRGB(0xD1E6E2),
+                                                                               @"MonthViewWeekdayFontColor": UIColorFromRGB(0xDFEBE9),
+                                                                               @"WeekViewWeekdayFontColor": UIColorFromRGB(0xEEEEEE),
+                                                                               @"WeekViewDateFontColor":  UIColorFromRGB(0x808080),
+                                                                               @"WeekViewDayCircleColor": UIColorFromRGB(0xECF4F2)
+                                                                               }];
     }
-    return self;
+    return  self;
+}
+
+- (NSDictionary *)appearanceDictionary
+{
+    return self.privateDictionary;
+}
+
+- (UIColor *)colorForKey:(NSString *)key
+{
+    return self.privateDictionary[key];
+}
+
+- (instancetype)init
+{
+    @throw [NSException exceptionWithName:@"Singleton" reason:@"Use +[SRMCalendarAppearance appearanceDictionary]" userInfo:nil];
+    return nil;
 }
 
 @end

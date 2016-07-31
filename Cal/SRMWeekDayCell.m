@@ -17,12 +17,9 @@
 
 - (void)setWeekDate:(NSInteger)day
 {
-    
-    SRMCalendarAppearance *appearance = [[SRMCalendarAppearance alloc] init];
-    
     self.dateLabel.font = [UIFont fontWithName:@"Avenir" size:18];
     self.dateLabel.text = [NSString stringWithFormat:@"%lu", day];
-    self.dateLabel.textColor = appearance.weekViewDateFontColor;
+    self.dateLabel.textColor = [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"WeekViewDateFontColor"];
 }
 
 @end
