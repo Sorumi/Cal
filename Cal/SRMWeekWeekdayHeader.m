@@ -24,6 +24,12 @@
 
 - (void)awakeFromNib
 {
+    CALayer *layer =  self.layer;
+    layer.shadowOffset = CGSizeMake(0, 0);
+    layer.shadowRadius = 1;
+    layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    layer.shadowOpacity = 0.3;
+    
     // weekday labels
     
     self.weekday = @[@"SUN",@"MON",@"TUE",@"WED",@"THU",@"FRI",@"SAT"];

@@ -11,12 +11,6 @@
 
 @interface SRMCalendarAppearance : NSObject
 
-//@property (nonatomic ,strong) UIColor *calendarHeaderColor;
-//@property (nonatomic ,strong) UIColor *calendarMonthBorderColor;
-//
-//@property (nonatomic ,strong) UIColor *monthWeekdayFontColor;
-//@property (nonatomic ,strong) UIColor *weekViewDateFontColor;
-
 @property (nonatomic, readonly) NSDictionary *appearanceDictionary;
 
 + (instancetype)appearanceDictionary;

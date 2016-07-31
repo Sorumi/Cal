@@ -7,6 +7,7 @@
 //
 
 
+#import <EventKit/EventKit.h>
 #import "SRMCalendarViewController.h"
 #import "SRMCalendarConstance.h"
 #import "SRMCalendarTool.h"
@@ -14,6 +15,7 @@
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
+#import "SRMEventStore.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
@@ -26,8 +28,9 @@
 @property (nonatomic) NSInteger selectedMonth;
 @property (nonatomic) NSInteger selectedDay;
 
-@property (nonatomic) SRMCalendarViewMode viewMode;
+#pragma mark - Collection
 
+@property (nonatomic) SRMCalendarViewMode viewMode;
 @property (weak, nonatomic) IBOutlet SRMCalendarHeader *headerView;
 @property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
@@ -89,8 +92,6 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthDayCell" bundle:nil] forCellWithReuseIdentifier:reuseMonthCellIdentifier];
     [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
     
-//    [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthClipboardView" bundle:nil] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseClipboardIdentifier];
-    
     self.monthCollectionView.bounces = NO;
     self.monthCollectionView.pagingEnabled = YES;
     self.monthCollectionView.showsVerticalScrollIndicator = NO;
@@ -122,6 +123,19 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // event
+    
+    [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
+    NSLog([SRMEventStore sharedStore].isGranted ? @"Yes" : @"No");
+    if ([SRMEventStore sharedStore].isGranted) {
+        [[SRMEventStore sharedStore] fetchEventsFromDate:[self.tool dateWithYear:2016 month:1 day:1]
+                                                  toDate:[self.tool dateWithYear:2016 month:12 day:31]];
+    }
+}
 
 - (void)viewDidLayoutSubviews
 {
@@ -232,14 +246,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         [self.headerView setMonthHeaderYear:year month:month];
         
     } else if (scrollView == self.weekCollectionView) {
-               
-//        NSInteger page = round(self.weekCollectionView.contentOffset.x / self.viewWidth);
-//
-//        NSDate *beginDate = [tool beginingOfWeekOfDate:tool.minimumDate];
-//        date = [tool dateByAddingWeeks:page toDate:beginDate];
-        
-//        self.date = date;
-//        [self scrollToDate:date animated:NO];
+    
     }
 
 }
@@ -359,10 +366,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-        
-//        if (cell.selected) {
-//            cell.backgroundColor = [UIColor whiteColor]; // highlight selection
-//        }
+
         return cell;
         
     } else if (collectionView == self.weekCollectionView) {
@@ -456,19 +460,6 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 //    }
 }
 
-
-//- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-//{
-//    UICollectionReusableView *reusableview = nil;
-//    
-//    if (kind == UICollectionElementKindSectionHeader)
-//    {
-//        SRMMonthClipboardView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseClipboardIdentifier forIndexPath:indexPath];
-//        reusableview = headerView;
-//    }
-//    
-//    return reusableview;
-//}
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
