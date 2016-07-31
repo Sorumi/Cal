@@ -134,8 +134,6 @@
     return components.month;
 }
 
-#pragma mark -
-
 - (NSInteger)weeksFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate
 {
     NSDateComponents *components = [self.calendar components:NSCalendarUnitWeekOfYear
@@ -214,7 +212,7 @@
     return [self.calendar dateFromComponents:components];
 }
 
-- (NSDate *)beginingOfWeekOfDate:(NSDate *)date
+- (NSDate *)beginningOfWeekOfDate:(NSDate *)date
 {
     NSDateComponents *weekdayComponents = [self.calendar components:NSCalendarUnitWeekday fromDate:date];
     NSDateComponents *components = self.components;
@@ -224,6 +222,31 @@
     beginningOfWeek = [self dateByIgnoringTimeComponentsOfDate:beginningOfWeek];
     components.day = NSIntegerMax;
     return beginningOfWeek;
+}
+
+- (BOOL)date:(NSDate *)date1 isEqualToDate:(NSDate *)date2
+{
+    NSInteger year1 = [self yearOfDate:date1];
+    NSInteger month1 = [self monthOfDate:date1];
+    NSInteger day1 = [self  dayOfDate:date1];
+    
+    NSInteger year2 = [self yearOfDate:date2];
+    NSInteger month2 = [self monthOfDate:date2];
+    NSInteger day2 = [self  dayOfDate:date2];
+    
+    if (year1 == year2 && month1 == month2 && day1 == day2) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (NSString *)dateFormat:(NSDate *)date
+{
+    NSInteger year = [self yearOfDate:date];
+    NSInteger month = [self monthOfDate:date];
+    NSInteger day = [self  dayOfDate:date];
+    return [NSString stringWithFormat:@"%lu %lu %lu", year, month, day];
 }
 
 @end

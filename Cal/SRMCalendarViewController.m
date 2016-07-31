@@ -6,12 +6,13 @@
 //  Copyright © 2016年 Sorumi. All rights reserved.
 //
 
+
 #import "SRMCalendarViewController.h"
+#import "SRMCalendarConstance.h"
+#import "SRMCalendarTool.h"
+#import "SRMCalendarHeader.h"
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
-#import "SRMMonthViewFlowLayout.h"
-#import "SRMCalendarTool.h"
-#import "SRMMonthHeaderView.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate>
 
@@ -24,7 +25,9 @@
 @property (nonatomic) NSInteger selectedMonth;
 @property (nonatomic) NSInteger selectedDay;
 
-@property (weak, nonatomic) IBOutlet SRMMonthHeaderView *headerView;
+@property (nonatomic) SRMCalendarViewMode viewMode;
+
+@property (weak, nonatomic) IBOutlet SRMCalendarHeader *headerView;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
 
@@ -32,8 +35,10 @@
 
 #pragma mark - Constraint
 
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthViewTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthWeekdayViewTop;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekViewBottom;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthHeaderTop;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekHeaderTop;
 
 @end
 
@@ -51,6 +56,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     self.selectedYear = [_tool yearOfDate:self.date];
     self.selectedMonth = [_tool monthOfDate:self.date];
     self.selectedDay = [_tool dayOfDate:self.date];
+    [self.headerView setWeekHeaderYear:self.selectedYear month:self.selectedMonth day:self.selectedDay weekday:[self.tool weekdayOfDate:self.date]];
 }
 
 #pragma mark - Life Cycle & Initialization
@@ -100,6 +106,8 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     self.weekCollectionView.delegate = self;
     self.weekCollectionView.dataSource = self;
     
+    self.viewMode = SRMCalendarMonthViewMode;
+    
     // add custum gesture
     UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(MonthToWeek:)];
     monthToWeek.direction = UISwipeGestureRecognizerDirectionUp;
@@ -113,22 +121,25 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 
 }
 
+
 - (void)viewDidLayoutSubviews
 {
+    
     if (self.isFirstTimeViewDidLayoutSubviews) {
         
-        [self scrollToDate:self.date animated:NO];
-        self.headerView.dateLabel.text = [NSString stringWithFormat:@"%ld %ld", self.selectedYear, self.selectedMonth];
+        [self monthScrollToDate:self.today animated:NO];
+        [self weekScrollToDate:self.today animated:NO];
+        [self.headerView setMonthHeaderYear:self.selectedYear month:self.selectedMonth];
         
         self.date = self.today;
-        NSLog(@"%ld %ld %ld", self.selectedYear, self.selectedMonth, self.selectedDay);
         self.isFirstTimeViewDidLayoutSubviews = NO;
+
     }
 }
 
 #pragma mark - Private
 
-- (void)scrollToDate:(NSDate *)date animated:(BOOL)animated
+- (void)monthScrollToDate:(NSDate *)date animated:(BOOL)animated
 {
     SRMCalendarTool *tool = self.tool;
     if ([tool monthsFromDate:tool.minimumDate toDate:date] > 0 && [tool monthsFromDate:date toDate:tool.maximumDate] > 0 ) {
@@ -139,33 +150,49 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
     }
 }
 
+- (void)weekScrollToDate:(NSDate *)date animated:(BOOL)animated
+{
+    SRMCalendarTool *tool = self.tool;
+    if ([tool monthsFromDate:tool.minimumDate toDate:date] > 0 && [tool monthsFromDate:date toDate:tool.maximumDate] > 0 ) {
+        date = [tool beginningOfWeekOfDate:date];
+        NSDate *beginDate = [tool beginningOfWeekOfDate:tool.minimumDate];
+        NSInteger weekCount = [tool weeksFromDate:beginDate toDate:date];
+        CGFloat offsetX = self.viewWidth * weekCount;
+        [self.weekCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:animated];
+    }
+}
+
 
 #pragma mark - Action
 
 - (IBAction)setPrevMonth:(id)sender
 {
     NSDate *date = [self.tool dateByAddingMonths:-1 toDate:self.date];
-    [self scrollToDate:date animated:YES];
+    [self monthScrollToDate:date animated:YES];
 }
 
 - (IBAction)setNextMonth:(id)sender
 {
     NSDate *date = [self.tool dateByAddingMonths:1 toDate:self.date];
-    [self scrollToDate:date animated:YES];
+    [self monthScrollToDate:date animated:YES];
 }
 
 - (void)MonthToWeek:(UISwipeGestureRecognizer *)gesture
 {
-    SRMCalendarTool *tool = self.tool;
-    NSDate *date = [tool beginingOfWeekOfDate:self.date];
-    NSDate *beginDate = [tool beginingOfWeekOfDate:tool.minimumDate];
-    NSInteger weekCount = [tool weeksFromDate:beginDate toDate:date];
-    CGFloat offsetX = self.viewWidth * weekCount;
-    [self.weekCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:NO];
+    self.viewMode = SRMCalendarWeekViewMode;
     
+    // animation
     [self.view bringSubviewToFront:self.headerView];
-    self.monthViewTop.constant = - self.monthCollectionView.frame.size.height + self.viewWidth / 7;
+    self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight + self.viewWidth / 7;
     self.weekViewBottom.constant = self.weekCollectionView.frame.size.height;
+    self.monthHeaderTop.constant = - SRMHeaderHeight;
+    self.weekHeaderTop.constant = - SRMHeaderHeight;
+
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         self.headerView.monthHeader.alpha = 0;
+                         self.headerView.weekHeader.alpha = 1;
+                     }];
     [UIView animateWithDuration:0.5
                      animations:^{
                          [self.view layoutIfNeeded];
@@ -174,15 +201,20 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 
 - (void)WeekToMonth:(UISwipeGestureRecognizer *)gesture
 {
-    SRMCalendarTool *tool = self.tool;
-
-    NSInteger monthCount = [tool monthsFromDate:tool.minimumDate toDate:self.date];
-    CGFloat offsetX = self.viewWidth * monthCount;
-    [self.monthCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:NO];
+    self.viewMode = SRMCalendarMonthViewMode;
     
+    // animation
     [self.view bringSubviewToFront:self.headerView];
-    self.monthViewTop.constant = 0;
+    self.monthWeekdayViewTop.constant = 0;
     self.weekViewBottom.constant = 0;
+    self.monthHeaderTop.constant = 0;
+    self.weekHeaderTop.constant = 0;
+
+    [UIView animateWithDuration:0.3
+                     animations:^{
+                         self.headerView.monthHeader.alpha = 1;
+                         self.headerView.weekHeader.alpha = 0;
+                     }];
     [UIView animateWithDuration:0.5
                      animations:^{
                          [self.view layoutIfNeeded];
@@ -193,6 +225,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    //month view change the label
     NSDate *date;
     SRMCalendarTool *tool = self.tool;
     
@@ -200,23 +233,84 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
     
         date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        NSInteger year = [tool yearOfDate:date];
+        NSInteger month = [tool monthOfDate:date];
+        
+
+        [self.headerView setMonthHeaderYear:year month:month];
         
     } else if (scrollView == self.weekCollectionView) {
                
-        NSInteger page = round(self.weekCollectionView.contentOffset.x / self.viewWidth);
-
-        date = [tool dateByAddingWeeks:page toDate:tool.minimumDate];
+//        NSInteger page = round(self.weekCollectionView.contentOffset.x / self.viewWidth);
+//
+//        NSDate *beginDate = [tool beginingOfWeekOfDate:tool.minimumDate];
+//        date = [tool dateByAddingWeeks:page toDate:beginDate];
         
-        [self scrollToDate:date animated:NO];
+//        self.date = date;
+//        [self scrollToDate:date animated:NO];
     }
-    
-    self.date = date;
-    self.selectedYear = [tool yearOfDate:self.date];
-    self.selectedMonth = [tool monthOfDate:self.date];
-    self.selectedDay = [tool dayOfDate:self.date];
-    
-    //    NSLog(@"%ld %ld %ld", self.selectedYear, self.selectedMonth, self.selectedDay);
-    self.headerView.dateLabel.text = [NSString stringWithFormat:@"%ld %ld", self.selectedYear, self.selectedMonth];
+
+}
+
+// use finger ti scroll
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
+
+        SRMCalendarTool *tool = self.tool;
+        NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
+        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
+
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+            [self weekScrollToDate:self.date animated:NO];
+        }
+        
+    } else if (scrollView == self.weekCollectionView && self.viewMode == SRMCalendarWeekViewMode) {
+        
+        SRMCalendarTool *tool = self.tool;
+        NSInteger page = self.weekCollectionView.contentOffset.x / self.viewWidth;
+        NSDate *currentBeginningDate = [tool beginningOfWeekOfDate:tool.minimumDate];
+        currentBeginningDate = [tool dateByAddingWeeks:page toDate:currentBeginningDate];
+        NSDate *selfBeginningDate = [tool beginningOfWeekOfDate:self.date];
+        
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+            [self monthScrollToDate:self.date animated:NO];
+        }
+    }
+
+}
+
+// use code to scroll
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
+
+        SRMCalendarTool *tool = self.tool;
+        NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
+        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
+        
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+            [self weekScrollToDate:self.date animated:NO];
+        }
+        
+    } else if (scrollView == self.weekCollectionView && self.viewMode == SRMCalendarWeekViewMode) {
+        
+        SRMCalendarTool *tool = self.tool;
+        NSInteger page = self.weekCollectionView.contentOffset.x / self.viewWidth;
+        NSDate *currentBeginningDate = [tool beginningOfWeekOfDate:tool.minimumDate];
+        currentBeginningDate = [tool dateByAddingWeeks:page toDate:currentBeginningDate];
+        NSDate *selfBeginningDate = [tool beginningOfWeekOfDate:self.date];
+        
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+            [self monthScrollToDate:self.date animated:NO];
+        }
+    }
 
 }
 
@@ -289,7 +383,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
         
         SRMCalendarTool *tool = self.tool;
         NSDate *date = [tool dateByAddingWeeks:indexPath.section toDate:tool.minimumDate];
-        date = [tool beginingOfWeekOfDate:date];
+        date = [tool beginningOfWeekOfDate:date];
         date = [tool dateByAddingDays:indexPath.row toDate:date];
         
 //        NSLog(@"%lu %lu %lu %lu",[tool yearOfDate:date], [tool monthOfDate:date], [tool dayOfDate:date], [tool weekdayOfDate:date]);

@@ -39,7 +39,10 @@
 - (NSDate *)dateByAddingDays:(NSInteger)days toDate:(NSDate *)date;
 
 - (NSDate *)beginningOfMonthOfDate:(NSDate *)date;
-- (NSDate *)beginingOfWeekOfDate:(NSDate *)date;
+- (NSDate *)beginningOfWeekOfDate:(NSDate *)date;
 - (NSInteger)dayCountOfMonthofDate:(NSDate *)date;
+
+- (BOOL)date:(NSDate *)date1 isEqualToDate:(NSDate *)date2;
+- (NSString *)dateFormat:(NSDate *)date;
 
 @end

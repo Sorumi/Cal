@@ -11,3 +11,9 @@
 #import <Foundation/Foundation.h>
 
 UIKIT_EXTERN CGFloat const SRMHeaderHeight;
+UIKIT_EXTERN CGFloat const SRMMonthViewWeekdayHeight;
+
+typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
+    SRMCalendarMonthViewMode    = 0,
+    SRMCalendarWeekViewMode     = 1
+};

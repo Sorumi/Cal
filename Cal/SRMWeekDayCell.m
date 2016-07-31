@@ -7,19 +7,22 @@
 //
 
 #import "SRMWeekDayCell.h"
+#import "SRMCalendarAppearance.h"
 
 @implementation SRMWeekDayCell
 
 - (void)awakeFromNib
 {
-    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
-    self.layer.borderWidth = 0.3;
 }
 
 - (void)setWeekDate:(NSInteger)day
 {
+    
+    SRMCalendarAppearance *appearance = [[SRMCalendarAppearance alloc] init];
+    
+    self.dateLabel.font = [UIFont fontWithName:@"Avenir" size:18];
     self.dateLabel.text = [NSString stringWithFormat:@"%lu", day];
-    self.dateLabel.textColor = [UIColor colorWithRed:51/255 green:51/255 blue:51/255 alpha:1];
+    self.dateLabel.textColor = appearance.weekViewDateFontColor;
 }
 
 @end

@@ -7,13 +7,16 @@
 //
 
 #import "SRMMonthDayCell.h"
+#import "SRMCalendarAppearance.h"
 
 @implementation SRMMonthDayCell
 
 
 - (void)awakeFromNib
 {
-    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    
+    SRMCalendarAppearance *appearance = [[SRMCalendarAppearance alloc] init];
+    self.layer.borderColor = appearance.calendarMonthBorderColor.CGColor;
     self.layer.borderWidth = 0.3;
 }
 
