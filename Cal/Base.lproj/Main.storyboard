@@ -157,27 +157,59 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PL9-2p-viR">
                                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="32" id="tcX-QE-BQU"/>
+                                                    <constraint firstAttribute="height" constant="32" id="whD-kf-sz3"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="15"/>
                                                 <state key="normal" image="next_arrow">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
-                                                <variation key="widthClass=compact"/>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="tcX-QE-BQU"/>
+                                                        <exclude reference="whD-kf-sz3"/>
+                                                    </mask>
+                                                </variation>
+                                                <variation key="widthClass=compact">
+                                                    <mask key="constraints">
+                                                        <include reference="tcX-QE-BQU"/>
+                                                        <include reference="whD-kf-sz3"/>
+                                                    </mask>
+                                                </variation>
                                                 <connections>
                                                     <action selector="setNextMonth:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="oGC-kS-D8l"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Tz-34-AxF">
                                                 <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="32" id="ABq-ur-vkb"/>
+                                                    <constraint firstAttribute="height" constant="32" id="Sqw-cr-0Ks"/>
+                                                </constraints>
                                                 <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="15"/>
                                                 <state key="normal" image="prev_arrow">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
-                                                <variation key="widthClass=compact"/>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="ABq-ur-vkb"/>
+                                                        <exclude reference="Sqw-cr-0Ks"/>
+                                                    </mask>
+                                                </variation>
+                                                <variation key="widthClass=compact">
+                                                    <mask key="constraints">
+                                                        <include reference="ABq-ur-vkb"/>
+                                                        <include reference="Sqw-cr-0Ks"/>
+                                                    </mask>
+                                                </variation>
                                                 <connections>
                                                     <action selector="setPrevMonth:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="CuK-YW-Zvd"/>
                                                 </connections>
                                             </button>
-                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2016" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1rh-H9-ezn">
+                                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.69999999999999996" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2016" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1rh-H9-ezn">
                                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -194,7 +226,7 @@
                                             <constraint firstItem="VJh-TM-Jes" firstAttribute="centerX" secondItem="Un4-vx-Tox" secondAttribute="centerX" id="Ior-D6-uGj"/>
                                             <constraint firstItem="0Tz-34-AxF" firstAttribute="centerY" secondItem="Un4-vx-Tox" secondAttribute="centerY" id="L23-Zr-Cjr"/>
                                             <constraint firstItem="0Tz-34-AxF" firstAttribute="leading" secondItem="Un4-vx-Tox" secondAttribute="leading" constant="185" id="VLD-e8-2Bt">
-                                                <variation key="widthClass=compact" constant="18"/>
+                                                <variation key="widthClass=compact" constant="10"/>
                                             </constraint>
                                             <constraint firstItem="VJh-TM-Jes" firstAttribute="top" secondItem="1rh-H9-ezn" secondAttribute="bottom" id="ZG0-ze-yeU"/>
                                             <constraint firstItem="PL9-2p-viR" firstAttribute="centerY" secondItem="Un4-vx-Tox" secondAttribute="centerY" id="b41-Qv-PR2"/>
@@ -202,7 +234,7 @@
                                                 <variation key="widthClass=compact" constant="8"/>
                                             </constraint>
                                             <constraint firstAttribute="trailing" secondItem="PL9-2p-viR" secondAttribute="trailing" constant="185" id="hK1-6g-lOK">
-                                                <variation key="widthClass=compact" constant="18"/>
+                                                <variation key="widthClass=compact" constant="10"/>
                                             </constraint>
                                             <constraint firstItem="1rh-H9-ezn" firstAttribute="centerX" secondItem="Un4-vx-Tox" secondAttribute="centerX" id="s4X-4d-X0y"/>
                                         </constraints>
@@ -332,7 +364,24 @@
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tTx-lW-Rjv">
                                         <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="32" id="DK0-dM-U26"/>
+                                            <constraint firstAttribute="width" constant="32" id="TEO-TX-cA2"/>
+                                        </constraints>
                                         <state key="normal" image="prev_arrow"/>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="DK0-dM-U26"/>
+                                                <exclude reference="TEO-TX-cA2"/>
+                                            </mask>
+                                        </variation>
+                                        <variation key="widthClass=compact">
+                                            <mask key="constraints">
+                                                <include reference="DK0-dM-U26"/>
+                                                <include reference="TEO-TX-cA2"/>
+                                            </mask>
+                                        </variation>
                                         <connections>
                                             <action selector="backToMode:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="Zxj-bp-ANu"/>
                                         </connections>
@@ -341,7 +390,7 @@
                                 <color key="backgroundColor" red="0.81960784313725488" green="0.90196078431372551" blue="0.88627450980392153" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="tTx-lW-Rjv" firstAttribute="leading" secondItem="F3C-Zo-w14" secondAttribute="trailing" constant="8" id="3Vn-uE-63B">
-                                        <variation key="widthClass=compact" constant="29"/>
+                                        <variation key="widthClass=compact" constant="0.0"/>
                                     </constraint>
                                     <constraint firstItem="aW4-Rh-QYI" firstAttribute="height" secondItem="F3C-Zo-w14" secondAttribute="height" id="6N7-9y-c3A"/>
                                     <constraint firstItem="Un4-vx-Tox" firstAttribute="height" secondItem="F3C-Zo-w14" secondAttribute="height" id="7QG-Mm-o0P"/>

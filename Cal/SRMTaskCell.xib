@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" restorationIdentifier="TaskCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="TaskCell" rowHeight="50" id="KGk-i7-Jjw" customClass="SRMTaskCell">
+            <rect key="frame" x="0.0" y="0.0" width="340" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="340" height="49.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="K7L-Ua-6G0">
+                        <rect key="frame" x="18" y="5" width="304" height="39.5"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3qa-jM-29l">
+                                <rect key="frame" x="0.0" y="0.0" width="10" height="40"/>
+                                <color key="backgroundColor" red="1" green="0.75571349189264403" blue="0.70363621916205665" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="10" id="Mw9-0r-yvW"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SWb-eh-aOO">
+                                <rect key="frame" x="20" y="9" width="20" height="22"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="task_icon_unfinished"/>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="juf-1V-BPE">
+                                <rect key="frame" x="50" y="9" width="29.5" height="20.5"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                                <color key="textColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                                <size key="shadowOffset" width="0.0" height="0.0"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="2016.7.18" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ryf-vo-22u">
+                                <rect key="frame" x="227" y="10" width="67" height="20.5"/>
+                                <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                                <color key="textColor" white="0.69999999999999996" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="3qa-jM-29l" firstAttribute="height" secondItem="K7L-Ua-6G0" secondAttribute="height" id="0RO-1o-QbG"/>
+                            <constraint firstItem="ryf-vo-22u" firstAttribute="centerY" secondItem="K7L-Ua-6G0" secondAttribute="centerY" id="6SX-KE-aAm"/>
+                            <constraint firstItem="ryf-vo-22u" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="juf-1V-BPE" secondAttribute="trailing" constant="10" id="9Rb-CG-laF"/>
+                            <constraint firstItem="juf-1V-BPE" firstAttribute="centerY" secondItem="K7L-Ua-6G0" secondAttribute="centerY" id="LA0-UR-Pgy"/>
+                            <constraint firstItem="SWb-eh-aOO" firstAttribute="centerY" secondItem="K7L-Ua-6G0" secondAttribute="centerY" id="LDL-aq-QHl"/>
+                            <constraint firstItem="juf-1V-BPE" firstAttribute="leading" secondItem="SWb-eh-aOO" secondAttribute="trailing" constant="10" id="Pap-vo-Stc"/>
+                            <constraint firstItem="SWb-eh-aOO" firstAttribute="leading" secondItem="3qa-jM-29l" secondAttribute="trailing" constant="10" id="XPt-OO-ZBB"/>
+                            <constraint firstItem="3qa-jM-29l" firstAttribute="leading" secondItem="K7L-Ua-6G0" secondAttribute="leading" id="biI-Ru-b8O"/>
+                            <constraint firstAttribute="trailing" secondItem="ryf-vo-22u" secondAttribute="trailing" constant="10" id="myn-yP-o8d"/>
+                            <constraint firstItem="3qa-jM-29l" firstAttribute="centerY" secondItem="K7L-Ua-6G0" secondAttribute="centerY" id="yuO-AH-5fe"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                <constraints>
+                    <constraint firstItem="K7L-Ua-6G0" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="j6f-wm-a2x"/>
+                    <constraint firstItem="K7L-Ua-6G0" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="jKV-G3-waM"/>
+                    <constraint firstItem="K7L-Ua-6G0" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" constant="-36" id="mIi-zm-7cv"/>
+                    <constraint firstItem="K7L-Ua-6G0" firstAttribute="height" secondItem="H2p-sc-9uM" secondAttribute="height" constant="-10" id="wu2-qr-Fsh"/>
+                </constraints>
+            </tableViewCellContentView>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <connections>
+                <outlet property="blockView" destination="K7L-Ua-6G0" id="dtb-i0-lPO"/>
+                <outlet property="categoryColorView" destination="3qa-jM-29l" id="uty-n1-K5M"/>
+                <outlet property="dateLabel" destination="ryf-vo-22u" id="iBC-dt-aQT"/>
+                <outlet property="iconImage" destination="SWb-eh-aOO" id="FAt-tw-xYA"/>
+                <outlet property="titleLable" destination="juf-1V-BPE" id="Bfg-8e-BcO"/>
+            </connections>
+            <point key="canvasLocation" x="68" y="517"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="task_icon_unfinished" width="20" height="20"/>
+    </resources>
+</document>

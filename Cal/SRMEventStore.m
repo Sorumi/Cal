@@ -11,7 +11,7 @@
 
 @interface SRMEventStore ()
 
-@property (strong, nonatomic) EKEventStore *eventStore;
+@property (nonatomic, strong) EKEventStore *eventStore;
 
 @property (nonatomic, strong) NSMutableArray<SRMEvent *> *events;
 @property (nonatomic, strong) NSArray<EKCalendar *> *calendars;

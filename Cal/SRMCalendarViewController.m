@@ -15,10 +15,13 @@
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
+#import "SRMListHeader.h"
 #import "SRMEvent.h"
 #import "SRMEventStore.h"
 #import "SRMEventCell.h"
-#import "SRMListHeader.h"
+#import "SRMTask.h"
+#import "SRMTaskStore.h"
+#import "SRMTaskCell.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -61,6 +64,7 @@
 static NSString * const reuseMonthCellIdentifier = @"MonthDateCell";
 static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 static NSString * const reuseEventCellIdentifier = @"EventCell";
+static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 #pragma mark - Properties
 
@@ -124,6 +128,7 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     
     // table
     [self.monthItemTableView registerNib:[UINib nibWithNibName:@"SRMEventCell" bundle:nil] forCellReuseIdentifier:reuseEventCellIdentifier];
+    [self.monthItemTableView registerNib:[UINib nibWithNibName:@"SRMTaskCell" bundle:nil] forCellReuseIdentifier:reuseTaskCellIdentifier];
     
     self.monthItemTableView.scrollEnabled = NO;
     
@@ -222,7 +227,7 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight + self.viewWidth / 7;
     self.weekViewBottom.constant = self.weekCollectionView.frame.size.height;
     self.weekHeaderTrailing.constant = self.headerView.weekHeader.frame.size.width;
-    self.backButtonLeading.constant = -29;
+    self.backButtonLeading.constant = -42;
 
     [UIView animateWithDuration:0.5
                           delay:0.0
@@ -260,12 +265,15 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
 
 - (void)upMonthItemTable:(UISwipeGestureRecognizer *)gesture
 {
+    if (self.viewMode != SRMCalendarMonthViewMode) {
+        return;
+    }
     self.viewMode = SRMCalendarItemViewMode;
     
     // animation
     [self.view bringSubviewToFront:self.headerView];
     self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight;
-    self.backButtonLeading.constant = -29;
+    self.backButtonLeading.constant = -42;
 
     [UIView animateWithDuration:0.5
                           delay:0.0
@@ -290,6 +298,7 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     [self.view bringSubviewToFront:self.headerView];
     self.monthWeekdayViewTop.constant = 0;
     self.backButtonLeading.constant = 0;
+    [self.monthItemTableView setContentOffset:CGPointZero  animated:YES];
     
     [UIView animateWithDuration:0.5
                           delay:0.0
@@ -324,25 +333,49 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[SRMEventStore sharedStore] allEvents].count;
+    if (section == 0) {
+         return [[SRMTaskStore sharedStore] allTasks].count;
+        
+    } else if (section == 1) {
+         return [[SRMEventStore sharedStore] allEvents].count;
+    }
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
-    NSArray *items = [[SRMEventStore sharedStore] allEvents];
-    SRMEvent *item = items[indexPath.row];
-    
-    [cell setEvent:[NSString stringWithFormat:@"%@", item.systemEvent.title]];
-    
-    return cell;
+    if (indexPath.section == 0) {
+        SRMTaskCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseTaskCellIdentifier forIndexPath:indexPath];
+        NSArray *items = [[SRMTaskStore sharedStore] allTasks];
+        SRMTask *item = items[indexPath.row];
+        
+        [cell setTask:[NSString stringWithFormat:@"%@", item.title]];
+        
+        return cell;
+        
+    } else if (indexPath.section == 1) {
+        SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
+        NSArray *items = [[SRMEventStore sharedStore] allEvents];
+        SRMEvent *item = items[indexPath.row];
+        
+        [cell setEvent:[NSString stringWithFormat:@"%@", item.systemEvent.title]];
+        
+        return cell;
+    }
+    return  nil;
 }
 
 #pragma mark - <UITableViewDelegate>
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return SRMEventCellHeight + SRMEventCellSpacing;
+    if (indexPath.section == 0) {
+        return SRMTaskCellHeight + SRMItemCellSpacing;
+
+    } else if (indexPath.section == 1) {
+        return SRMEventCellHeight + SRMItemCellSpacing;
+    }
+    return 0;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
