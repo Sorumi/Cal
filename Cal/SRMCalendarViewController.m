@@ -18,6 +18,7 @@
 #import "SRMEvent.h"
 #import "SRMEventStore.h"
 #import "SRMEventCell.h"
+#import "SRMListHeader.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -35,6 +36,7 @@
 #pragma mark - Collection
 
 @property (nonatomic) SRMCalendarViewMode viewMode;
+
 @property (weak, nonatomic) IBOutlet SRMCalendarHeader *headerView;
 @property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
@@ -50,6 +52,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthWeekdayViewTop;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekViewBottom;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekHeaderTrailing;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *backButtonLeading;
 
 @end
 
@@ -122,19 +125,23 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     // table
     [self.monthItemTableView registerNib:[UINib nibWithNibName:@"SRMEventCell" bundle:nil] forCellReuseIdentifier:reuseEventCellIdentifier];
     
-//    self.monthItemTableView.scrollEnabled = NO;
+    self.monthItemTableView.scrollEnabled = NO;
     
     self.monthItemTableView.delegate = self;
     self.monthItemTableView.dataSource = self;
     
     // add custum gesture
-    UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(MonthToWeek:)];
+    UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(monthToWeek:)];
     monthToWeek.direction = UISwipeGestureRecognizerDirectionUp;
     [self.monthCollectionView addGestureRecognizer:monthToWeek];
     
-    UISwipeGestureRecognizer *weekToMonth = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(WeekToMonth:)];
+    UISwipeGestureRecognizer *weekToMonth = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(weekToMonth:)];
     weekToMonth.direction = UISwipeGestureRecognizerDirectionDown;
     [self.weekCollectionView addGestureRecognizer:weekToMonth];
+    
+    UISwipeGestureRecognizer *showMonthItem = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(upMonthItemTable:)];
+    showMonthItem.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.monthItemTableView addGestureRecognizer:showMonthItem];
     
     self.isFirstTimeViewDidLayoutSubviews = YES;
 
@@ -163,12 +170,6 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
         
         self.date = self.today;
         self.isFirstTimeViewDidLayoutSubviews = NO;
-        
-        CALayer *layer = self.monthCollectionView.layer;
-        layer.shadowOffset = CGSizeMake(0, 0);
-        layer.shadowRadius = 1;
-        layer.shadowColor = [UIColor darkGrayColor].CGColor;
-        layer.shadowOpacity = 0.3;
 
     }
 }
@@ -212,7 +213,7 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     [self monthScrollToDate:date animated:YES];
 }
 
-- (void)MonthToWeek:(UISwipeGestureRecognizer *)gesture
+- (void)monthToWeek:(UISwipeGestureRecognizer *)gesture
 {
     self.viewMode = SRMCalendarWeekViewMode;
     
@@ -221,16 +222,20 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight + self.viewWidth / 7;
     self.weekViewBottom.constant = self.weekCollectionView.frame.size.height;
     self.weekHeaderTrailing.constant = self.headerView.weekHeader.frame.size.width;
+    self.backButtonLeading.constant = -29;
 
     [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          self.headerView.monthHeader.alpha = 0;
                          self.headerView.weekHeader.alpha = 1;
                          [self.view layoutIfNeeded];
-                     }];
+                     }
+                     completion:NULL];
 }
 
-- (void)WeekToMonth:(UISwipeGestureRecognizer *)gesture
+- (void)weekToMonth:(UISwipeGestureRecognizer *)gesture
 {
     self.viewMode = SRMCalendarMonthViewMode;
     
@@ -239,16 +244,83 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     self.monthWeekdayViewTop.constant = 0;
     self.weekViewBottom.constant = 0;
     self.weekHeaderTrailing.constant = 0;
-
+    self.backButtonLeading.constant = 0;
+    
     [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
                          self.headerView.monthHeader.alpha = 1;
                          self.headerView.weekHeader.alpha = 0;
                          [self.view layoutIfNeeded];
+                     }
+                     completion:NULL];
+
+}
+
+- (void)upMonthItemTable:(UISwipeGestureRecognizer *)gesture
+{
+    self.viewMode = SRMCalendarItemViewMode;
+    
+    // animation
+    [self.view bringSubviewToFront:self.headerView];
+    self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight;
+    self.backButtonLeading.constant = -29;
+
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.headerView.monthHeader.alpha = 0;
+                         [self.view layoutIfNeeded];
+                     }
+                     completion:^(BOOL finished){
+                         if (finished) {
+                             self.monthItemTableView.scrollEnabled = YES;
+                         }
                      }];
+
+}
+
+- (void)downMonthItemTable
+{
+    self.viewMode = SRMCalendarMonthViewMode;
+    
+    // animation
+    [self.view bringSubviewToFront:self.headerView];
+    self.monthWeekdayViewTop.constant = 0;
+    self.backButtonLeading.constant = 0;
+    
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         self.headerView.monthHeader.alpha = 1;
+                         [self.view layoutIfNeeded];
+                     }
+                     completion:^(BOOL finished){
+                         if (finished) {
+                             self.monthItemTableView.scrollEnabled = NO;
+                         }
+                     }];
+    
+}
+
+- (IBAction)backToMode:(id)sender
+{
+    if (self.viewMode == SRMCalendarWeekViewMode) {
+        [self weekToMonth:nil];
+    } else if (self.viewMode == SRMCalendarItemViewMode) {
+        [self downMonthItemTable];
+    }
 }
 
 #pragma mark - <UITableViewDateSource>
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 2;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -261,7 +333,7 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
     NSArray *items = [[SRMEventStore sharedStore] allEvents];
     SRMEvent *item = items[indexPath.row];
     
-    cell.titleLable.text = [NSString stringWithFormat:@"%@", item.systemEvent.title];
+    [cell setEvent:[NSString stringWithFormat:@"%@", item.systemEvent.title]];
     
     return cell;
 }
@@ -271,6 +343,26 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     return SRMEventCellHeight + SRMEventCellSpacing;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 50;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (tableView == self.monthItemTableView) {
+        NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"SRMListHeader" owner:self options:nil];
+        SRMListHeader *header = [array firstObject];
+        if (section == 0) {
+            header.sectionTitleLable.text = @"Tasks";
+        } else if (section == 0) {
+            header.sectionTitleLable.text = @"Events";
+        }
+            return header;
+    }
+    return nil;
 }
 
 #pragma mark - <UIScrollViewDelegate>
@@ -485,7 +577,7 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
             self.date = cell.date;
             [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:NO];
             [self weekScrollToDate:self.date animated:NO];
-            [self MonthToWeek:nil];
+            [self monthToWeek:nil];
         }
         
     } else if (collectionView == self.weekCollectionView) {

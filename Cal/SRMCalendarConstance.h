@@ -20,5 +20,6 @@ UIKIT_EXTERN CGFloat const SRMEventCellSpacing;
 
 typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
     SRMCalendarMonthViewMode    = 0,
-    SRMCalendarWeekViewMode     = 1
+    SRMCalendarWeekViewMode     = 1,
+    SRMCalendarItemViewMode     = 2
 };

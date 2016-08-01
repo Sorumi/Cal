@@ -20,11 +20,11 @@
 
 - (void)awakeFromNib
 {
+    CGFloat width = [UIScreen mainScreen].bounds.size.width/7;
+    
     // weekday labels
     
     self.weekday = @[@"SUN",@"MON",@"TUE",@"WED",@"THU",@"FRI",@"SAT"];
-    
-    CGFloat width = [UIScreen mainScreen].bounds.size.width/7;
     
     CGRect labelRect = CGRectMake(0, 0, width, SRMMonthViewWeekdayHeight);
     

@@ -11,7 +11,13 @@
 
 @interface SRMEventCell ()
 
-@property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
+@property (nonatomic) IBOutlet UIView *blockView;
+@property (nonatomic) IBOutlet UIView *categoryColorView;
+@property (nonatomic) IBOutlet UIImageView *iconImage;
+@property (weak, nonatomic) IBOutlet UILabel *titleLable;
+@property (weak, nonatomic) IBOutlet UILabel *dateLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
+@property (weak, nonatomic) IBOutlet UILabel *durationLabel;
 
 @end
 
@@ -20,40 +26,39 @@
 - (void)awakeFromNib {
     // Initialization code
     
-    self.isFirstTimeViewDidLayoutSubviews = YES;
-}
-
-- (void)layoutSubviews
-{
-    if (self.isFirstTimeViewDidLayoutSubviews) {
-        
-        CGRect frame = self.contentView.frame;
-        CGRect newFrame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(SRMEventCellSpacing/2, 20, SRMEventCellSpacing/2, 20));
-        
-        UIView *bgRect = [[UIView alloc] initWithFrame:newFrame];
-        bgRect.layer.cornerRadius = 2;
-        
-        bgRect.backgroundColor = [UIColor whiteColor];
-        
-        CALayer *layer = bgRect.layer;
-        layer.shadowOffset = CGSizeMake(0, 0);
-        layer.shadowRadius = 1;
-        layer.shadowColor = [UIColor darkGrayColor].CGColor;
-        layer.shadowOpacity = 0.3;
-        
-        [self.contentView addSubview:bgRect];
-        [self.contentView sendSubviewToBack:bgRect];
-        
-        self.isFirstTimeViewDidLayoutSubviews = NO;
-    }
-   
-
+    
+    // shadow
+    CALayer *layer = self.blockView.layer;
+    layer.shadowOffset = CGSizeMake(0, 0);
+    layer.shadowRadius = 1;
+    layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    layer.shadowOpacity = 0.3;
+    
+    layer.cornerRadius = 2;
+    
+    // category
+    UIBezierPath *maskPath;
+    maskPath = [UIBezierPath bezierPathWithRoundedRect:self.categoryColorView.bounds
+                                     byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomLeft)
+                                           cornerRadii:CGSizeMake(2, 2)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.categoryColorView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.categoryColorView.layer.mask = maskLayer;
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+#pragma mark - Public
+
+- (void)setEvent:(NSString *)title
+{
+    self.titleLable.text = title;
 }
 
 @end

@@ -18,13 +18,19 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="W6V-UO-pvr">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" style="grouped" separatorStyle="none" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="W6V-UO-pvr">
+                                <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                                <color key="backgroundColor" white="0.97999999999999998" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Id7-Tq-5dx" customClass="SRMMonthBackground">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
+                            </view>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="VGO-i8-Jik">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="300" id="KLM-m9-WCj"/>
                                     <constraint firstAttribute="width" secondItem="VGO-i8-Jik" secondAttribute="height" multiplier="7:6" id="O3v-0k-D2i"/>
@@ -38,7 +44,16 @@
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
-                                <cells/>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dxS-fN-kVK">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="KLM-m9-WCj"/>
@@ -64,7 +79,7 @@
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mwg-TE-lQa" customClass="SRMMonthWeekdayHeader">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="xhm-5j-7jG"/>
                                 </constraints>
@@ -315,9 +330,19 @@
                                             </mask>
                                         </variation>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tTx-lW-Rjv">
+                                        <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                        <state key="normal" image="prev_arrow"/>
+                                        <connections>
+                                            <action selector="backToMode:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="Zxj-bp-ANu"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.81960784313725488" green="0.90196078431372551" blue="0.88627450980392153" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="tTx-lW-Rjv" firstAttribute="leading" secondItem="F3C-Zo-w14" secondAttribute="trailing" constant="8" id="3Vn-uE-63B">
+                                        <variation key="widthClass=compact" constant="29"/>
+                                    </constraint>
                                     <constraint firstItem="aW4-Rh-QYI" firstAttribute="height" secondItem="F3C-Zo-w14" secondAttribute="height" id="6N7-9y-c3A"/>
                                     <constraint firstItem="Un4-vx-Tox" firstAttribute="height" secondItem="F3C-Zo-w14" secondAttribute="height" id="7QG-Mm-o0P"/>
                                     <constraint firstItem="Un4-vx-Tox" firstAttribute="centerY" secondItem="F3C-Zo-w14" secondAttribute="centerY" id="7y2-6y-1bg"/>
@@ -326,6 +351,7 @@
                                         <variation key="widthClass=compact" constant="60"/>
                                     </constraint>
                                     <constraint firstItem="Un4-vx-Tox" firstAttribute="width" secondItem="F3C-Zo-w14" secondAttribute="width" id="Gkj-gX-Wbb"/>
+                                    <constraint firstItem="tTx-lW-Rjv" firstAttribute="centerY" secondItem="F3C-Zo-w14" secondAttribute="centerY" id="eUb-f1-0qj"/>
                                     <constraint firstItem="aW4-Rh-QYI" firstAttribute="centerY" secondItem="F3C-Zo-w14" secondAttribute="centerY" id="nl7-Y0-ksC"/>
                                     <constraint firstItem="aW4-Rh-QYI" firstAttribute="trailing" secondItem="F3C-Zo-w14" secondAttribute="leading" id="yT5-tr-8cR"/>
                                 </constraints>
@@ -333,6 +359,7 @@
                                     <mask key="subviews">
                                         <exclude reference="Un4-vx-Tox"/>
                                         <exclude reference="aW4-Rh-QYI"/>
+                                        <exclude reference="tTx-lW-Rjv"/>
                                     </mask>
                                     <mask key="constraints">
                                         <exclude reference="DvZ-3w-UUU"/>
@@ -343,12 +370,15 @@
                                         <exclude reference="6N7-9y-c3A"/>
                                         <exclude reference="nl7-Y0-ksC"/>
                                         <exclude reference="yT5-tr-8cR"/>
+                                        <exclude reference="3Vn-uE-63B"/>
+                                        <exclude reference="eUb-f1-0qj"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
                                     <mask key="subviews">
                                         <include reference="Un4-vx-Tox"/>
                                         <include reference="aW4-Rh-QYI"/>
+                                        <include reference="tTx-lW-Rjv"/>
                                     </mask>
                                     <mask key="constraints">
                                         <include reference="DvZ-3w-UUU"/>
@@ -359,6 +389,8 @@
                                         <include reference="6N7-9y-c3A"/>
                                         <include reference="nl7-Y0-ksC"/>
                                         <include reference="yT5-tr-8cR"/>
+                                        <include reference="3Vn-uE-63B"/>
+                                        <include reference="eUb-f1-0qj"/>
                                     </mask>
                                 </variation>
                                 <connections>
@@ -374,7 +406,9 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="W6V-UO-pvr" firstAttribute="top" secondItem="VGO-i8-Jik" secondAttribute="bottom" id="3G5-d3-s4l"/>
+                            <constraint firstItem="W6V-UO-pvr" firstAttribute="top" secondItem="VGO-i8-Jik" secondAttribute="bottom" id="3G5-d3-s4l">
+                                <variation key="widthClass=compact" constant="0.0"/>
+                            </constraint>
                             <constraint firstItem="jCc-tS-paE" firstAttribute="top" secondItem="W6V-UO-pvr" secondAttribute="bottom" id="471-4P-Qdz"/>
                             <constraint firstItem="VGO-i8-Jik" firstAttribute="top" secondItem="mwg-TE-lQa" secondAttribute="bottom" id="9We-yC-C9q"/>
                             <constraint firstItem="F3C-Zo-w14" firstAttribute="top" secondItem="QqA-qU-dd9" secondAttribute="top" id="AXO-VU-0cB"/>
@@ -382,23 +416,28 @@
                             <constraint firstItem="JLH-H6-jJH" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="F2P-ph-MwJ"/>
                             <constraint firstItem="VGO-i8-Jik" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="Piq-FN-FnB"/>
                             <constraint firstItem="W6V-UO-pvr" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="T3z-7L-NNA"/>
+                            <constraint firstItem="Id7-Tq-5dx" firstAttribute="width" secondItem="VGO-i8-Jik" secondAttribute="width" id="XdA-WF-URB"/>
                             <constraint firstItem="VGO-i8-Jik" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="XqT-L4-Mv9"/>
                             <constraint firstItem="mwg-TE-lQa" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="atQ-nH-wOs"/>
                             <constraint firstItem="dpK-xs-UIc" firstAttribute="bottom" secondItem="F3C-Zo-w14" secondAttribute="bottom" constant="120" id="e74-X1-NxH">
                                 <variation key="widthClass=compact" constant="0.0"/>
                             </constraint>
+                            <constraint firstItem="Id7-Tq-5dx" firstAttribute="top" secondItem="VGO-i8-Jik" secondAttribute="top" id="i5C-4x-Vq3"/>
                             <constraint firstItem="dpK-xs-UIc" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="iJM-Nv-60o"/>
                             <constraint firstItem="F3C-Zo-w14" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="iL9-wf-GfH"/>
+                            <constraint firstItem="Id7-Tq-5dx" firstAttribute="height" secondItem="VGO-i8-Jik" secondAttribute="height" id="lFC-7K-9tk"/>
                             <constraint firstItem="mwg-TE-lQa" firstAttribute="top" secondItem="F3C-Zo-w14" secondAttribute="bottom" id="oBs-jk-QQj"/>
                             <constraint firstItem="mwg-TE-lQa" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="rg7-yI-PLJ"/>
                             <constraint firstItem="JLH-H6-jJH" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="rx8-K7-k7B"/>
                             <constraint firstItem="F3C-Zo-w14" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="vso-go-Eix"/>
                             <constraint firstItem="JLH-H6-jJH" firstAttribute="top" secondItem="dpK-xs-UIc" secondAttribute="top" id="wZJ-9w-Ona"/>
+                            <constraint firstItem="Id7-Tq-5dx" firstAttribute="centerX" secondItem="QqA-qU-dd9" secondAttribute="centerX" id="yN8-fQ-3Av"/>
                             <constraint firstItem="dpK-xs-UIc" firstAttribute="width" secondItem="QqA-qU-dd9" secondAttribute="width" id="zCM-UV-ogD"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="W6V-UO-pvr"/>
+                                <exclude reference="Id7-Tq-5dx"/>
                                 <exclude reference="VGO-i8-Jik"/>
                                 <exclude reference="mwg-TE-lQa"/>
                                 <exclude reference="JLH-H6-jJH"/>
@@ -421,6 +460,10 @@
                                 <exclude reference="9We-yC-C9q"/>
                                 <exclude reference="Piq-FN-FnB"/>
                                 <exclude reference="XqT-L4-Mv9"/>
+                                <exclude reference="XdA-WF-URB"/>
+                                <exclude reference="i5C-4x-Vq3"/>
+                                <exclude reference="lFC-7K-9tk"/>
+                                <exclude reference="yN8-fQ-3Av"/>
                                 <exclude reference="3G5-d3-s4l"/>
                                 <exclude reference="DOb-7I-83u"/>
                                 <exclude reference="T3z-7L-NNA"/>
@@ -430,6 +473,7 @@
                         <variation key="widthClass=compact">
                             <mask key="subviews">
                                 <include reference="W6V-UO-pvr"/>
+                                <include reference="Id7-Tq-5dx"/>
                                 <include reference="VGO-i8-Jik"/>
                                 <include reference="mwg-TE-lQa"/>
                                 <include reference="JLH-H6-jJH"/>
@@ -452,6 +496,10 @@
                                 <include reference="9We-yC-C9q"/>
                                 <include reference="Piq-FN-FnB"/>
                                 <include reference="XqT-L4-Mv9"/>
+                                <include reference="XdA-WF-URB"/>
+                                <include reference="i5C-4x-Vq3"/>
+                                <include reference="lFC-7K-9tk"/>
+                                <include reference="yN8-fQ-3Av"/>
                                 <include reference="3G5-d3-s4l"/>
                                 <include reference="DOb-7I-83u"/>
                                 <include reference="T3z-7L-NNA"/>
@@ -461,6 +509,7 @@
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="backButtonLeading" destination="3Vn-uE-63B" id="B12-Zz-c7X"/>
                         <outlet property="headerView" destination="F3C-Zo-w14" id="sSX-HW-Ne7"/>
                         <outlet property="monthCollectionView" destination="VGO-i8-Jik" id="vXz-qg-NY9"/>
                         <outlet property="monthItemTableView" destination="W6V-UO-pvr" id="bqb-lw-lXF"/>

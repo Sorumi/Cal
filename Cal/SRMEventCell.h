@@ -10,6 +10,6 @@
 
 @interface SRMEventCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UILabel *titleLable;
+- (void)setEvent:(NSString *)title;
 
 @end
