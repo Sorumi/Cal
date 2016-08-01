@@ -40,7 +40,7 @@
                                                                                @"CalendarMonthBorderColor": UIColorFromRGB(0xD1E6E2),
                                                                                @"MonthViewWeekdayFontColor": UIColorFromRGB(0xDFEBE9),
                                                                                @"WeekViewWeekdayFontColor": UIColorFromRGB(0xEEEEEE),
-                                                                               @"WeekViewDateFontColor":  UIColorFromRGB(0x808080),
+                                                                               @"WeekViewDateFontColor":  UIColorFromRGB(0x404040),
                                                                                @"WeekViewDayCircleColor": UIColorFromRGB(0xECF4F2)
                                                                                }];
     }

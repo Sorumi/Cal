@@ -49,7 +49,6 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *monthItemTableView;
 
-
 #pragma mark - Constraint
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthWeekdayViewTop;
@@ -68,14 +67,22 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 #pragma mark - Properties
 
-
 - (void)setDate:(NSDate *)date
 {
     _date = date;
-    self.selectedYear = [_tool yearOfDate:self.date];
-    self.selectedMonth = [_tool monthOfDate:self.date];
-    self.selectedDay = [_tool dayOfDate:self.date];
+    _selectedYear = [_tool yearOfDate:_date];
+    _selectedMonth = [_tool monthOfDate:_date];
+    _selectedDay = [_tool dayOfDate:_date];
     [self.headerView setWeekHeaderYear:self.selectedYear month:self.selectedMonth day:self.selectedDay weekday:[self.tool weekdayOfDate:self.date]];
+    
+    if (self.viewMode == SRMCalendarMonthViewMode) {
+        [self weekScrollToDate:self.date animated:NO];
+        [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:NO];
+        
+    } else if (self.viewMode == SRMCalendarWeekViewMode) {
+        [self monthScrollToDate:self.date animated:NO];
+        [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:YES];
+    }
 }
 
 #pragma mark - Life Cycle & Initialization
@@ -92,8 +99,11 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 - (void) initialize
 {
     _tool = [[SRMCalendarTool alloc] init];
-    self.date = [NSDate date];
-    self.today = self.date;
+    _date = [NSDate date];
+    _today = self.date;
+    _selectedYear = [_tool yearOfDate:_date];
+    _selectedMonth = [_tool monthOfDate:_date];
+    _selectedDay = [_tool dayOfDate:_date];
 }
 
 - (void)viewDidLoad {
@@ -144,9 +154,9 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     weekToMonth.direction = UISwipeGestureRecognizerDirectionDown;
     [self.weekCollectionView addGestureRecognizer:weekToMonth];
     
-    UISwipeGestureRecognizer *showMonthItem = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(upMonthItemTable:)];
-    showMonthItem.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.monthItemTableView addGestureRecognizer:showMonthItem];
+    UISwipeGestureRecognizer *upMonthItem = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(upMonthItemTable:)];
+    upMonthItem.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.monthItemTableView addGestureRecognizer:upMonthItem];
     
     self.isFirstTimeViewDidLayoutSubviews = YES;
 
@@ -218,8 +228,21 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     [self monthScrollToDate:date animated:YES];
 }
 
+- (IBAction)backToToday:(id)sender
+{
+    self.date = self.today;
+    if (self.viewMode == SRMCalendarMonthViewMode) {
+        [self monthScrollToDate:self.date animated:YES];
+    } else if (self.viewMode == SRMCalendarWeekViewMode) {
+        [self weekScrollToDate:self.date animated:YES];
+    }
+}
+
 - (void)monthToWeek:(UISwipeGestureRecognizer *)gesture
 {
+    if (self.viewMode != SRMCalendarMonthViewMode) {
+        return;
+    }
     self.viewMode = SRMCalendarWeekViewMode;
     
     // animation
@@ -242,6 +265,9 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void)weekToMonth:(UISwipeGestureRecognizer *)gesture
 {
+    if (self.viewMode != SRMCalendarWeekViewMode) {
+        return;
+    }
     self.viewMode = SRMCalendarMonthViewMode;
     
     // animation
@@ -292,6 +318,9 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void)downMonthItemTable
 {
+    if (self.viewMode != SRMCalendarItemViewMode) {
+        return;
+    }
     self.viewMode = SRMCalendarMonthViewMode;
     
     // animation
@@ -310,6 +339,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
                      completion:^(BOOL finished){
                          if (finished) {
                              self.monthItemTableView.scrollEnabled = NO;
+                             NSLog(@"%f", self.monthItemTableView.contentOffset.y);
                          }
                      }];
     
@@ -412,7 +442,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
         NSInteger year = [tool yearOfDate:date];
         NSInteger month = [tool monthOfDate:date];
-        
 
         [self.headerView setMonthHeaderYear:year month:month];
         
@@ -434,7 +463,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
         if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
             self.date = currentBeginningDate;
-            [self weekScrollToDate:self.date animated:NO];
+
         }
         
     } else if (scrollView == self.weekCollectionView && self.viewMode == SRMCalendarWeekViewMode) {
@@ -447,8 +476,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         
         if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
             self.date = currentBeginningDate;
-            [self.weekWeekdayHeader setCirclePos:[tool weekdayOfDate:self.date] animated:YES];
-            [self monthScrollToDate:self.date animated:NO];
         }
     }
 
@@ -466,7 +493,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         
         if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
             self.date = currentBeginningDate;
-            [self weekScrollToDate:self.date animated:NO];
         }
         
     }
@@ -603,22 +629,20 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 {
     if (collectionView == self.monthCollectionView) {
         SRMMonthDayCell *cell = (SRMMonthDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//        cell.backgroundColor = [UIColor redColor];
+
         if ([self.tool monthOfDate:cell.date] != self.selectedMonth) {
             [self monthScrollToDate:cell.date animated:YES];
+            self.date = cell.date;
+            
         } else {
             self.date = cell.date;
-            [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:NO];
-            [self weekScrollToDate:self.date animated:NO];
             [self monthToWeek:nil];
         }
         
     } else if (collectionView == self.weekCollectionView) {
         SRMWeekDayCell *cell = (SRMWeekDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
-        
         self.date = cell.date;
-        [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:YES];
-        [self monthScrollToDate:self.date animated:NO];
+
     }
 }
 
