@@ -15,7 +15,8 @@
     self = [super init];
     if (self) {
         self.systemEvent = systemEvent;
-        self.tagNum = 0;
+        self.systemEventIdentifer = systemEvent.eventIdentifier;
+        self.iconNum = 0;
     }
     return self;
 }

@@ -48,6 +48,7 @@
 #pragma mark - Table
 
 @property (weak, nonatomic) IBOutlet UITableView *monthItemTableView;
+@property (nonatomic) CGFloat lastContentOffset;
 
 #pragma mark - Constraint
 
@@ -55,6 +56,9 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekViewBottom;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekHeaderTrailing;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backButtonLeading;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthItemTableTop;
+
 
 @end
 
@@ -249,6 +253,8 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     [self.view bringSubviewToFront:self.headerView];
     self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight + self.viewWidth / 7;
     self.weekViewBottom.constant = self.weekCollectionView.frame.size.height;
+    self.monthItemTableTop.constant = self.view.frame.size.height - SRMHeaderHeight-self.viewWidth / 7;
+    
     self.weekHeaderTrailing.constant = self.headerView.weekHeader.frame.size.width;
     self.backButtonLeading.constant = -42;
 
@@ -274,6 +280,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     [self.view bringSubviewToFront:self.headerView];
     self.monthWeekdayViewTop.constant = 0;
     self.weekViewBottom.constant = 0;
+    self.monthItemTableTop.constant = 0;
     self.weekHeaderTrailing.constant = 0;
     self.backButtonLeading.constant = 0;
     
@@ -339,7 +346,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
                      completion:^(BOOL finished){
                          if (finished) {
                              self.monthItemTableView.scrollEnabled = NO;
-                             NSLog(@"%f", self.monthItemTableView.contentOffset.y);
                          }
                      }];
     
@@ -349,6 +355,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 {
     if (self.viewMode == SRMCalendarWeekViewMode) {
         [self weekToMonth:nil];
+        
     } else if (self.viewMode == SRMCalendarItemViewMode) {
         [self downMonthItemTable];
     }
@@ -379,7 +386,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         NSArray *items = [[SRMTaskStore sharedStore] allTasks];
         SRMTask *item = items[indexPath.row];
         
-        [cell setTask:[NSString stringWithFormat:@"%@", item.title]];
+        [cell setTask:item];
         
         return cell;
         
@@ -388,7 +395,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         NSArray *items = [[SRMEventStore sharedStore] allEvents];
         SRMEvent *item = items[indexPath.row];
         
-        [cell setEvent:[NSString stringWithFormat:@"%@", item.systemEvent.title]];
+        [cell setEvent:item];
         
         return cell;
     }
@@ -420,7 +427,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         SRMListHeader *header = [array firstObject];
         if (section == 0) {
             header.sectionTitleLable.text = @"Tasks";
-        } else if (section == 0) {
+        } else if (section == 1) {
             header.sectionTitleLable.text = @"Events";
         }
             return header;
@@ -430,13 +437,23 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 #pragma mark - <UIScrollViewDelegate>
 
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (scrollView == self.monthItemTableView) {
+        if (self.lastContentOffset == scrollView.contentOffset.y && scrollView.contentOffset.y == 0) {
+            [self downMonthItemTable];
+        }
+        self.lastContentOffset = scrollView.contentOffset.y;
+    }
+}
+
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     //month view change the label
-    NSDate *date;
-    SRMCalendarTool *tool = self.tool;
-    
     if (scrollView == self.monthCollectionView) {
+        NSDate *date;
+        SRMCalendarTool *tool = self.tool;
         NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
     
         date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
@@ -453,7 +470,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 // use finger ti scroll
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{
+{    
     if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
 
         SRMCalendarTool *tool = self.tool;

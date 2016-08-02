@@ -24,7 +24,7 @@
     
     CGContextSetLineWidth(context, 1.0f);
     
-    CGContextMoveToPoint(context, 16.0f, 40.0f);
+    CGContextMoveToPoint(context, 17.0f, 40.0f);
     CGContextAddLineToPoint(context, 66.0f, 40.0f);
     
     CGContextStrokePath(context);

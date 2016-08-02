@@ -59,6 +59,7 @@
         
         task = [[SRMTask alloc] initWithTitle:@"Do design Do design Do design Do design Do design Do design"];
         [_tasks addObject:task];
+        task.finishDate = [NSDate date];
         
         task = [[SRMTask alloc] initWithTitle:@"Programming Programming Programming Programming Programming Programming" dueDate:[NSDate date]];
         [_tasks addObject:task];

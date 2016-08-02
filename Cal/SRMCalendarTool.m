@@ -152,6 +152,24 @@
     return components.day;
 }
 
+- (NSInteger)hoursFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate
+{
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitHour
+                                                    fromDate:fromDate
+                                                      toDate:toDate
+                                                     options:0];
+    return components.hour;
+}
+
+- (NSInteger)minutesFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate
+{
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitHour | NSCalendarUnitMinute
+                                                    fromDate:fromDate
+                                                      toDate:toDate
+                                                     options:0];
+    return components.minute;
+}
+
 #pragma mark - Adding
 
 - (NSDate *)dateByAddingYears:(NSInteger)years toDate:(NSDate *)date
@@ -246,7 +264,7 @@
     NSInteger year = [self yearOfDate:date];
     NSInteger month = [self monthOfDate:date];
     NSInteger day = [self  dayOfDate:date];
-    return [NSString stringWithFormat:@"%lu %lu %lu", year, month, day];
+    return [NSString stringWithFormat:@"%lu.%lu.%lu", year, month, day];
 }
 
 @end

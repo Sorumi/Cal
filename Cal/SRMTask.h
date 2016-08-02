@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) NSString *taskIdentifier;
 @property (nonatomic, strong) NSString *title;
-@property (nonatomic) NSInteger tagNum;
+@property (nonatomic) NSInteger colorNum;
 @property (nonatomic, strong) NSDate *dueDate;
 @property (nonatomic, strong) NSDate *finishDate;
 

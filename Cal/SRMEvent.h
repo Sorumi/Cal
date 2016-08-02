@@ -12,7 +12,8 @@
 @interface SRMEvent : NSObject
 
 @property (nonatomic, strong) EKEvent *systemEvent;
-@property (nonatomic) NSInteger tagNum;
+@property (nonatomic, strong) NSString *systemEventIdentifer;
+@property (nonatomic) NSInteger iconNum;
 
 - (instancetype)initWithSystemEvent:(EKEvent *)systemEvent;
 @end

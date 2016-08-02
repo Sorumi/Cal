@@ -6,13 +6,13 @@
 //  Copyright © 2016年 Sorumi. All rights reserved.
 //
 
-#import "SRMAddViewController.h"
+#import "SRMEditViewController.h"
 
-@interface SRMAddViewController ()
+@interface SRMEditViewController ()
 
 @end
 
-@implementation SRMAddViewController
+@implementation SRMEditViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

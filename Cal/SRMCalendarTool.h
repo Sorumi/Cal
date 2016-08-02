@@ -27,6 +27,8 @@
 - (NSInteger)monthsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
 - (NSInteger)weeksFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
 - (NSInteger)daysFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
+- (NSInteger)hoursFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
+- (NSInteger)minutesFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
 
 - (NSDate *)dateByAddingYears:(NSInteger)years toDate:(NSDate *)date;
 - (NSDate *)dateByAddingMonths:(NSInteger)months toDate:(NSDate *)date;

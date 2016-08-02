@@ -6,8 +6,11 @@
 //  Copyright © 2016年 Sorumi. All rights reserved.
 //
 
+#import <EventKit/EventKit.h>
+#import "SRMEvent.h"
 #import "SRMEventCell.h"
 #import "SRMCalendarConstance.h"
+#import "SRMCalendarTool.h"
 
 @interface SRMEventCell ()
 
@@ -32,19 +35,7 @@
     layer.shadowRadius = 0.5;
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.3;
-    
-//    layer.cornerRadius = 2;
-//    
-//    // category
-//    UIBezierPath *maskPath;
-//    maskPath = [UIBezierPath bezierPathWithRoundedRect:self.categoryColorView.bounds
-//                                     byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomLeft)
-//                                           cornerRadii:CGSizeMake(2, 2)];
-//    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-//    maskLayer.frame = self.categoryColorView.bounds;
-//    maskLayer.path = maskPath.CGPath;
-//    self.categoryColorView.layer.mask = maskLayer;
-    
+
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -55,9 +46,33 @@
 
 #pragma mark - Public
 
-- (void)setEvent:(NSString *)title
+- (void)setEvent:(SRMEvent *)event
 {
-    self.titleLable.text = title;
+    SRMCalendarTool *tool = [[SRMCalendarTool alloc] init];
+    
+    EKEvent *systemEvent = event.systemEvent;
+    self.titleLable.text = systemEvent.title;
+    self.categoryColorView.backgroundColor = [UIColor colorWithCGColor:systemEvent.calendar.CGColor];
+    
+    if (!systemEvent.allDay) {
+        self.dateLabel.hidden = NO;
+        self.dateLabel.text = [tool dateFormat:systemEvent.startDate];
+        
+        NSInteger hour = [tool hoursFromDate:systemEvent.startDate toDate:systemEvent.endDate];
+        NSInteger minute = [tool minutesFromDate:systemEvent.startDate toDate:systemEvent.endDate];
+        NSString *hourStr = hour == 0 ? @"" : [NSString stringWithFormat:@"%luh", hour];
+        NSString *minuteStr = minute == 0 ? @"" : [NSString stringWithFormat:@"%lum", minute];
+        self.durationLabel.text = [hourStr stringByAppendingString:minuteStr];
+        
+    } else {
+        self.dateLabel.hidden = YES;
+        self.timeLabel.text = [tool dateFormat:systemEvent.startDate];
+        NSInteger day = [tool daysFromDate:systemEvent.startDate toDate:systemEvent.endDate] + 1;
+        self.durationLabel.text = [NSString stringWithFormat:@"%lud", day];
+    }
+    
+    
 }
+
 
 @end

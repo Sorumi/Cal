@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class SRMTask;
+
 @interface SRMTaskCell : UITableViewCell
 
-- (void)setTask:(NSString *)title;
+- (void)setTask:(SRMTask *)task;
 
 @end

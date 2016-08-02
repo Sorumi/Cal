@@ -7,6 +7,8 @@
 //
 
 #import "SRMTaskCell.h"
+#import "SRMTask.h"
+#import "SRMCalendarTool.h"
 
 @interface SRMTaskCell ()
 
@@ -31,18 +33,6 @@
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.3;
     
-//    layer.cornerRadius = 2;
-//    
-//    // category
-//    UIBezierPath *maskPath;
-//    maskPath = [UIBezierPath bezierPathWithRoundedRect:self.categoryColorView.bounds
-//                                     byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerBottomLeft)
-//                                           cornerRadii:CGSizeMake(2, 2)];
-//    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
-//    maskLayer.frame = self.categoryColorView.bounds;
-//    maskLayer.path = maskPath.CGPath;
-//    self.categoryColorView.layer.mask = maskLayer;
-
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -51,9 +41,13 @@
     // Configure the view for the selected state
 }
 
-- (void)setTask:(NSString *)title
+- (void)setTask:(SRMTask *)task
 {
-    self.titleLable.text = title;
+    SRMCalendarTool *tool = [[SRMCalendarTool alloc] init];
+    self.titleLable.text = task.title;
+    self.dateLabel.text = task.dueDate == nil ? @"" : [tool dateFormat:task.dueDate];
+
+    self.iconImage.imageView.image = task.finishDate == nil ? [UIImage imageNamed:@"task_icon_unfinished"] : [UIImage imageNamed:@"task_icon_finished"];
 }
 
 @end

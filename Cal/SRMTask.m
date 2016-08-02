@@ -20,7 +20,7 @@
     self = [super init];
     if (self) {
         self.title = title;
-        self.tagNum = 0;
+        self.colorNum = 0;
         self.dueDate = dueDate;
         
         NSUUID *uuid = [[NSUUID alloc] init];

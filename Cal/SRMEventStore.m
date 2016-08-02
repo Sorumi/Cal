@@ -121,6 +121,8 @@
 - (void)addSystemEvent:(EKEvent *)systemEvent;
 {
     SRMEvent *event = [[SRMEvent alloc] initWithSystemEvent:systemEvent];
+//    systemEvent.recurrenceRules[0].
+    
     [self.events addObject:event];
 
 }

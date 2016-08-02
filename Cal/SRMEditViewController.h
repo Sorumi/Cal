@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SRMAddViewController : UIViewController
+@interface SRMEditViewController : UIViewController
 
 @end
