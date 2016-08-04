@@ -8,10 +8,10 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MonthDateCell" id="HXr-YZ-Jtk" customClass="SRMMonthDayCell">
-            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+            <rect key="frame" x="0.0" y="0.0" width="50.5" height="50"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                <rect key="frame" x="0.0" y="0.0" width="50.5" height="50"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="date" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zGM-3c-7Hb">
@@ -23,15 +23,16 @@
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="zGM-3c-7Hb" firstAttribute="top" secondItem="HXr-YZ-Jtk" secondAttribute="top" constant="8" id="rZR-gZ-REI"/>
                 <constraint firstItem="zGM-3c-7Hb" firstAttribute="leading" secondItem="HXr-YZ-Jtk" secondAttribute="leading" constant="8" id="ukd-zP-ww7"/>
             </constraints>
+            <size key="customSize" width="50.5" height="50"/>
             <connections>
                 <outlet property="dateLabel" destination="zGM-3c-7Hb" id="joU-Zc-j9a"/>
             </connections>
-            <point key="canvasLocation" x="211" y="317"/>
+            <point key="canvasLocation" x="211.25" y="317"/>
         </collectionViewCell>
     </objects>
 </document>

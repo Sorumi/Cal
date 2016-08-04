@@ -40,6 +40,9 @@
 - (NSInteger)dayCountOfMonthofDate:(NSDate *)date;
 
 - (BOOL)date:(NSDate *)date1 isEqualToDate:(NSDate *)date2;
+
 - (NSString *)dateFormat:(NSDate *)date;
+- (NSString *)timeFormat:(NSDate *)date;
+- (NSString *)weekdayFormat:(NSDate *)date;
 
 @end

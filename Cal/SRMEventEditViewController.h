@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "StaticDataTableViewController.h"
 
-@interface SRMEditViewController : UIViewController
+@interface SRMEventEditViewController : StaticDataTableViewController
 
 @end

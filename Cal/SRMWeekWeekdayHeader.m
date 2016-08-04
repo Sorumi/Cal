@@ -44,7 +44,7 @@
         label.text = self.weekday[i];
         label.textAlignment = NSTextAlignmentCenter;
         label.textColor = [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"WeekViewWeekdayFontColor"];
-        label.font = [UIFont fontWithName:@"Avenir" size:12];
+        label.font = [UIFont fontWithName:@"Avenir" size:10];
         [self addSubview:label];
         labelRect.origin.x += width;
     }

@@ -1,3 +1,3 @@
 # Cal
 
-A Simple Calendar for iOS
+A calendar app for iOS

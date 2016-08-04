@@ -12,6 +12,7 @@
 
 @property (nonatomic, strong) NSCalendar *calendar;
 @property (nonatomic, strong) NSDateComponents *components;
+@property (nonatomic, strong) NSArray *chineseWeekday;
 
 @end
 
@@ -49,6 +50,14 @@
         _components = [[NSDateComponents alloc] init];
     }
     return _components;
+}
+
+- (NSArray *)chineseWeekday
+{
+    if (!_chineseWeekday) {
+        _chineseWeekday = @[@"星期日", @"星期一", @"星期二", @"星期三", @"星期四", @"星期五", @"星期六"];
+    }
+    return _chineseWeekday;
 }
 
 #pragma mark -
@@ -261,10 +270,39 @@
 
 - (NSString *)dateFormat:(NSDate *)date
 {
-    NSInteger year = [self yearOfDate:date];
-    NSInteger month = [self monthOfDate:date];
-    NSInteger day = [self  dayOfDate:date];
-    return [NSString stringWithFormat:@"%lu.%lu.%lu", year, month, day];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+
+    if ([NSLocalizedString(@"local", nil) isEqual: @"en"]) {
+        [formatter setDateFormat:@"d MMM YYYY"];
+        
+    } else if ([NSLocalizedString(@"local", nil) isEqual: @"cs"]) {
+        [formatter setDateFormat:@"YYYY年M月d日"];
+    }
+    
+    return [formatter stringFromDate:date];
+}
+
+- (NSString *)timeFormat:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    
+    [formatter setDateFormat:@"HH:mm"];
+
+    return [formatter stringFromDate:date];
+}
+
+- (NSString *)weekdayFormat:(NSDate *)date
+{
+
+    if ([NSLocalizedString(@"local", nil) isEqual: @"cs"]) {
+        return self.chineseWeekday[[self weekdayOfDate:date]];
+        
+    } else {
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"EEEE"];
+        return [formatter stringFromDate:date];
+    }
+    
 }
 
 @end

@@ -57,6 +57,7 @@
     if (!systemEvent.allDay) {
         self.dateLabel.hidden = NO;
         self.dateLabel.text = [tool dateFormat:systemEvent.startDate];
+        self.timeLabel.text = [tool timeFormat:systemEvent.startDate];
         
         NSInteger hour = [tool hoursFromDate:systemEvent.startDate toDate:systemEvent.endDate];
         NSInteger minute = [tool minutesFromDate:systemEvent.startDate toDate:systemEvent.endDate];

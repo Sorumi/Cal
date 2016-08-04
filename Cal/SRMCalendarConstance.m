@@ -9,6 +9,7 @@
 #import "SRMCalendarConstance.h"
 
 CGFloat const SRMHeaderHeight = 60;
+CGFloat const SRMToolbarHeight = 40;
 CGFloat const SRMMonthViewWeekdayHeight = 40;
 CGFloat const SRMWeekViewWeekdayHeight = 26;
 CGFloat const SRMWeekViewDayCircleRadius = 14;

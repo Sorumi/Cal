@@ -43,7 +43,7 @@
             <connections>
                 <outlet property="sectionTitleLable" destination="xSq-SY-kCq" id="T2N-XJ-BdT"/>
             </connections>
-            <point key="canvasLocation" x="392" y="197"/>
+            <point key="canvasLocation" x="279.5" y="-66"/>
         </view>
     </objects>
 </document>

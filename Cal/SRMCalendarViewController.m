@@ -22,6 +22,7 @@
 #import "SRMTask.h"
 #import "SRMTaskStore.h"
 #import "SRMTaskCell.h"
+#import "SRMEventEditViewController.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -361,6 +362,17 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     }
 }
 
+#pragma mark - Segue
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqual: @"EditEvent"]) {
+        SRMEventEditViewController *vc = segue.destinationViewController;
+        
+    }
+}
+
+
 #pragma mark - <UITableViewDateSource>
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -401,40 +413,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     }
     return  nil;
 }
-
-#pragma mark - <UITableViewDelegate>
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.section == 0) {
-        return SRMTaskCellHeight + SRMItemCellSpacing;
-
-    } else if (indexPath.section == 1) {
-        return SRMEventCellHeight + SRMItemCellSpacing;
-    }
-    return 0;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 50;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    if (tableView == self.monthItemTableView) {
-        NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"SRMListHeader" owner:self options:nil];
-        SRMListHeader *header = [array firstObject];
-        if (section == 0) {
-            header.sectionTitleLable.text = @"Tasks";
-        } else if (section == 1) {
-            header.sectionTitleLable.text = @"Events";
-        }
-            return header;
-    }
-    return nil;
-}
-
 #pragma mark - <UIScrollViewDelegate>
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -515,6 +493,47 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     }
 }
 
+#pragma mark - <UITableViewDelegate>
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        return SRMTaskCellHeight + SRMItemCellSpacing;
+        
+    } else if (indexPath.section == 1) {
+        return SRMEventCellHeight + SRMItemCellSpacing;
+    }
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 50;
+}
+
+- (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.1;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    if (tableView == self.monthItemTableView) {
+        NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"SRMListHeader" owner:self options:nil];
+        SRMListHeader *header = [array firstObject];
+        if (section == 0) {
+            header.sectionTitleLable.text = @"Tasks";
+        } else if (section == 1) {
+            header.sectionTitleLable.text = @"Events";
+        }
+        return header;
+    }
+    return nil;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return [[UIView alloc] initWithFrame:CGRectZero];
+}
 
 #pragma mark - <UICollectionViewDataSource>
 
@@ -666,10 +685,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 // 取消选中操作
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-//    if (collectionView == self.monthCollectionView) {
-//        UICollectionViewCell *cell = (UICollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-//        cell.backgroundColor = [UIColor whiteColor];
-//    }
+
 }
 
 

@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 UIKIT_EXTERN CGFloat const SRMHeaderHeight;
+UIKIT_EXTERN CGFloat const SRMToolbarHeight;
 UIKIT_EXTERN CGFloat const SRMMonthViewWeekdayHeight;
 UIKIT_EXTERN CGFloat const SRMWeekViewWeekdayHeight;
 UIKIT_EXTERN CGFloat const SRMWeekViewDayCircleRadius;
