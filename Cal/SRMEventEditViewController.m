@@ -7,18 +7,18 @@
 //
 
 #import "SRMEventEditViewController.h"
+#import "SRMSelectViewController.h"
 #import "SRMCalendarTool.h"
 #import "SRMSwitch.h"
 
-typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
-    SRMTimeSelectNone   = 0,
-    SRMTimeSelectStart  = 1,
-    SRMTimeSelectEnd    = 2
-};
+@interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate>
 
-@interface SRMEventEditViewController () <UITextViewDelegate, SRMSwitchDelegate>
+@property (nonatomic, strong) NSArray *repeatType;
+@property (nonatomic, strong) NSArray *reminderType;
+@property (nonatomic, strong) NSArray *reminderAllDayType;
 
 @property (nonatomic) SRMTimeSelectMode timeSelectMode;
+@property (nonatomic) SRMEventRepeatMode repeatMode;
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 
@@ -36,10 +36,12 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
 
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (weak, nonatomic) IBOutlet SRMSwitch *allDaySwitch;
+@property (weak, nonatomic) IBOutlet UILabel *repeatValueLabel;
 
 #pragma mark - IBOutlet Cell
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *datePickerCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *repeatEndCell;
 
 @end
 
@@ -51,13 +53,12 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.navigationController.title = @"Add Event";
+    self.repeatType = @[@"Never", @"Every Day", @"Every Week", @"Every 2 Weeks", @"Every Month", @"Every Year"];
+    self.reminderType = @[@"None", @"On time of event", @"5 minutes before", @"15 minutes before", @"30 minutes before", @"1 hour before", @"1 day before", @"1 week before"];
+    self.reminderAllDayType = @[@"None", @"On the day of event", @"1 day before", @"2 days before", @"1 week before"];
     
-    CGRect frame = self.tableView.tableHeaderView.frame;
-    frame.size.height = 10;
+    self.title = @"Add Event";
     
-    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:frame];
-
     for (UIView *view in self.blockView) {
         // shadow
         CALayer *layer = view.layer;
@@ -69,6 +70,9 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     
     self.noteText.textContainer.lineFragmentPadding = 0;
     
+    [self.startLabel setHighlightedTextColor:self.view.tintColor];
+    [self.endLabel setHighlightedTextColor:self.view.tintColor];
+    
     self.datePicker.subviews[0].subviews[1].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
     self.datePicker.subviews[0].subviews[2].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
     [self.datePicker addTarget:self action:@selector(datePickerChange:) forControlEvents:UIControlEventValueChanged];
@@ -78,14 +82,122 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     self.allDaySwitch.delegate = self;
     
     // static table
-    self.timeSelectMode = SRMTimeSelectNone;
     self.hideSectionsWithHiddenRows = YES;
     self.reloadTableViewRowAnimation = UITableViewRowAnimationMiddle;
     self.insertTableViewRowAnimation = UITableViewRowAnimationMiddle;
     self.deleteTableViewRowAnimation = UITableViewRowAnimationMiddle;
+    
     [self cell:self.datePickerCell setHidden:YES];
+    [self cell:self.repeatEndCell setHidden:YES];
     [self reloadDataAnimated:NO];
     
+    // init - add
+    self.startDate = [[SRMCalendarTool tool] dateOnHour:[NSDate date]];
+    self.endDate = [[SRMCalendarTool tool] dateOnHour:[[SRMCalendarTool tool] dateByAddingHours:1 toDate:[NSDate date]]];
+    
+    self.timeSelectMode = SRMTimeSelectNone;
+    self.repeatMode = SRMEventRepeatNever;
+    
+}
+
+#pragma mark - Properties
+
+- (void)setTimeSelectMode:(SRMTimeSelectMode)timeSelectMode
+{
+    NSDate *date;
+    switch (timeSelectMode) {
+        case SRMTimeSelectNone:
+            _timeSelectMode = SRMTimeSelectNone;
+            [self setDatePickerHidden:YES];
+            [self.startLabel setHighlighted:NO];
+            [self.endLabel setHighlighted:NO];
+            break;
+            
+        case SRMTimeSelectStart:
+            _timeSelectMode = SRMTimeSelectStart;
+            [self setDatePickerHidden:NO];
+            [self.startLabel setHighlighted:YES];
+            [self.endLabel setHighlighted:NO];
+            self.datePicker.minimumDate = nil;
+            date = self.startDate;
+
+            break;
+            
+        case SRMTimeSelectEnd:
+            _timeSelectMode = SRMTimeSelectEnd;
+            [self setDatePickerHidden:NO];
+            [self.startLabel setHighlighted:NO];
+            [self.endLabel setHighlighted:YES];
+            self.datePicker.minimumDate = self.startDate;
+            date = self.endDate;
+
+            break;
+    }
+    
+    __weak SRMEventEditViewController *weakSelf = self;
+    
+    if (timeSelectMode != SRMTimeSelectNone) {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             weakSelf.datePicker.date = date;
+                         }];
+    }
+
+}
+
+- (void)setRepeatMode:(SRMEventRepeatMode)repeatMode
+{
+    _repeatMode = repeatMode;
+    self.repeatValueLabel.text = self.repeatType[repeatMode];
+    if (_repeatMode != SRMTimeSelectNone) {
+        [self cell:self.repeatEndCell setHidden:NO];
+        [self reloadDataAnimated:YES];
+    } else {
+        [self cell:self.repeatEndCell setHidden:YES];
+        [self reloadDataAnimated:YES];
+    }
+}
+
+- (void)setStartDate:(NSDate *)date
+{
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
+    
+    self.startDateLabel.text = [tool dateFormat:date];
+    
+    if (!self.allDaySwitch.value) { // not all day
+        self.startTimeLabel.text = [tool timeFormat:date];
+    } else {
+        self.startTimeLabel.text = [tool weekdayFormat:date];
+    }
+    
+    _startDate = date;
+}
+
+- (void)setEndDate:(NSDate *)date
+{
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
+    
+    self.endDateLabel.text = [tool dateFormat:date];
+    
+    if (!self.allDaySwitch.value) { // not all day
+        self.endTimeLabel.text = [tool timeFormat:date];
+    } else {
+        self.endTimeLabel.text = [tool weekdayFormat:date];
+    }
+    _endDate = date;
+}
+
+#pragma mark - Segue
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqual: @"RepeatType"]) {
+        SRMSelectViewController *vc = segue.destinationViewController;
+        vc.title = @"Repeat";
+        vc.delegate = self;
+        vc.titleArray = self.repeatType;
+        vc.selectedRow = self.repeatMode;
+    }
 }
 
 #pragma mark - Action
@@ -95,21 +207,16 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     [self.presentingViewController dismissViewControllerAnimated:YES
                                                       completion:nil];
 }
+
 - (IBAction)toggleStartDate:(id)sender
 {
     if (self.timeSelectMode == SRMTimeSelectStart) {
         self.timeSelectMode = SRMTimeSelectNone;
-        self.startLabel.textColor = [UIColor lightGrayColor];
-        [self setDatePickerHidden:YES];
         
     } else if (self.timeSelectMode == SRMTimeSelectNone) {
         self.timeSelectMode = SRMTimeSelectStart;
-        self.startLabel.textColor = self.startLabel.tintColor;
-        [self setDatePickerHidden:NO];
         
     } else {
-        self.startLabel.textColor = self.startLabel.tintColor;
-        self.endLabel.textColor = [UIColor lightGrayColor];
         self.timeSelectMode = SRMTimeSelectStart;
     }
     
@@ -119,20 +226,16 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
 {
     if (self.timeSelectMode == SRMTimeSelectEnd) {
         self.timeSelectMode = SRMTimeSelectNone;
-        self.endLabel.textColor = [UIColor lightGrayColor];
-        [self setDatePickerHidden:YES];
         
     } else if (self.timeSelectMode == SRMTimeSelectNone) {
         self.timeSelectMode = SRMTimeSelectEnd;
-        self.endLabel.textColor = self.endLabel.tintColor;
-        [self setDatePickerHidden:NO];
         
     } else {
-        self.endLabel.textColor = self.endLabel.tintColor;
-        self.startLabel.textColor = [UIColor lightGrayColor];
         self.timeSelectMode = SRMTimeSelectEnd;
     }
 }
+
+#pragma mark - DatePicker
 
 - (void)setDatePickerHidden:(BOOL)hidden
 {
@@ -142,54 +245,35 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
 
 - (void)datePickerChange:(UIDatePicker *)datePicker
 {
-//    NSLog(@"Selected date = %@", datePicker.date);
-    
     NSDate *date = datePicker.date;
     
     if (self.timeSelectMode == SRMTimeSelectStart) {
-        [self setStartDate:date withAllDay:self.allDaySwitch.value];
+        [self setStartDate:date];
+        
     } else if (self.timeSelectMode == SRMTimeSelectEnd) {
-        [self setEndDate:date withAllDay:self.allDaySwitch.value];
+        [self setEndDate:date];
     }
     
 }
 
-- (void)setStartDate:(NSDate *)date withAllDay:(BOOL)isAllDay
+#pragma mark - <SRMSelectViewDelegate>
+
+- (void)selectView:(NSString *)titleName didBackWithSelectRow:(NSInteger)selectRow
 {
-    SRMCalendarTool *tool = [[SRMCalendarTool alloc] init];
-    
-    self.startDateLabel.text = [tool dateFormat:date];
-    
-    if (!self.allDaySwitch.value) { // not all day
-        self.startTimeLabel.text = [tool timeFormat:date];
-    } else {
-        self.startTimeLabel.text = [tool weekdayFormat:date];
+    if ([titleName isEqualToString:@"Repeat"]) {
+        self.repeatMode = selectRow;
     }
 }
 
-- (void)setEndDate:(NSDate *)date withAllDay:(BOOL)isAllDay
+#pragma mark - <UITextFieldDelegate>
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    SRMCalendarTool *tool = [[SRMCalendarTool alloc] init];
-    
-    self.endDateLabel.text = [tool dateFormat:date];
-    
-    if (!self.allDaySwitch.value) { // not all day
-        self.endTimeLabel.text = [tool timeFormat:date];
-    } else {
-        self.endTimeLabel.text = [tool weekdayFormat:date];
-    }
+    [textField resignFirstResponder];
+    return YES;
 }
 
 #pragma mark - <UITextViewDelegate>
-
-- (CGFloat)textViewHeightForRowAtIndexPath: (NSIndexPath*)indexPath
-{
- 
-    CGFloat textViewWidth = self.noteText.frame.size.width;
-
-    CGSize size = [self.noteText sizeThatFits:CGSizeMake(textViewWidth, FLT_MAX)];
-    return size.height + 20;
-}
 
 - (void)textViewDidChange:(UITextView *)textView
 {
@@ -197,6 +281,12 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
     
+    [self scrollToCursorForTextView:textView]; // cursor
+}
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    self.noteLabel.hidden = YES;
     [self scrollToCursorForTextView:textView];
 }
 
@@ -207,12 +297,16 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     }
 }
 
-- (void)textViewDidBeginEditing:(UITextView *)textView
-{
-    self.noteLabel.hidden = YES;
-    [self scrollToCursorForTextView:textView];
-}
+#pragma mark - TextView
 
+- (CGFloat)textViewHeightForRowAtIndexPath: (NSIndexPath*)indexPath
+{
+    
+    CGFloat textViewWidth = self.noteText.frame.size.width;
+    
+    CGSize size = [self.noteText sizeThatFits:CGSizeMake(textViewWidth, FLT_MAX)];
+    return size.height + 20;
+}
 
 - (void)scrollToCursorForTextView: (UITextView*)textView
 {
@@ -243,20 +337,26 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
 
 - (void)switchView:(SRMSwitch *)switchView didEndToggleWithValue:(BOOL)value
 {
-//    NSLog(value ? @"YES" : @"NO");
+    __weak SRMEventEditViewController *weakSelf = self;
     if (value) {
+
+        
         [UIView animateWithDuration:0.3
                          animations:^{
-                            self.datePicker.datePickerMode = UIDatePickerModeDate;
+                             weakSelf.datePicker.datePickerMode = UIDatePickerModeDate;
                          }];
 
     } else {
         [UIView animateWithDuration:0.3
                          animations:^{
-                            self.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+                             weakSelf.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+                             weakSelf.datePicker.minuteInterval = 5;
                          }];
 
     }
+    
+    self.startDate = self.startDate;
+    self.endDate = self.endDate;
     
 }
 
@@ -273,31 +373,34 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     } else if (indexPath.section == 2 && indexPath.row == 1 && self.timeSelectMode != SRMTimeSelectNone) {
         return 180;
     }
-    return 40;
+    return 44;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.timeSelectMode != SRMTimeSelectNone) {
+        self.timeSelectMode = SRMTimeSelectNone;
+
+    }
     if (indexPath.section == 1 && indexPath.row == 1) {
         [self.noteText becomeFirstResponder];
     }
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 10;
+}
+
+- (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.1;
+}
 
 #pragma mark - Others
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

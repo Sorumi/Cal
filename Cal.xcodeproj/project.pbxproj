@@ -44,7 +44,9 @@
 		4DB2A9D11D52F79900DE9693 /* SRMSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9D01D52F79900DE9693 /* SRMSwitch.m */; };
 		4DB2A9D41D5328CB00DE9693 /* StaticDataTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9D31D5328CB00DE9693 /* StaticDataTableViewController.m */; };
 		4DB2A9D71D536D7F00DE9693 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2A9D91D536D7F00DE9693 /* Localizable.strings */; };
-		4DB2A9DE1D53811300DE9693 /* SRMHighlightLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9DD1D53811300DE9693 /* SRMHighlightLabel.m */; };
+		4DB2A9E41D54896600DE9693 /* SRMSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E31D54896600DE9693 /* SRMSelectViewController.m */; };
+		4DB2A9E81D549FC600DE9693 /* SRMSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E61D549FC600DE9693 /* SRMSelectCell.m */; };
+		4DB2A9E91D549FC600DE9693 /* SRMSelectCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,8 +137,11 @@
 		4DB2A9D81D536D7F00DE9693 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4DB2A9DA1D536D9E00DE9693 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		4DB2A9DB1D536DF100DE9693 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		4DB2A9DC1D53811300DE9693 /* SRMHighlightLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SRMHighlightLabel.h; path = ../SRMHighlightLabel.h; sourceTree = "<group>"; };
-		4DB2A9DD1D53811300DE9693 /* SRMHighlightLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SRMHighlightLabel.m; path = ../SRMHighlightLabel.m; sourceTree = "<group>"; };
+		4DB2A9E21D54896600DE9693 /* SRMSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMSelectViewController.h; sourceTree = "<group>"; };
+		4DB2A9E31D54896600DE9693 /* SRMSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMSelectViewController.m; sourceTree = "<group>"; };
+		4DB2A9E51D549FC600DE9693 /* SRMSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMSelectCell.h; sourceTree = "<group>"; };
+		4DB2A9E61D549FC600DE9693 /* SRMSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMSelectCell.m; sourceTree = "<group>"; };
+		4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMSelectCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +207,8 @@
 				4D1E5D6A1D4891880057DC76 /* SRMCalendarViewController.m */,
 				4D3513AE1D4CD77B00D2B128 /* SRMEventEditViewController.h */,
 				4D3513AF1D4CD77B00D2B128 /* SRMEventEditViewController.m */,
+				4DB2A9E21D54896600DE9693 /* SRMSelectViewController.h */,
+				4DB2A9E31D54896600DE9693 /* SRMSelectViewController.m */,
 				4D3513C21D4E17E400D2B128 /* EventAndTaskModel */,
 				4D3513CB1D4E297F00D2B128 /* EventAndTaskView */,
 				4D3513C01D4DDD0700D2B128 /* CalendarView */,
@@ -285,8 +292,6 @@
 		4D3513CB1D4E297F00D2B128 /* EventAndTaskView */ = {
 			isa = PBXGroup;
 			children = (
-				4DB2A9DC1D53811300DE9693 /* SRMHighlightLabel.h */,
-				4DB2A9DD1D53811300DE9693 /* SRMHighlightLabel.m */,
 				4DB2A9CF1D52F79900DE9693 /* SRMSwitch.h */,
 				4DB2A9D01D52F79900DE9693 /* SRMSwitch.m */,
 				4DB2A9CC1D52F3C200DE9693 /* SRMTimeDecoration.h */,
@@ -294,6 +299,9 @@
 				4D3513D41D4ED93D00D2B128 /* SRMListHeader.h */,
 				4D3513D51D4ED93D00D2B128 /* SRMListHeader.m */,
 				4D3513D71D4EDD8900D2B128 /* SRMListHeader.xib */,
+				4DB2A9E51D549FC600DE9693 /* SRMSelectCell.h */,
+				4DB2A9E61D549FC600DE9693 /* SRMSelectCell.m */,
+				4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */,
 				4D3513F01D4F172B00D2B128 /* SRMTaskCell.h */,
 				4D3513F11D4F172B00D2B128 /* SRMTaskCell.m */,
 				4D3513F21D4F172B00D2B128 /* SRMTaskCell.xib */,
@@ -419,6 +427,7 @@
 				4D1E5D6D1D48D6B70057DC76 /* SRMMonthDayCell.xib in Resources */,
 				4D3513F41D4F172B00D2B128 /* SRMTaskCell.xib in Resources */,
 				4D1E5C9B1D44EAED0057DC76 /* Main.storyboard in Resources */,
+				4DB2A9E91D549FC600DE9693 /* SRMSelectCell.xib in Resources */,
 				4D3513D01D4E29E800D2B128 /* SRMEventCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -445,9 +454,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				4D1E5D651D4705BE0057DC76 /* SRMCalendarHeader.m in Sources */,
-				4DB2A9DE1D53811300DE9693 /* SRMHighlightLabel.m in Sources */,
 				4D3513A91D4AED2600D2B128 /* SRMWeekDayCell.m in Sources */,
 				4D1E5D6B1D4891880057DC76 /* SRMCalendarViewController.m in Sources */,
+				4DB2A9E41D54896600DE9693 /* SRMSelectViewController.m in Sources */,
 				4D3513F31D4F172B00D2B128 /* SRMTaskCell.m in Sources */,
 				4D3513D61D4ED93D00D2B128 /* SRMListHeader.m in Sources */,
 				4D1E5CC81D44EC740057DC76 /* SRMMonthDayCell.m in Sources */,
@@ -456,6 +465,7 @@
 				4DB2A9CE1D52F3C200DE9693 /* SRMTimeDecoration.m in Sources */,
 				4D3513D31D4EC32500D2B128 /* SRMMonthBackground.m in Sources */,
 				4D3513B01D4CD77B00D2B128 /* SRMEventEditViewController.m in Sources */,
+				4DB2A9E81D549FC600DE9693 /* SRMSelectCell.m in Sources */,
 				4D3513A51D4ACB0900D2B128 /* SRMCalendarConstance.m in Sources */,
 				4DB2A9D11D52F79900DE9693 /* SRMSwitch.m in Sources */,
 				4D3513B91D4D9B7600D2B128 /* SRMWeekWeekdayHeader.m in Sources */,

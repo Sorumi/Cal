@@ -30,7 +30,7 @@
 
 @property (nonatomic) CGFloat const viewWidth;
 
-@property (nonatomic, strong) SRMCalendarTool *tool;
+//@property (nonatomic, strong) SRMCalendarTool *tool;
 @property (nonatomic, strong) NSDate *date;
 @property (nonatomic, strong) NSDate *today;
 @property (nonatomic) NSInteger selectedYear;
@@ -60,7 +60,6 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthItemTableTop;
 
-
 @end
 
 @implementation SRMCalendarViewController
@@ -75,18 +74,18 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 - (void)setDate:(NSDate *)date
 {
     _date = date;
-    _selectedYear = [_tool yearOfDate:_date];
-    _selectedMonth = [_tool monthOfDate:_date];
-    _selectedDay = [_tool dayOfDate:_date];
-    [self.headerView setWeekHeaderYear:self.selectedYear month:self.selectedMonth day:self.selectedDay weekday:[self.tool weekdayOfDate:self.date]];
+    _selectedYear = [[SRMCalendarTool tool] yearOfDate:_date];
+    _selectedMonth = [[SRMCalendarTool tool] monthOfDate:_date];
+    _selectedDay = [[SRMCalendarTool tool] dayOfDate:_date];
+    [self.headerView setWeekHeaderYear:self.selectedYear month:self.selectedMonth day:self.selectedDay weekday:[[SRMCalendarTool tool] weekdayOfDate:self.date]];
     
     if (self.viewMode == SRMCalendarMonthViewMode) {
         [self weekScrollToDate:self.date animated:NO];
-        [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:NO];
+        [self.weekWeekdayHeader setCirclePos:[[SRMCalendarTool tool] weekdayOfDate:self.date] animated:NO];
         
     } else if (self.viewMode == SRMCalendarWeekViewMode) {
         [self monthScrollToDate:self.date animated:NO];
-        [self.weekWeekdayHeader setCirclePos:[self.tool weekdayOfDate:self.date] animated:YES];
+        [self.weekWeekdayHeader setCirclePos:[[SRMCalendarTool tool] weekdayOfDate:self.date] animated:YES];
     }
 }
 
@@ -103,12 +102,11 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void) initialize
 {
-    _tool = [[SRMCalendarTool alloc] init];
     _date = [NSDate date];
     _today = self.date;
-    _selectedYear = [_tool yearOfDate:_date];
-    _selectedMonth = [_tool monthOfDate:_date];
-    _selectedDay = [_tool dayOfDate:_date];
+    _selectedYear = [[SRMCalendarTool tool] yearOfDate:_date];
+    _selectedMonth = [[SRMCalendarTool tool] monthOfDate:_date];
+    _selectedDay = [[SRMCalendarTool tool] dayOfDate:_date];
 }
 
 - (void)viewDidLoad {
@@ -175,8 +173,8 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     
     [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
     if ([SRMEventStore sharedStore].isGranted) {
-        [[SRMEventStore sharedStore] fetchEventsFromDate:[self.tool dateWithYear:2016 month:1 day:1]
-                                                  toDate:[self.tool dateWithYear:2016 month:12 day:31]];
+        [[SRMEventStore sharedStore] fetchEventsFromDate:[[SRMCalendarTool tool] dateWithYear:2016 month:1 day:1]
+                                                  toDate:[[SRMCalendarTool tool] dateWithYear:2016 month:12 day:31]];
     }
 }
 
@@ -198,7 +196,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void)monthScrollToDate:(NSDate *)date animated:(BOOL)animated
 {
-    SRMCalendarTool *tool = self.tool;
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
     if ([tool monthsFromDate:tool.minimumDate toDate:date] > 0 && [tool monthsFromDate:date toDate:tool.maximumDate] > 0 ) {
         NSInteger monthCount = [tool monthsFromDate:tool.minimumDate toDate:date];
         CGFloat offsetX = self.viewWidth * monthCount;
@@ -209,7 +207,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void)weekScrollToDate:(NSDate *)date animated:(BOOL)animated
 {
-    SRMCalendarTool *tool = self.tool;
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
     if ([tool monthsFromDate:tool.minimumDate toDate:date] > 0 && [tool monthsFromDate:date toDate:tool.maximumDate] > 0 ) {
         date = [tool beginningOfWeekOfDate:date];
         NSDate *beginDate = [tool beginningOfWeekOfDate:tool.minimumDate];
@@ -223,13 +221,13 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (IBAction)setPrevMonth:(id)sender
 {
-    NSDate *date = [self.tool dateByAddingMonths:-1 toDate:self.date];
+    NSDate *date = [[SRMCalendarTool tool] dateByAddingMonths:-1 toDate:self.date];
     [self monthScrollToDate:date animated:YES];
 }
 
 - (IBAction)setNextMonth:(id)sender
 {
-    NSDate *date = [self.tool dateByAddingMonths:1 toDate:self.date];
+    NSDate *date = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:self.date];
     [self monthScrollToDate:date animated:YES];
 }
 
@@ -372,6 +370,85 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     }
 }
 
+#pragma mark - <UIScrollViewDelegate>
+
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if (scrollView == self.monthItemTableView) {
+        if (self.lastContentOffset == scrollView.contentOffset.y && scrollView.contentOffset.y == 0) {
+            [self downMonthItemTable];
+        }
+        self.lastContentOffset = scrollView.contentOffset.y;
+    }
+}
+
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    //month view change the label
+    if (scrollView == self.monthCollectionView) {
+        NSDate *date;
+        SRMCalendarTool *tool = [SRMCalendarTool tool];
+        NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
+    
+        date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        NSInteger year = [tool yearOfDate:date];
+        NSInteger month = [tool monthOfDate:date];
+
+        [self.headerView setMonthHeaderYear:year month:month];
+        
+    } else if (scrollView == self.weekCollectionView) {
+    
+    }
+
+}
+
+// use finger ti scroll
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{    
+    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
+
+        SRMCalendarTool *tool = [SRMCalendarTool tool];
+        NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
+        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
+
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+
+        }
+        
+    } else if (scrollView == self.weekCollectionView && self.viewMode == SRMCalendarWeekViewMode) {
+        
+        SRMCalendarTool *tool = [SRMCalendarTool tool];
+        NSInteger page = self.weekCollectionView.contentOffset.x / self.viewWidth;
+        NSDate *currentBeginningDate = [tool beginningOfWeekOfDate:tool.minimumDate];
+        currentBeginningDate = [tool dateByAddingWeeks:page toDate:currentBeginningDate];
+        NSDate *selfBeginningDate = [tool beginningOfWeekOfDate:self.date];
+        
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+        }
+    }
+
+}
+
+// use code to scroll
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
+
+        SRMCalendarTool *tool = [SRMCalendarTool tool];
+        NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
+        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
+        
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+        }
+        
+    }
+}
 
 #pragma mark - <UITableViewDateSource>
 
@@ -383,10 +460,10 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
-         return [[SRMTaskStore sharedStore] allTasks].count;
+        return [[SRMTaskStore sharedStore] allTasks].count;
         
     } else if (section == 1) {
-         return [[SRMEventStore sharedStore] allEvents].count;
+        return [[SRMEventStore sharedStore] allEvents].count;
     }
     return 0;
 }
@@ -412,85 +489,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         return cell;
     }
     return  nil;
-}
-#pragma mark - <UIScrollViewDelegate>
-
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
-{
-    if (scrollView == self.monthItemTableView) {
-        if (self.lastContentOffset == scrollView.contentOffset.y && scrollView.contentOffset.y == 0) {
-            [self downMonthItemTable];
-        }
-        self.lastContentOffset = scrollView.contentOffset.y;
-    }
-}
-
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    //month view change the label
-    if (scrollView == self.monthCollectionView) {
-        NSDate *date;
-        SRMCalendarTool *tool = self.tool;
-        NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
-    
-        date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
-        NSInteger year = [tool yearOfDate:date];
-        NSInteger month = [tool monthOfDate:date];
-
-        [self.headerView setMonthHeaderYear:year month:month];
-        
-    } else if (scrollView == self.weekCollectionView) {
-    
-    }
-
-}
-
-// use finger ti scroll
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{    
-    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
-
-        SRMCalendarTool *tool = self.tool;
-        NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
-        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
-        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
-
-        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
-            self.date = currentBeginningDate;
-
-        }
-        
-    } else if (scrollView == self.weekCollectionView && self.viewMode == SRMCalendarWeekViewMode) {
-        
-        SRMCalendarTool *tool = self.tool;
-        NSInteger page = self.weekCollectionView.contentOffset.x / self.viewWidth;
-        NSDate *currentBeginningDate = [tool beginningOfWeekOfDate:tool.minimumDate];
-        currentBeginningDate = [tool dateByAddingWeeks:page toDate:currentBeginningDate];
-        NSDate *selfBeginningDate = [tool beginningOfWeekOfDate:self.date];
-        
-        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
-            self.date = currentBeginningDate;
-        }
-    }
-
-}
-
-// use code to scroll
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
-{
-    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
-
-        SRMCalendarTool *tool = self.tool;
-        NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
-        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
-        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
-        
-        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
-            self.date = currentBeginningDate;
-        }
-        
-    }
 }
 
 #pragma mark - <UITableViewDelegate>
@@ -539,7 +537,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    SRMCalendarTool *tool = self.tool;
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
     
     if (collectionView == self.monthCollectionView) {
         
@@ -573,16 +571,16 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     if (collectionView == self.monthCollectionView) {
         SRMMonthDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseMonthCellIdentifier forIndexPath:indexPath];
         
-        SRMCalendarTool *tool = self.tool;
+        SRMCalendarTool *tool = [SRMCalendarTool tool];
         
         NSDate *date = [tool dateByAddingMonths:indexPath.section toDate:tool.minimumDate];
         
-        NSInteger blankDayCount = [self.tool weekdayOfDate:[self.tool beginningOfMonthOfDate:date]];
-        NSInteger currentMonthDayCount = [self.tool dayCountOfMonthofDate:date];
+        NSInteger blankDayCount = [tool weekdayOfDate:[tool beginningOfMonthOfDate:date]];
+        NSInteger currentMonthDayCount = [tool dayCountOfMonthofDate:date];
         
         
         NSDate *prevDate = [tool dateByAddingMonths:-1 toDate:date];
-        NSInteger previousMonthDayCount = [self.tool dayCountOfMonthofDate:prevDate];
+        NSInteger previousMonthDayCount = [tool dayCountOfMonthofDate:prevDate];
 
         date = [tool dateByAddingDays:(indexPath.row - blankDayCount) toDate:date];
         cell.date = date;
@@ -605,7 +603,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     } else if (collectionView == self.weekCollectionView) {
         SRMWeekDayCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseWeekCellIdentifier forIndexPath:indexPath];
         
-        SRMCalendarTool *tool = self.tool;
+        SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSDate *date = [tool dateByAddingWeeks:indexPath.section toDate:tool.minimumDate];
         date = [tool beginningOfWeekOfDate:date];
         date = [tool dateByAddingDays:indexPath.row toDate:date];
@@ -666,7 +664,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     if (collectionView == self.monthCollectionView) {
         SRMMonthDayCell *cell = (SRMMonthDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
 
-        if ([self.tool monthOfDate:cell.date] != self.selectedMonth) {
+        if ([[SRMCalendarTool tool] monthOfDate:cell.date] != self.selectedMonth) {
             [self monthScrollToDate:cell.date animated:YES];
             self.date = cell.date;
             

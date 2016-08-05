@@ -48,7 +48,7 @@
 
 - (void)setEvent:(SRMEvent *)event
 {
-    SRMCalendarTool *tool = [[SRMCalendarTool alloc] init];
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
     
     EKEvent *systemEvent = event.systemEvent;
     self.titleLable.text = systemEvent.title;

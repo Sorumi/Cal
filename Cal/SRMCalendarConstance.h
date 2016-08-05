@@ -25,3 +25,18 @@ typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
     SRMCalendarWeekViewMode     = 1,
     SRMCalendarItemViewMode     = 2
 };
+
+typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
+    SRMTimeSelectNone   = 0,
+    SRMTimeSelectStart  = 1,
+    SRMTimeSelectEnd    = 2
+};
+
+typedef NS_ENUM(NSInteger, SRMEventRepeatMode) {
+    SRMEventRepeatNever         = 0,
+    SRMEventRepeatEveryDay      = 1,
+    SRMEventRepeatEveryWeek     = 2,
+    SRMEventRepeatEveryTwoWeek  = 3,
+    SRMEventRepeatEveryMonth    = 4,
+    SRMEventRepeatEveryYear     = 5
+};

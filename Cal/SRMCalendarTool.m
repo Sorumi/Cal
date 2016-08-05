@@ -18,6 +18,36 @@
 
 @implementation SRMCalendarTool
 
+
+#pragma mark - Initialization
+
++ (instancetype)tool
+{
+    static SRMCalendarTool *tool = nil;
+    
+    if (!tool) {
+        tool = [[self alloc] initPrivate];
+    }
+    
+    return tool;
+}
+
+- (instancetype)init
+{
+    @throw [NSException exceptionWithName:@"Singleton"
+                                   reason:@"Use +[SRMCalendarTool tool]"
+                                 userInfo:nil];
+}
+
+- (instancetype)initPrivate
+{
+    self = [super init];
+    
+    if (self) {
+    }
+    return self;
+}
+
 #pragma mark - Properties
 
 - (NSDate *)minimumDate
@@ -217,6 +247,15 @@
     return d;
 }
 
+- (NSDate *)dateByAddingHours:(NSInteger)hours toDate:(NSDate *)date
+{
+    NSDateComponents *components = self.components;
+    components.hour = hours;
+    NSDate *d = [self.calendar dateByAddingComponents:components toDate:date options:0];
+    components.hour = NSIntegerMax;
+    return d;
+}
+
 #pragma mrak -
 
 - (NSDate *)dateByIgnoringTimeComponentsOfDate:(NSDate *)date
@@ -303,6 +342,16 @@
         return [formatter stringFromDate:date];
     }
     
+}
+
+- (NSDate *)dateOnHour:(NSDate *)date
+{
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear | NSCalendarUnitMonth | NSCalendarUnitDay | NSCalendarUnitHour fromDate:date];
+    
+    components.minute = 0;
+    components.second = 0;
+    NSDate *result = [self.calendar dateFromComponents:components];
+    return result;
 }
 
 @end

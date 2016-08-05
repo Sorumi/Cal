@@ -43,9 +43,8 @@
 
 - (void)setTask:(SRMTask *)task
 {
-    SRMCalendarTool *tool = [[SRMCalendarTool alloc] init];
     self.titleLable.text = task.title;
-    self.dateLabel.text = task.dueDate == nil ? @"" : [tool dateFormat:task.dueDate];
+    self.dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateFormat:task.dueDate];
 
     self.iconImage.imageView.image = task.finishDate == nil ? [UIImage imageNamed:@"task_icon_unfinished"] : [UIImage imageNamed:@"task_icon_finished"];
 }
