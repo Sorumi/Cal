@@ -17,6 +17,7 @@
 @implementation SRMSelectViewController
 
 static NSString * const reuseCellIdentifier = @"SelectCell";
+static NSString * const reuseDatePickerCellIdentifier = @"DatePickerCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -28,6 +29,7 @@ static NSString * const reuseCellIdentifier = @"SelectCell";
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.selectedRow inSection:0];
     [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionNone];
 
@@ -35,8 +37,9 @@ static NSString * const reuseCellIdentifier = @"SelectCell";
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     if ([_delegate respondsToSelector:@selector(selectView:didBackWithSelectRow:)]) {
-        [_delegate selectView:self.title didBackWithSelectRow:self.selectedRow];
+        [_delegate selectView:self.selectMode didBackWithSelectRow:self.selectedRow];
     }
 }
 

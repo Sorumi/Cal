@@ -32,6 +32,13 @@ typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
     SRMTimeSelectEnd    = 2
 };
 
+typedef NS_ENUM(NSInteger, SRMEventSelectMode) {
+    SRMEventCalendar    = 0,
+    SRMEventRepeat      = 1,
+    SRMEventRepeatEnd   = 2,
+    SRMEventReminder    = 3,
+};
+
 typedef NS_ENUM(NSInteger, SRMEventRepeatMode) {
     SRMEventRepeatNever         = 0,
     SRMEventRepeatEveryDay      = 1,

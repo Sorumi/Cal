@@ -47,6 +47,7 @@
 		4DB2A9E41D54896600DE9693 /* SRMSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E31D54896600DE9693 /* SRMSelectViewController.m */; };
 		4DB2A9E81D549FC600DE9693 /* SRMSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E61D549FC600DE9693 /* SRMSelectCell.m */; };
 		4DB2A9E91D549FC600DE9693 /* SRMSelectCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */; };
+		4DB2A9EC1D555C8200DE9693 /* SRMRepeatEndViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9EB1D555C8200DE9693 /* SRMRepeatEndViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -142,6 +143,8 @@
 		4DB2A9E51D549FC600DE9693 /* SRMSelectCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMSelectCell.h; sourceTree = "<group>"; };
 		4DB2A9E61D549FC600DE9693 /* SRMSelectCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMSelectCell.m; sourceTree = "<group>"; };
 		4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMSelectCell.xib; sourceTree = "<group>"; };
+		4DB2A9EA1D555C8200DE9693 /* SRMRepeatEndViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMRepeatEndViewController.h; sourceTree = "<group>"; };
+		4DB2A9EB1D555C8200DE9693 /* SRMRepeatEndViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMRepeatEndViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -209,6 +212,8 @@
 				4D3513AF1D4CD77B00D2B128 /* SRMEventEditViewController.m */,
 				4DB2A9E21D54896600DE9693 /* SRMSelectViewController.h */,
 				4DB2A9E31D54896600DE9693 /* SRMSelectViewController.m */,
+				4DB2A9EA1D555C8200DE9693 /* SRMRepeatEndViewController.h */,
+				4DB2A9EB1D555C8200DE9693 /* SRMRepeatEndViewController.m */,
 				4D3513C21D4E17E400D2B128 /* EventAndTaskModel */,
 				4D3513CB1D4E297F00D2B128 /* EventAndTaskView */,
 				4D3513C01D4DDD0700D2B128 /* CalendarView */,
@@ -453,6 +458,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DB2A9EC1D555C8200DE9693 /* SRMRepeatEndViewController.m in Sources */,
 				4D1E5D651D4705BE0057DC76 /* SRMCalendarHeader.m in Sources */,
 				4D3513A91D4AED2600D2B128 /* SRMWeekDayCell.m in Sources */,
 				4D1E5D6B1D4891880057DC76 /* SRMCalendarViewController.m in Sources */,

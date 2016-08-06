@@ -8,10 +8,11 @@
 
 #import "SRMEventEditViewController.h"
 #import "SRMSelectViewController.h"
+#import "SRMRepeatEndViewController.h"
 #import "SRMCalendarTool.h"
 #import "SRMSwitch.h"
 
-@interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate>
+@interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate, SRMRepeatEndDelegate>
 
 @property (nonatomic, strong) NSArray *repeatType;
 @property (nonatomic, strong) NSArray *reminderType;
@@ -21,6 +22,7 @@
 @property (nonatomic) SRMEventRepeatMode repeatMode;
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
+@property (nonatomic, strong) NSDate *repeatEndDate;
 
 #pragma mark - IBOutlet
 
@@ -37,6 +39,7 @@
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (weak, nonatomic) IBOutlet SRMSwitch *allDaySwitch;
 @property (weak, nonatomic) IBOutlet UILabel *repeatValueLabel;
+@property (weak, nonatomic) IBOutlet UILabel *repeatEndDateLabel;
 
 #pragma mark - IBOutlet Cell
 
@@ -193,10 +196,20 @@
 {
     if ([segue.identifier isEqual: @"RepeatType"]) {
         SRMSelectViewController *vc = segue.destinationViewController;
+        vc.selectMode = SRMEventRepeat;
         vc.title = @"Repeat";
         vc.delegate = self;
         vc.titleArray = self.repeatType;
         vc.selectedRow = self.repeatMode;
+        
+    } else if ([segue.identifier isEqual: @"EndRepeat"]) {
+        SRMRepeatEndViewController *vc = segue.destinationViewController;
+        vc.delegate = self;
+
+        if (self.repeatEndDate) {
+            vc.date = self.repeatEndDate;
+        }
+
     }
 }
 
@@ -253,15 +266,26 @@
     } else if (self.timeSelectMode == SRMTimeSelectEnd) {
         [self setEndDate:date];
     }
-    
 }
 
 #pragma mark - <SRMSelectViewDelegate>
 
-- (void)selectView:(NSString *)titleName didBackWithSelectRow:(NSInteger)selectRow
+- (void)selectView:(SRMEventSelectMode)selectMode didBackWithSelectRow:(NSInteger)selectRow
 {
-    if ([titleName isEqualToString:@"Repeat"]) {
+    if (selectMode == SRMEventRepeat) {
         self.repeatMode = selectRow;
+    }
+}
+
+#pragma mark - <SRMRepeatEndDelegate>
+
+- (void)repeadEndViewDidBackWithDate:(NSDate *)endDate
+{
+    self.repeatEndDate = endDate;
+    if (endDate) {
+        self.repeatEndDateLabel.text = [[SRMCalendarTool tool] dateFormat:endDate];
+    } else {
+        self.repeatEndDateLabel.text = @"Never";
     }
 }
 

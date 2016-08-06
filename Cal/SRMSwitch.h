@@ -22,6 +22,6 @@
 @interface SRMSwitch : UIView
 
 @property (nonatomic) BOOL value;
-@property (nonatomic, assign) IBOutlet id<SRMSwitchDelegate> delegate;
+@property (nonatomic, weak) IBOutlet id<SRMSwitchDelegate> delegate;
 
 @end

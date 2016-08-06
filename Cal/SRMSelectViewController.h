@@ -7,19 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SRMCalendarConstance.h"
 
 @protocol SRMSelectViewDelegate <NSObject>
 
 @optional
-- (void)selectView:(NSString *)titleName didBackWithSelectRow:(NSInteger)selectRow;
+- (void)selectView:(SRMEventSelectMode)selectMode didBackWithSelectRow:(NSInteger)selectRow;
 
 @end
 
 @interface SRMSelectViewController : UITableViewController
 
-@property (nonatomic, assign) id <SRMSelectViewDelegate> delegate;
+@property (nonatomic, weak) id <SRMSelectViewDelegate> delegate;
 
-@property (nonatomic, strong) NSString *segueIdentifier;
+@property (nonatomic) SRMEventSelectMode selectMode;
 @property (nonatomic, strong) NSArray *titleArray;
 @property (nonatomic) NSInteger selectedRow;
 
