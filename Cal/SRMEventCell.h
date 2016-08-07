@@ -8,10 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@class SRMEvent;
-
 @interface SRMEventCell : UITableViewCell
 
-- (void)setEvent:(SRMEvent *)event;
+- (void)setEvent:(EKEvent *)event;
 
 @end

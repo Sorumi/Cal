@@ -9,14 +9,27 @@
 #import <Foundation/Foundation.h>
 #import <EventKit/EventKit.h>
 
+@protocol SRMEventStoreDelegate <NSObject>
+
+@optional
+- (void)didFetchRecentEvent;
+- (void)didFetchDayEvent;
+
+@end
+
 @interface SRMEventStore : NSObject
 
+@property (nonatomic, weak) id<SRMEventStoreDelegate> delegate;
 @property (nonatomic) BOOL isGranted;
-@property (nonatomic, readonly) NSArray *allEvents;
+@property (nonatomic, readonly) NSArray *recentEvents;
 
 + (instancetype)sharedStore;
 
 - (void)checkCalendarAuthorizationStatus;
-- (void)fetchEventsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate;
+
+- (void)fetchRecentEvents:(NSDate *)fromDate;
+- (void)fetchDayEvents:(NSDate *)date;
+
+- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 
 @end

@@ -16,4 +16,5 @@
 @property (nonatomic) NSInteger iconNum;
 
 - (instancetype)initWithSystemEvent:(EKEvent *)systemEvent;
+//- (instancetype)init
 @end

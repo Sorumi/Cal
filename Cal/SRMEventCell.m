@@ -7,7 +7,7 @@
 //
 
 #import <EventKit/EventKit.h>
-#import "SRMEvent.h"
+//#import "SRMEvent.h"
 #import "SRMEventCell.h"
 #import "SRMCalendarConstance.h"
 #import "SRMCalendarTool.h"
@@ -46,29 +46,29 @@
 
 #pragma mark - Public
 
-- (void)setEvent:(SRMEvent *)event
+- (void)setEvent:(EKEvent *)event
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
-    EKEvent *systemEvent = event.systemEvent;
-    self.titleLable.text = systemEvent.title;
-    self.categoryColorView.backgroundColor = [UIColor colorWithCGColor:systemEvent.calendar.CGColor];
+//    EKEvent *systemEvent = event.systemEvent;
+    self.titleLable.text = event.title;
+    self.categoryColorView.backgroundColor = [UIColor colorWithCGColor:event.calendar.CGColor];
     
-    if (!systemEvent.allDay) {
+    if (!event.allDay) {
         self.dateLabel.hidden = NO;
-        self.dateLabel.text = [tool dateFormat:systemEvent.startDate];
-        self.timeLabel.text = [tool timeFormat:systemEvent.startDate];
+        self.dateLabel.text = [tool dateFormat:event.startDate];
+        self.timeLabel.text = [tool timeFormat:event.startDate];
         
-        NSInteger hour = [tool hoursFromDate:systemEvent.startDate toDate:systemEvent.endDate];
-        NSInteger minute = [tool minutesFromDate:systemEvent.startDate toDate:systemEvent.endDate];
+        NSInteger hour = [tool hoursFromDate:event.startDate toDate:event.endDate];
+        NSInteger minute = [tool minutesFromDate:event.startDate toDate:event.endDate];
         NSString *hourStr = hour == 0 ? @"" : [NSString stringWithFormat:@"%luh", hour];
         NSString *minuteStr = minute == 0 ? @"" : [NSString stringWithFormat:@"%lum", minute];
         self.durationLabel.text = [hourStr stringByAppendingString:minuteStr];
         
     } else {
         self.dateLabel.hidden = YES;
-        self.timeLabel.text = [tool dateFormat:systemEvent.startDate];
-        NSInteger day = [tool daysFromDate:systemEvent.startDate toDate:systemEvent.endDate] + 1;
+        self.timeLabel.text = [tool dateFormat:event.startDate];
+        NSInteger day = [tool daysFromDate:event.startDate toDate:event.endDate] + 1;
         self.durationLabel.text = [NSString stringWithFormat:@"%lud", day];
     }
     

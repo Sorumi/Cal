@@ -11,6 +11,7 @@
 #import "SRMRepeatEndViewController.h"
 #import "SRMCalendarTool.h"
 #import "SRMSwitch.h"
+#import "SRMEventStore.h"
 
 @interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate, SRMRepeatEndDelegate>
 
@@ -20,6 +21,7 @@
 
 @property (nonatomic) SRMTimeSelectMode timeSelectMode;
 @property (nonatomic) SRMEventRepeatMode repeatMode;
+
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 @property (nonatomic, strong) NSDate *repeatEndDate;
@@ -27,8 +29,14 @@
 #pragma mark - IBOutlet
 
 @property (nonatomic) IBOutletCollection(UIView) NSArray *blockView;
+
+@property (weak, nonatomic) IBOutlet UITextField *titleText;
+
+@property (weak, nonatomic) IBOutlet UITextField *locationText;
+
 @property (weak, nonatomic) IBOutlet UITextView *noteText;
 @property (weak, nonatomic) IBOutlet UILabel *noteLabel;
+
 @property (weak, nonatomic) IBOutlet UILabel *startLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endLabel;
 @property (weak, nonatomic) IBOutlet UILabel *startDateLabel;
@@ -40,6 +48,8 @@
 @property (weak, nonatomic) IBOutlet SRMSwitch *allDaySwitch;
 @property (weak, nonatomic) IBOutlet UILabel *repeatValueLabel;
 @property (weak, nonatomic) IBOutlet UILabel *repeatEndDateLabel;
+
+@property (weak, nonatomic) IBOutlet UIButton *moreButton;
 
 #pragma mark - IBOutlet Cell
 
@@ -174,6 +184,10 @@
     }
     
     _startDate = date;
+    
+    if ([_endDate timeIntervalSinceDate: _startDate] < 0) {
+        self.endDate = _startDate;
+    }
 }
 
 - (void)setEndDate:(NSDate *)date
@@ -215,10 +229,32 @@
 
 #pragma mark - Action
 
-- (IBAction)backToCalendar:(id)sender
+- (IBAction)cancel:(id)sender
 {
     [self.presentingViewController dismissViewControllerAnimated:YES
                                                       completion:nil];
+}
+
+- (IBAction)done:(id)sender
+{
+    if ([self.titleText.text isEqual: @""]) {
+        // popover
+    } else {
+        
+        BOOL isSuccess = [[SRMEventStore sharedStore] addEvent:self.titleText.text
+                                     calendar:0
+                                       allDay:self.allDaySwitch.value
+                                    startDate:self.startDate
+                                      endDate:self.endDate];
+        
+        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
+        if (self.didDismiss) {
+            self.didDismiss();
+        }
+        
+        [self.presentingViewController dismissViewControllerAnimated:YES
+                                                          completion:nil];
+    }
 }
 
 - (IBAction)toggleStartDate:(id)sender

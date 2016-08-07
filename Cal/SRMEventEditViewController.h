@@ -12,4 +12,6 @@
 
 @interface SRMEventEditViewController : StaticDataTableViewController
 
+@property (nonatomic, copy) void (^didDismiss)();
+
 @end

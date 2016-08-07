@@ -24,7 +24,7 @@
 #import "SRMTaskCell.h"
 #import "SRMEventEditViewController.h"
 
-@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate>
 
 @property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
 
@@ -163,18 +163,22 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     
     self.isFirstTimeViewDidLayoutSubviews = YES;
 
+    // event
+    [SRMEventStore sharedStore].delegate = self;
+    [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
+    [self fetchRecentEvents];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(fetchRecentEvents)
+                                                 name:EKEventStoreChangedNotification object:nil];
+    
+
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)fetchRecentEvents
 {
-    [super viewWillAppear:animated];
-    
-    // event
-    
-    [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
     if ([SRMEventStore sharedStore].isGranted) {
-        [[SRMEventStore sharedStore] fetchEventsFromDate:[[SRMCalendarTool tool] dateWithYear:2016 month:1 day:1]
-                                                  toDate:[[SRMCalendarTool tool] dateWithYear:2016 month:12 day:31]];
+        [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
     }
 }
 
@@ -190,6 +194,13 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         self.isFirstTimeViewDidLayoutSubviews = NO;
 
     }
+}
+
+#pragma mark - <SRMEventStoreDelegate>
+
+- (void)didFetchRecentEvent
+{
+    [self.monthItemTableView reloadData];
 }
 
 #pragma mark - Private
@@ -365,8 +376,14 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqual: @"EditEvent"]) {
-        SRMEventEditViewController *vc = segue.destinationViewController;
+        UINavigationController *nc = segue.destinationViewController;
+        SRMEventEditViewController *vc = [nc.viewControllers firstObject];
         
+        __weak SRMCalendarViewController *weakSelf = self;
+        
+        vc.didDismiss = ^{
+            [weakSelf.monthItemTableView reloadData];
+        };
     }
 }
 
@@ -463,7 +480,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         return [[SRMTaskStore sharedStore] allTasks].count;
         
     } else if (section == 1) {
-        return [[SRMEventStore sharedStore] allEvents].count;
+        return [[SRMEventStore sharedStore] recentEvents].count;
     }
     return 0;
 }
@@ -481,8 +498,8 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         
     } else if (indexPath.section == 1) {
         SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
-        NSArray *items = [[SRMEventStore sharedStore] allEvents];
-        SRMEvent *item = items[indexPath.row];
+        NSArray *items = [[SRMEventStore sharedStore] recentEvents];
+        EKEvent *item = items[indexPath.row];
         
         [cell setEvent:item];
         

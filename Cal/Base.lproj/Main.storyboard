@@ -4,6 +4,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Calendar View Controller-->
@@ -164,7 +165,7 @@
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <state key="normal" image="system_icon_add"/>
                                                 <connections>
-                                                    <segue destination="CkJ-LD-lwC" kind="presentation" id="EqP-HV-Q1C"/>
+                                                    <segue destination="CkJ-LD-lwC" kind="presentation" identifier="EditEvent" id="EqP-HV-Q1C"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -2062,9 +2063,6 @@
                                                             <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                                             <color key="textColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
-                                                            <variation key="widthClass=compact" misplaced="YES">
-                                                                <rect key="frame" x="60" y="10" width="44.5" height="19.5"/>
-                                                            </variation>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="None" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YnH-4s-9C9">
                                                             <rect key="frame" x="-42" y="-21" width="42" height="21"/>
@@ -2192,6 +2190,51 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="356-D5-6kF">
+                                <cells>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="40" id="2tp-2U-W6D">
+                                        <rect key="frame" x="0.0" y="517" width="600" height="40"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2tp-2U-W6D" id="Mwp-Fc-P8s">
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="40"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gtb-SL-y73">
+                                                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
+                                                    <state key="normal" title="More details &gt;&gt;&gt;"/>
+                                                </button>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            <constraints>
+                                                <constraint firstItem="gtb-SL-y73" firstAttribute="leading" secondItem="Mwp-Fc-P8s" secondAttribute="leadingMargin" constant="12" id="Rhv-9R-9m1">
+                                                    <variation key="widthClass=compact" constant="2"/>
+                                                </constraint>
+                                                <constraint firstItem="gtb-SL-y73" firstAttribute="centerY" secondItem="Mwp-Fc-P8s" secondAttribute="centerY" id="nbe-wH-n5X"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="subviews">
+                                                    <exclude reference="gtb-SL-y73"/>
+                                                </mask>
+                                                <mask key="constraints">
+                                                    <exclude reference="Rhv-9R-9m1"/>
+                                                    <exclude reference="nbe-wH-n5X"/>
+                                                </mask>
+                                            </variation>
+                                            <variation key="widthClass=compact">
+                                                <mask key="subviews">
+                                                    <include reference="gtb-SL-y73"/>
+                                                </mask>
+                                                <mask key="constraints">
+                                                    <include reference="Rhv-9R-9m1"/>
+                                                    <include reference="nbe-wH-n5X"/>
+                                                </mask>
+                                            </variation>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="sTC-NZ-q81" id="4fV-yR-kFe"/>
@@ -2199,10 +2242,15 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Event" id="OW6-v7-15t">
-                        <barButtonItem key="leftBarButtonItem" title="back" id="zfv-C1-mav">
+                        <barButtonItem key="leftBarButtonItem" image="system_icom_cancel" id="zfv-C1-mav">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="backToCalendar:" destination="sTC-NZ-q81" id="9Sl-cj-l6E"/>
+                                <action selector="cancel:" destination="sTC-NZ-q81" id="j1w-Eu-xes"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" image="system_icom_done" id="jeA-Em-gqj">
+                            <connections>
+                                <action selector="done:" destination="sTC-NZ-q81" id="fe9-et-EIk"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -2213,6 +2261,8 @@
                         <outlet property="endDateLabel" destination="IVd-Qc-xGf" id="cCs-GE-VTc"/>
                         <outlet property="endLabel" destination="oq1-q7-SEq" id="LQy-UU-yVm"/>
                         <outlet property="endTimeLabel" destination="EmS-PW-3YV" id="R0l-XC-irZ"/>
+                        <outlet property="locationText" destination="L4j-fL-ybR" id="2Th-wi-qah"/>
+                        <outlet property="moreButton" destination="gtb-SL-y73" id="d6C-p5-naK"/>
                         <outlet property="noteLabel" destination="5aV-fs-sVb" id="W6M-7b-szo"/>
                         <outlet property="noteText" destination="MXY-AI-zkd" id="nNw-pi-wbI"/>
                         <outlet property="repeatEndCell" destination="9Lf-S1-cOs" id="8G9-Dk-BId"/>
@@ -2221,6 +2271,7 @@
                         <outlet property="startDateLabel" destination="XNr-DT-BBO" id="5DO-d8-DNc"/>
                         <outlet property="startLabel" destination="Wnw-bn-MR3" id="XJs-Zl-4Om"/>
                         <outlet property="startTimeLabel" destination="jJ6-Qf-kGI" id="oQ4-Ue-5aa"/>
+                        <outlet property="titleText" destination="Ydn-XW-11J" id="N8L-zU-quC"/>
                         <outletCollection property="blockView" destination="uFR-L7-Qfo" id="Hb0-4a-GoE"/>
                         <outletCollection property="blockView" destination="OJ8-li-Nbl" id="rpQ-01-CN0"/>
                         <outletCollection property="blockView" destination="NAr-y5-ku6" id="4WF-92-Vvp"/>
@@ -2626,6 +2677,8 @@
         <image name="content_icon_time" width="21" height="21"/>
         <image name="next_arrow" width="11" height="21"/>
         <image name="prev_arrow" width="11" height="21"/>
+        <image name="system_icom_cancel" width="20" height="20"/>
+        <image name="system_icom_done" width="25" height="18"/>
         <image name="system_icon_add" width="26" height="26"/>
         <image name="task_icon_finished" width="20" height="20"/>
         <image name="task_icon_unfinished" width="20" height="20"/>
