@@ -40,10 +40,12 @@
 
 - (NSDate *)beginningOfMonthOfDate:(NSDate *)date;
 - (NSDate *)beginningOfWeekOfDate:(NSDate *)date;
+- (NSDate *)beginningOfDayOfDate:(NSDate *)date;
 - (NSInteger)dayCountOfMonthofDate:(NSDate *)date;
 
 - (BOOL)date:(NSDate *)date1 isEqualToDate:(NSDate *)date2;
 
+- (NSString *)dateAndTimeFormat:(NSDate *)date;
 - (NSString *)dateFormat:(NSDate *)date;
 - (NSString *)timeFormat:(NSDate *)date;
 - (NSString *)weekdayFormat:(NSDate *)date;

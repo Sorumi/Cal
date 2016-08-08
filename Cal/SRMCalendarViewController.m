@@ -23,8 +23,9 @@
 #import "SRMTaskStore.h"
 #import "SRMTaskCell.h"
 #import "SRMEventEditViewController.h"
+#import "SRMDayHeader.h"
 
-@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate>
+@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate>
 
 @property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
 
@@ -37,7 +38,7 @@
 @property (nonatomic) NSInteger selectedMonth;
 @property (nonatomic) NSInteger selectedDay;
 
-#pragma mark - Collection
+#pragma mark - Calendar
 
 @property (nonatomic) SRMCalendarViewMode viewMode;
 
@@ -46,10 +47,15 @@
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
 
-#pragma mark - Table
+#pragma mark - Item
 
 @property (weak, nonatomic) IBOutlet UITableView *monthItemTableView;
 @property (nonatomic) CGFloat lastContentOffset;
+
+@property (weak, nonatomic) IBOutlet SRMDayHeader *dayHeader;
+@property (weak, nonatomic) IBOutlet UIScrollView *dayScrollView;
+@property (weak, nonatomic) IBOutlet UITableView *dayItemTableView;
+@property (weak, nonatomic) IBOutlet UICollectionView *dayItemCollectionView;
 
 #pragma mark - Constraint
 
@@ -57,6 +63,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekViewBottom;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *weekHeaderTrailing;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backButtonLeading;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *dayScrollViewHeight;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthItemTableTop;
 
@@ -87,6 +94,8 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         [self monthScrollToDate:self.date animated:NO];
         [self.weekWeekdayHeader setCirclePos:[[SRMCalendarTool tool] weekdayOfDate:self.date] animated:YES];
     }
+    [[SRMEventStore sharedStore] fetchDayEvents:date];
+
 }
 
 #pragma mark - Life Cycle & Initialization
@@ -139,7 +148,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     
     self.viewMode = SRMCalendarMonthViewMode;
     
-    // table
+    // month table
     [self.monthItemTableView registerNib:[UINib nibWithNibName:@"SRMEventCell" bundle:nil] forCellReuseIdentifier:reuseEventCellIdentifier];
     [self.monthItemTableView registerNib:[UINib nibWithNibName:@"SRMTaskCell" bundle:nil] forCellReuseIdentifier:reuseTaskCellIdentifier];
     
@@ -147,6 +156,15 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     
     self.monthItemTableView.delegate = self;
     self.monthItemTableView.dataSource = self;
+    
+    // day table
+    
+    [self.dayItemTableView registerNib:[UINib nibWithNibName:@"SRMEventCell" bundle:nil] forCellReuseIdentifier:reuseEventCellIdentifier];
+    [self.dayItemTableView registerNib:[UINib nibWithNibName:@"SRMTaskCell" bundle:nil] forCellReuseIdentifier:reuseTaskCellIdentifier];
+    
+    self.dayHeader.delegate = self;
+    self.dayItemTableView.delegate = self;
+    self.dayItemTableView.dataSource = self;
     
     // add custum gesture
     UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(monthToWeek:)];
@@ -166,20 +184,13 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     // event
     [SRMEventStore sharedStore].delegate = self;
     [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
-    [self fetchRecentEvents];
+    [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(fetchRecentEvents)
+                                             selector:@selector(eventStoreDidChanged)
                                                  name:EKEventStoreChangedNotification object:nil];
     
 
-}
-
-- (void)fetchRecentEvents
-{
-    if ([SRMEventStore sharedStore].isGranted) {
-        [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
-    }
 }
 
 - (void)viewDidLayoutSubviews
@@ -193,7 +204,16 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         self.date = self.today;
         self.isFirstTimeViewDidLayoutSubviews = NO;
 
+        self.dayScrollViewHeight.constant = - SRMHeaderHeight - SRMDayHeaderHeight - SRMToolbarHeight - self.viewWidth/7;
     }
+}
+
+#pragma mark - Event
+
+- (void)eventStoreDidChanged
+{
+    [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
+    [[SRMEventStore sharedStore] fetchDayEvents:self.today];
 }
 
 #pragma mark - <SRMEventStoreDelegate>
@@ -201,6 +221,12 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 - (void)didFetchRecentEvent
 {
     [self.monthItemTableView reloadData];
+}
+
+- (void)didFetchDayEvent
+{
+    [self.dayItemTableView reloadData];
+
 }
 
 #pragma mark - Private
@@ -277,6 +303,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
                          [self.view layoutIfNeeded];
                      }
                      completion:NULL];
+
 }
 
 - (void)weekToMonth:(UISwipeGestureRecognizer *)gesture
@@ -387,9 +414,16 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     }
 }
 
+#pragma mark - <SRMDayHeaderDelegate>
+
+- (void)dayHeaderBeginChange:(NSInteger)num
+{
+    [self.dayScrollView setContentOffset:CGPointMake(self.viewWidth*num, 0) animated:YES];
+}
+
 #pragma mark - <UIScrollViewDelegate>
 
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
     if (scrollView == self.monthItemTableView) {
         if (self.lastContentOffset == scrollView.contentOffset.y && scrollView.contentOffset.y == 0) {
@@ -422,8 +456,11 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 // use finger ti scroll
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
-{    
-    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
+{
+    if (scrollView == self.dayScrollView) {
+        NSInteger page = scrollView.contentOffset.x / self.viewWidth;
+        [self.dayHeader setBorderViewPos:page animated:YES];
+    } else if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
 
         SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
@@ -476,35 +513,61 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return [[SRMTaskStore sharedStore] allTasks].count;
+    if (tableView == self.monthItemTableView) {
+        if (section == 0) {
+            return [[SRMTaskStore sharedStore] allTasks].count;
         
-    } else if (section == 1) {
-        return [[SRMEventStore sharedStore] recentEvents].count;
+        } else if (section == 1) {
+            return [[SRMEventStore sharedStore] recentEvents].count;
+        }
+    } else if (tableView == self.dayItemTableView) {
+        if (section == 0) {
+//            return [[SRMTaskStore sharedStore] ].count;
+            
+        } else if (section == 1) {
+            return [[SRMEventStore sharedStore] dayEvents:self.date].count;
+        }
     }
     return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0) {
-        SRMTaskCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseTaskCellIdentifier forIndexPath:indexPath];
-        NSArray *items = [[SRMTaskStore sharedStore] allTasks];
-        SRMTask *item = items[indexPath.row];
+    if (tableView == self.monthItemTableView) {
+        if (indexPath.section == 0) {
+            SRMTaskCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseTaskCellIdentifier forIndexPath:indexPath];
+            NSArray *items = [[SRMTaskStore sharedStore] allTasks];
+            SRMTask *item = items[indexPath.row];
+            
+            [cell setTask:item];
+            
+            return cell;
+            
+        } else if (indexPath.section == 1) {
+            SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
+            NSArray *items = [[SRMEventStore sharedStore] recentEvents];
+            EKEvent *item = items[indexPath.row];
+            
+            [cell setEvent:item];
+            
+            return cell;
+        }
         
-        [cell setTask:item];
-        
-        return cell;
-        
-    } else if (indexPath.section == 1) {
-        SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
-        NSArray *items = [[SRMEventStore sharedStore] recentEvents];
-        EKEvent *item = items[indexPath.row];
-        
-        [cell setEvent:item];
-        
-        return cell;
+    } else if (tableView == self.dayItemTableView) {
+        if (indexPath.section == 0) {
+            SRMTaskCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseTaskCellIdentifier forIndexPath:indexPath];
+            return cell;
+        } else if (indexPath.section == 1) {
+            SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
+            NSArray *items = [[SRMEventStore sharedStore] dayEvents:self.date];
+            EKEvent *item = items[indexPath.row];
+            
+            [cell setEvent:item];
+            
+            return cell;
+        }
     }
+
     return  nil;
 }
 
@@ -528,12 +591,15 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section
 {
+    if (section == 1) {
+        return 10;
+    }
     return 0.1;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (tableView == self.monthItemTableView) {
+//    if (tableView == self.monthItemTableView) {
         NSArray *array = [[NSBundle mainBundle] loadNibNamed:@"SRMListHeader" owner:self options:nil];
         SRMListHeader *header = [array firstObject];
         if (section == 0) {
@@ -542,7 +608,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
             header.sectionTitleLable.text = @"Events";
         }
         return header;
-    }
+//    }
     return nil;
 }
 
@@ -693,7 +759,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     } else if (collectionView == self.weekCollectionView) {
         SRMWeekDayCell *cell = (SRMWeekDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
         self.date = cell.date;
-
     }
 }
 

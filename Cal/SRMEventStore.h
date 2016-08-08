@@ -29,6 +29,7 @@
 
 - (void)fetchRecentEvents:(NSDate *)fromDate;
 - (void)fetchDayEvents:(NSDate *)date;
+- (NSArray *)dayEvents:(NSDate *)date;
 
 - (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate;
 

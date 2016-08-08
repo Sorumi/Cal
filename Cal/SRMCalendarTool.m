@@ -283,11 +283,19 @@
     NSDateComponents *weekdayComponents = [self.calendar components:NSCalendarUnitWeekday fromDate:date];
     NSDateComponents *components = self.components;
     components.day = - (weekdayComponents.weekday - self.calendar.firstWeekday);
+    
     components.day = (components.day-7) % 7;
     NSDate *beginningOfWeek = [self.calendar dateByAddingComponents:components toDate:date options:0];
     beginningOfWeek = [self dateByIgnoringTimeComponentsOfDate:beginningOfWeek];
     components.day = NSIntegerMax;
     return beginningOfWeek;
+}
+
+- (NSDate *)beginningOfDayOfDate:(NSDate *)date
+{
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour fromDate:date];
+    components.hour = 0;
+    return [self.calendar dateFromComponents:components];
 }
 
 - (BOOL)date:(NSDate *)date1 isEqualToDate:(NSDate *)date2
@@ -305,6 +313,14 @@
     } else {
         return NO;
     }
+}
+
+- (NSString *)dateAndTimeFormat:(NSDate *)date
+{
+//    NSLog(@"[[NSTimeZone localTimeZone] name] is %@",[[NSTimeZone localTimeZone] name]);
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"YYYY-MM-d HH:mm:ss"];
+    return [dateFormatter stringFromDate:date];
 }
 
 - (NSString *)dateFormat:(NSDate *)date

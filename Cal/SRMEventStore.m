@@ -14,9 +14,9 @@
 
 @property (nonatomic, strong) EKEventStore *eventStore;
 
-@property (nonatomic, strong) NSArray<EKEvent *> *privateEvents;
+@property (nonatomic, strong) NSArray<EKEvent *> *privateRecentEvents;
 
-@property (nonatomic, strong) NSMutableDictionary *dayEvents;
+@property (nonatomic, strong) NSMutableDictionary *privateDayEvents;
 
 @property (nonatomic, strong) NSArray<EKCalendar *> *calendars;
 
@@ -30,7 +30,7 @@
 
 - (NSArray *)recentEvents
 {
-    return self.privateEvents;
+    return self.privateRecentEvents;
 }
 
 #pragma mark - Initialization
@@ -60,8 +60,8 @@
     if (!_eventStore) {
         _eventStore = [[EKEventStore alloc] init];
     }
-    if (!_dayEvents) {
-        _dayEvents = [[NSMutableDictionary alloc] init];
+    if (!_privateDayEvents) {
+        _privateDayEvents = [[NSMutableDictionary alloc] init];
     }
     NSString *path = [self itemArchivePath];
     _iconDictionary = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
@@ -103,6 +103,9 @@
 
 - (void)fetchRecentEvents:(NSDate *)fromDate
 {
+    if (!self.isGranted) {
+        return;
+    }
     NSDate *endDate = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:fromDate];
     
     NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:fromDate
@@ -120,7 +123,7 @@
                 }
             }
             [self saveChanges];
-            self.privateEvents = systemEvents;
+            self.privateRecentEvents = systemEvents;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
 
@@ -132,8 +135,13 @@
 
 - (void)fetchDayEvents:(NSDate *)date
 {
-    NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:date
-                                                                               endDate:date
+    if (!self.isGranted) {
+        return;
+    }
+    NSDate *fromDate = [[SRMCalendarTool tool] beginningOfDayOfDate:date];
+    NSDate *toDate = [[SRMCalendarTool tool] dateByAddingDays:1 toDate:fromDate];
+    NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:fromDate
+                                                                               endDate:toDate
                                                                              calendars:nil];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -147,12 +155,20 @@
                 }
             }
             [self saveChanges];
-            self.dayEvents[[[SRMCalendarTool tool] dateFormat:date]] = systemEvents;
+            self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:date]] = systemEvents;
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self.delegate didFetchDayEvent];
+        });
         
     });
 }
 
+- (NSArray *)dayEvents:(NSDate *)date
+{
+    return self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:date]];
+}
 
 #pragma mark - Icon
 

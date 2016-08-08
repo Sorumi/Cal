@@ -39,6 +39,7 @@
 		4D3513E41D4F091800D2B128 /* SRMTaskStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513E31D4F091800D2B128 /* SRMTaskStore.m */; };
 		4D3513F31D4F172B00D2B128 /* SRMTaskCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513F11D4F172B00D2B128 /* SRMTaskCell.m */; };
 		4D3513F41D4F172B00D2B128 /* SRMTaskCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D3513F21D4F172B00D2B128 /* SRMTaskCell.xib */; };
+		4D85DEE41D580F96000B9584 /* SRMDayHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D85DEE31D580F96000B9584 /* SRMDayHeader.m */; };
 		4DB2A9C61D52135600DE9693 /* SRMCalendarToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9C51D52135600DE9693 /* SRMCalendarToolbar.m */; };
 		4DB2A9CE1D52F3C200DE9693 /* SRMTimeDecoration.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9CD1D52F3C200DE9693 /* SRMTimeDecoration.m */; };
 		4DB2A9D11D52F79900DE9693 /* SRMSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9D01D52F79900DE9693 /* SRMSwitch.m */; };
@@ -127,6 +128,8 @@
 		4D3513F01D4F172B00D2B128 /* SRMTaskCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMTaskCell.h; sourceTree = "<group>"; };
 		4D3513F11D4F172B00D2B128 /* SRMTaskCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMTaskCell.m; sourceTree = "<group>"; };
 		4D3513F21D4F172B00D2B128 /* SRMTaskCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMTaskCell.xib; sourceTree = "<group>"; };
+		4D85DEE21D580F96000B9584 /* SRMDayHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMDayHeader.h; sourceTree = "<group>"; };
+		4D85DEE31D580F96000B9584 /* SRMDayHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMDayHeader.m; sourceTree = "<group>"; };
 		4DB2A9C41D52135600DE9693 /* SRMCalendarToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMCalendarToolbar.h; sourceTree = "<group>"; };
 		4DB2A9C51D52135600DE9693 /* SRMCalendarToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMCalendarToolbar.m; sourceTree = "<group>"; };
 		4DB2A9CC1D52F3C200DE9693 /* SRMTimeDecoration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMTimeDecoration.h; sourceTree = "<group>"; };
@@ -301,6 +304,8 @@
 				4DB2A9D01D52F79900DE9693 /* SRMSwitch.m */,
 				4DB2A9CC1D52F3C200DE9693 /* SRMTimeDecoration.h */,
 				4DB2A9CD1D52F3C200DE9693 /* SRMTimeDecoration.m */,
+				4D85DEE21D580F96000B9584 /* SRMDayHeader.h */,
+				4D85DEE31D580F96000B9584 /* SRMDayHeader.m */,
 				4D3513D41D4ED93D00D2B128 /* SRMListHeader.h */,
 				4D3513D51D4ED93D00D2B128 /* SRMListHeader.m */,
 				4D3513D71D4EDD8900D2B128 /* SRMListHeader.xib */,
@@ -484,6 +489,7 @@
 				4D3513E41D4F091800D2B128 /* SRMTaskStore.m in Sources */,
 				4D1E5C951D44EAED0057DC76 /* AppDelegate.m in Sources */,
 				4D1E5D621D46F95A0057DC76 /* SRMCalendarTool.m in Sources */,
+				4D85DEE41D580F96000B9584 /* SRMDayHeader.m in Sources */,
 				4D1E5C921D44EAED0057DC76 /* main.m in Sources */,
 				4D3513AD1D4AF28900D2B128 /* SRMWeekViewFlowLayout.m in Sources */,
 				4D3513BF1D4DDACE00D2B128 /* SRMEventStore.m in Sources */,

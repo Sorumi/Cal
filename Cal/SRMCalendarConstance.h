@@ -20,6 +20,8 @@ UIKIT_EXTERN CGFloat const SRMEventCellHeight;
 UIKIT_EXTERN CGFloat const SRMTaskCellHeight;
 UIKIT_EXTERN CGFloat const SRMItemCellSpacing;
 
+UIKIT_EXTERN CGFloat const SRMDayHeaderHeight;
+
 typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
     SRMCalendarMonthViewMode    = 0,
     SRMCalendarWeekViewMode     = 1,

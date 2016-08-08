@@ -17,3 +17,5 @@ CGFloat const SRMWeekViewDayCircleRadius = 14;
 CGFloat const SRMEventCellHeight = 70;
 CGFloat const SRMTaskCellHeight = 40;
 CGFloat const SRMItemCellSpacing = 10;
+
+CGFloat const SRMDayHeaderHeight = 40;
