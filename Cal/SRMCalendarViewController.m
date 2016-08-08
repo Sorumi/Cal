@@ -15,6 +15,7 @@
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
+#import "SRMMonthBoardView.h"
 #import "SRMListHeader.h"
 #import "SRMEvent.h"
 #import "SRMEventStore.h"
@@ -73,8 +74,10 @@
 
 static NSString * const reuseMonthCellIdentifier = @"MonthDateCell";
 static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
+static NSString * const reuseMonthBoardIdentifier = @"MonthBoard";
 static NSString * const reuseEventCellIdentifier = @"EventCell";
 static NSString * const reuseTaskCellIdentifier = @"TaskCell";
+
 
 #pragma mark - Properties
 
@@ -129,6 +132,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     // collection
     [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthDayCell" bundle:nil] forCellWithReuseIdentifier:reuseMonthCellIdentifier];
     [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
+    [self.monthCollectionView registerClass:[SRMMonthBoardView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier];
     
     self.monthCollectionView.bounces = NO;
     self.monthCollectionView.pagingEnabled = YES;
@@ -700,6 +704,15 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         return cell;
     }
     
+    return nil;
+}
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
+{
+    if (kind == UICollectionElementKindSectionHeader) {
+        SRMMonthBoardView *board = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier forIndexPath:indexPath];
+        return board;
+    }
     return nil;
 }
 
