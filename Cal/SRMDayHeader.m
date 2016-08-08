@@ -62,6 +62,9 @@
     layer.shadowRadius = 0.5;
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.3;
+    
+    // init
+    [self setBorderViewPos:0 animated:NO];
 }
 
 - (void)click:(id)sender

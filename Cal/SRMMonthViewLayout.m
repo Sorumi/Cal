@@ -31,20 +31,20 @@
     return self;
 }
 
-- (void)prepareLayout
-{
-    [super prepareLayout];
-     NSInteger page = [self.collectionView.dataSource numberOfSectionsInCollectionView:self.collectionView];
-    for (int i=0; i<page; i++) {
-        for (int j=0; j<42; j++) {
-            NSIndexPath *indexpath = [NSIndexPath indexPathForRow:j inSection:i];
-            UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:indexpath];
-            [_layoutAttributes addObject:attributes];
-        }
-        UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:i]];
-        [_layoutAttributes addObject:attributes];
-    }
-}
+//- (void)prepareLayout
+//{
+//    [super prepareLayout];
+//     NSInteger page = [self.collectionView.dataSource numberOfSectionsInCollectionView:self.collectionView];
+//    for (int i=0; i<page; i++) {
+//        for (int j=0; j<42; j++) {
+//            NSIndexPath *indexpath = [NSIndexPath indexPathForRow:j inSection:i];
+//            UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForItemAtIndexPath:indexpath];
+//            [_layoutAttributes addObject:attributes];
+//        }
+//        UICollectionViewLayoutAttributes *attributes = [self layoutAttributesForSupplementaryViewOfKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:i]];
+//        [_layoutAttributes addObject:attributes];
+//    }
+//}
 
 - (CGSize)collectionViewContentSize
 {

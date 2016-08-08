@@ -23,7 +23,7 @@
                                 <color key="textColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="task_icon_unfinished" translatesAutoresizingMaskIntoConstraints="NO" id="fbN-zf-4Vb">
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="task_icon_unfinished" translatesAutoresizingMaskIntoConstraints="NO" id="fbN-zf-4Vb">
                                 <rect key="frame" x="250" y="12" width="40" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="2id-xE-zJ3"/>

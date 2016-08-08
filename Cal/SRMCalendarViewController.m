@@ -16,6 +16,7 @@
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
 #import "SRMMonthBoardView.h"
+#import "SRMDayHeader.h"
 #import "SRMListHeader.h"
 #import "SRMEvent.h"
 #import "SRMEventStore.h"
@@ -24,7 +25,6 @@
 #import "SRMTaskStore.h"
 #import "SRMTaskCell.h"
 #import "SRMEventEditViewController.h"
-#import "SRMDayHeader.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate>
 
@@ -161,14 +161,20 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     self.monthItemTableView.delegate = self;
     self.monthItemTableView.dataSource = self;
     
-    // day table
+    // day scroll
+    self.dayScrollView.delegate = self;
     
+    // day table
     [self.dayItemTableView registerNib:[UINib nibWithNibName:@"SRMEventCell" bundle:nil] forCellReuseIdentifier:reuseEventCellIdentifier];
     [self.dayItemTableView registerNib:[UINib nibWithNibName:@"SRMTaskCell" bundle:nil] forCellReuseIdentifier:reuseTaskCellIdentifier];
     
     self.dayHeader.delegate = self;
     self.dayItemTableView.delegate = self;
     self.dayItemTableView.dataSource = self;
+    
+    // day collection
+    self.dayItemCollectionView.delegate = self;
+    self.dayItemCollectionView.dataSource = self;
     
     // add custum gesture
     UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(monthToWeek:)];
@@ -429,6 +435,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
+    
     if (scrollView == self.monthItemTableView) {
         if (self.lastContentOffset == scrollView.contentOffset.y && scrollView.contentOffset.y == 0) {
             [self downMonthItemTable];
@@ -440,6 +447,11 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    if (scrollView == self.dayScrollView) {
+        
+        NSInteger page = round(scrollView.contentOffset.x / self.viewWidth);
+        [self.dayHeader setBorderViewPos:page animated:YES];
+    }
     //month view change the label
     if (scrollView == self.monthCollectionView) {
         NSDate *date;
@@ -452,8 +464,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
         [self.headerView setMonthHeaderYear:year month:month];
         
-    } else if (scrollView == self.weekCollectionView) {
-    
     }
 
 }
@@ -461,9 +471,12 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 // use finger ti scroll
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+
     if (scrollView == self.dayScrollView) {
-        NSInteger page = scrollView.contentOffset.x / self.viewWidth;
-        [self.dayHeader setBorderViewPos:page animated:YES];
+        
+//        NSInteger page = scrollView.contentOffset.x / self.viewWidth;
+//        [self.dayHeader setBorderViewPos:page animated:YES];
+        
     } else if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
 
         SRMCalendarTool *tool = [SRMCalendarTool tool];
@@ -627,12 +640,13 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
     if (collectionView == self.monthCollectionView) {
-        
         return [tool monthsFromDate:tool.minimumDate toDate:tool.maximumDate] + 1;
         
     } else if (collectionView == self.weekCollectionView) {
-        
         return [tool weeksFromDate:tool.minimumDate toDate:tool.maximumDate] + 1;
+        
+    } else if (collectionView == self.dayItemCollectionView) {
+        return 1;
     }
     
     return 0;
@@ -648,6 +662,8 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     } else if (collectionView == self.weekCollectionView) {
         
         return 7;
+        
+    } else if (collectionView == self.dayItemCollectionView) {
         
     }
     return 0;
@@ -702,6 +718,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
 
         return cell;
+    } else if (collectionView == self.dayItemCollectionView) {
     }
     
     return nil;
@@ -709,9 +726,12 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    if (kind == UICollectionElementKindSectionHeader) {
-        SRMMonthBoardView *board = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier forIndexPath:indexPath];
-        return board;
+    if (collectionView == self.monthCollectionView) {
+        if (kind == UICollectionElementKindSectionHeader) {
+            SRMMonthBoardView *board = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier forIndexPath:indexPath];
+            board.userInteractionEnabled = NO;
+            return board;
+        }
     }
     return nil;
 }
@@ -721,10 +741,15 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    CGFloat cellWidth = self.viewWidth / 7.0;
-    CGSize size = CGSizeMake(cellWidth, cellWidth);
-
-    return size;
+    if (collectionView == self.monthCollectionView || collectionView == self.weekCollectionView) {
+        CGFloat cellWidth = self.viewWidth / 7.0;
+        CGSize size = CGSizeMake(cellWidth, cellWidth);
+        
+        return size;
+    } else if (collectionView == self.dayItemCollectionView) {
+        
+    }
+    return CGSizeZero;
 }
 
 /*
@@ -775,12 +800,13 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     }
 }
 
+/*
 // 取消选中操作
 - (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
 
 }
-
+*/
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 0;

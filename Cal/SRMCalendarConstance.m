@@ -19,3 +19,4 @@ CGFloat const SRMTaskCellHeight = 40;
 CGFloat const SRMItemCellSpacing = 10;
 
 CGFloat const SRMDayHeaderHeight = 40;
+CGFloat const SRMDayBoardCellHeight = 60;
