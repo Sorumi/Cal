@@ -58,8 +58,8 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    if ([_delegate respondsToSelector:@selector(repeadEndViewDidBackWithDate:)]) {
-        [_delegate repeadEndViewDidBackWithDate:self.date];
+    if ([_delegate respondsToSelector:@selector(repeatEndViewDidBackWithDate:)]) {
+        [_delegate repeatEndViewDidBackWithDate:self.date];
     }
 }
 

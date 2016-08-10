@@ -260,8 +260,10 @@
 
 - (NSDate *)dateByIgnoringTimeComponentsOfDate:(NSDate *)date
 {
-    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour fromDate:date];
+    NSDateComponents *components = [self.calendar components:NSCalendarUnitYear|NSCalendarUnitMonth|NSCalendarUnitDay|NSCalendarUnitHour|NSCalendarUnitMinute|NSCalendarUnitSecond fromDate:date];
     components.hour = 0;
+    components.minute = 0;
+    components.second = 0;
     return [self.calendar dateFromComponents:components];
 }
 

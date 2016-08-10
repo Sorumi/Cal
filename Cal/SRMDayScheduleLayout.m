@@ -64,7 +64,7 @@
 
 - (CGSize)collectionViewContentSize
 {
-    return CGSizeMake(self.collectionView.frame.size.width * 2, SRMDayBoardCellHeight*24);
+    return CGSizeMake(self.collectionView.frame.size.width, SRMDayBoardCellHeight*24);
 }
 
 - (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
@@ -89,13 +89,15 @@
         EKEvent *event = [datasource eventForRow:i];
         SRMDayScheduleCellAttribute *srmAttribute = [SRMDayScheduleCellAttribute attributeForIndex:1 num:1];
         
-        if ([event.startDate timeIntervalSinceDate: startDate] < 0) {
+//        NSLog(@"%@ %@ %@ %@", event.title, event.startDate, event.endDate, event.occurrenceDate);
+        
+        if ([event.startDate timeIntervalSinceDate:startDate] < 0) {
             srmAttribute.startY = 0;
         } else {
             srmAttribute.startY = [[SRMCalendarTool tool] hourOfDate:event.startDate] * SRMDayBoardCellHeight + (CGFloat)[[SRMCalendarTool tool] miniuteOfDate:event.startDate] / 60 * SRMDayBoardCellHeight;
         }
         
-        if ([event.endDate timeIntervalSinceDate: endDate] > 0) {
+        if ([event.endDate timeIntervalSinceDate:endDate] > 0) {
             srmAttribute.endY = 24 * SRMDayBoardCellHeight;
         } else {
             srmAttribute.endY = [[SRMCalendarTool tool] hourOfDate:event.endDate] * SRMDayBoardCellHeight + (CGFloat)[[SRMCalendarTool tool] miniuteOfDate:event.endDate] / 60 * SRMDayBoardCellHeight;
@@ -121,7 +123,7 @@
     CGFloat width = self.collectionView.frame.size.width;
     CGFloat leftMargin = 46;
     CGFloat rightMargin = 10;
-    CGFloat cellSpacing = 10;
+//    CGFloat cellSpacing = 10;
     
     UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
 
@@ -150,7 +152,9 @@
     
     
     SRMDayScheduleCellAttribute *attr = self.dayScheduleCellAttributes[indexPath.row];
-    attributes.frame = CGRectMake(leftMargin, attr.startY, width - leftMargin - rightMargin, MAX(attr.endY-attr.startY, 100)-10);
+    attributes.frame = CGRectMake(leftMargin, attr.startY, width - leftMargin - rightMargin, MAX(attr.endY-attr.startY, 60)-10);
+    
+    NSLog(@"%f %f", attr.startY, attr.endY);
     
     return attributes;
 }

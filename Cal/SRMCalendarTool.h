@@ -45,6 +45,8 @@
 
 - (BOOL)date:(NSDate *)date1 isEqualToDate:(NSDate *)date2;
 
+- (NSDate *)dateByIgnoringTimeComponentsOfDate:(NSDate *)date;
+
 - (NSString *)dateAndTimeFormat:(NSDate *)date;
 - (NSString *)dateFormat:(NSDate *)date;
 - (NSString *)timeFormat:(NSDate *)date;

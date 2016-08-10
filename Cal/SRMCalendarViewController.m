@@ -13,7 +13,6 @@
 #import "SRMCalendarTool.h"
 #import "SRMCalendarHeader.h"
 
-#import "SRMMonthViewDelegate.h"
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
@@ -21,7 +20,6 @@
 
 #import "SRMDayHeader.h"
 #import "SRMListHeader.h"
-#import "SRMEvent.h"
 #import "SRMEventStore.h"
 #import "SRMEventCell.h"
 #import "SRMTask.h"
@@ -51,8 +49,6 @@
 @property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
-
-@property (strong, nonatomic) IBOutlet SRMMonthViewDelegate *monthCollectionViewDelegate;
 
 #pragma mark - Item
 
@@ -120,7 +116,7 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 
 - (void) initialize
 {
-    _date = [NSDate date];
+    _date = [[SRMCalendarTool tool] dateByIgnoringTimeComponentsOfDate:[NSDate date]];
     _today = self.date;
     _selectedYear = [[SRMCalendarTool tool] yearOfDate:_date];
     _selectedMonth = [[SRMCalendarTool tool] monthOfDate:_date];
@@ -140,21 +136,8 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
     [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
     [self.monthCollectionView registerClass:[SRMMonthBoardView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier];
     
-//    self.monthCollectionView.bounces = NO;
-//    self.monthCollectionView.pagingEnabled = YES;
-//    self.monthCollectionView.showsVerticalScrollIndicator = NO;
-//    self.monthCollectionView.showsHorizontalScrollIndicator = NO;
-    
-//    self.monthCollectionView.delegate = self.monthCollectionViewDelegate;
-//    self.monthCollectionView.dataSource = self.monthCollectionViewDelegate;
-    
     self.monthCollectionView.delegate = self;
     self.monthCollectionView.dataSource = self;
-    
-//    self.weekCollectionView.bounces = NO;
-//    self.weekCollectionView.pagingEnabled = YES;
-//    self.weekCollectionView.showsVerticalScrollIndicator = NO;
-//    self.weekCollectionView.showsHorizontalScrollIndicator = NO;
     
     self.weekCollectionView.delegate = self;
     self.weekCollectionView.dataSource = self;
@@ -235,6 +218,11 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 {
     [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
     [[SRMEventStore sharedStore] fetchDayEvents:self.today];
+}
+- (EKEvent *)eventForRow:(NSInteger)row
+{
+    NSArray *items = [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date];
+    return items[row];
 }
 
 #pragma mark - <SRMEventStoreDelegate>
@@ -751,28 +739,7 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
     return nil;
 }
 
-
-///!!!!!!!!!!
-- (EKEvent *)eventForRow:(NSInteger)row
-{
-    NSArray *items = [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date];
-    return items[row];
-}
-
-- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
-{
-    if (collectionView == self.monthCollectionView) {
-        if (kind == UICollectionElementKindSectionHeader) {
-            SRMMonthBoardView *board = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier forIndexPath:indexPath];
-            board.userInteractionEnabled = NO;
-            return board;
-        }
-    }
-    return nil;
-}
-
 #pragma mark - <UICollectionViewDelegate>
-
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -787,34 +754,28 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
     return CGSizeZero;
 }
 
-/*
-// 允许选中时，高亮
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath
 {
-    return YES;
+    if (collectionView == self.monthCollectionView) {
+        if (kind == UICollectionElementKindSectionHeader) {
+            SRMMonthBoardView *board = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier forIndexPath:indexPath];
+            board.userInteractionEnabled = NO;
+            return board;
+        }
+    }
+    return nil;
 }
-// 高亮完成后回调
-- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-// 由高亮转成非高亮完成时的回调
-- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
-{
 
-}
-*/
-// 设置是否允许选中
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
 }
-// 设置是否允许取消选中
+
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     return YES;
 }
-// 选中操作
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     if (collectionView == self.monthCollectionView) {
@@ -834,14 +795,6 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
         self.date = cell.date;
     }
 }
-
-/*
-// 取消选中操作
-- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
-{
-
-}
-*/
 
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 0;

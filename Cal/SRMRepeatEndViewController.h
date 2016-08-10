@@ -12,7 +12,7 @@
 @protocol SRMRepeatEndDelegate <NSObject>
 
 @optional
-- (void)repeadEndViewDidBackWithDate:(NSDate *)endDate;
+- (void)repeatEndViewDidBackWithDate:(NSDate *)endDate;
 
 @end
 

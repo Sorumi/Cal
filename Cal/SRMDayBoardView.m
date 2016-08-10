@@ -19,7 +19,7 @@ alpha:1.0]
 - (instancetype)initWithFrame:(CGRect)frame
 {
     CGFloat width = [[UIScreen mainScreen] bounds].size.width;
-    CGRect newFrame = CGRectMake(0, 0, width * 2, SRMDayBoardCellHeight * 24);
+    CGRect newFrame = CGRectMake(0, 0, width, SRMDayBoardCellHeight * 24);
     
     self = [super initWithFrame:newFrame];
     self.backgroundColor = UIColorFromRGB(0xFCFCFC);
@@ -32,7 +32,7 @@ alpha:1.0]
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect {
     // Drawing code
-    CGFloat width = [[UIScreen mainScreen] bounds].size.width *2;
+    CGFloat width = [[UIScreen mainScreen] bounds].size.width;
     
     // string
     CGRect textRect = CGRectMake(6, 6, 50, 20);

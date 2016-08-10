@@ -248,27 +248,6 @@
                                     }];
 }
 
-//- (void)fetchEventsFromDate:(NSDate *)fromDate toDate:(NSDate *)toDate
-//{
-//    NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:fromDate endDate:toDate calendars:nil];
-//    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        
-//        NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
-//        
-//        if (systemEvents != nil) {
-//            for (EKEvent* event in systemEvents) {
-//                //                [self addSystemEvent:event];
-//                if (![self iconForEventIdentifier:event.eventIdentifier]) {
-//                    [self setIcon:0 forEventIdentifier:event.eventIdentifier];
-//                }
-//            }
-//        }
-//        
-//    });
-//    
-//}
-
 //- (void)addEvent:(EKEvent *)event;
 //{
 //    SRMEvent *event = [[SRMEvent alloc] initWithSystemEvent:systemEvent];
@@ -278,7 +257,7 @@
 //
 //}
 
-- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate
+- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule
 {
     EKEvent *event  = [EKEvent eventWithEventStore:self.eventStore];
     [event setCalendar:[self.eventStore defaultCalendarForNewEvents]];
@@ -286,6 +265,9 @@
     event.allDay = allday;
     event.startDate = startDate;
     event.endDate = endDate;
+    event.location = location;
+    event.notes = note;
+    [event addRecurrenceRule:rule];
     
     return [self.eventStore saveEvent:event span:EKSpanThisEvent commit:YES error:nil];
 }

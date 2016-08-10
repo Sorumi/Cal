@@ -210,7 +210,7 @@
 {
     if ([segue.identifier isEqual: @"RepeatType"]) {
         SRMSelectViewController *vc = segue.destinationViewController;
-        vc.selectMode = SRMEventRepeat;
+        vc.selectMode = SRMEventSelectRepeat;
         vc.title = @"Repeat";
         vc.delegate = self;
         vc.titleArray = self.repeatType;
@@ -240,12 +240,44 @@
     if ([self.titleText.text isEqual: @""]) {
         // popover
     } else {
+        EKRecurrenceRule *rule;
+
+        if (self.repeatMode != SRMEventRepeatNever) {
+            EKRecurrenceEnd *end;
+            
+            if (self.endDate) {
+                end = [EKRecurrenceEnd recurrenceEndWithEndDate:self.repeatEndDate];
+            }
+            
+            switch (self.repeatMode) {
+                case SRMEventRepeatEveryDay:
+                    rule = [[EKRecurrenceRule alloc] initRecurrenceWithFrequency:EKRecurrenceFrequencyDaily interval:1 end:end];
+                    break;
+                case SRMEventRepeatEveryWeek:
+                    rule = [[EKRecurrenceRule alloc] initRecurrenceWithFrequency:EKRecurrenceFrequencyWeekly interval:1 end:end];
+                    break;
+                case SRMEventRepeatEveryTwoWeek:
+                    rule = [[EKRecurrenceRule alloc] initRecurrenceWithFrequency:EKRecurrenceFrequencyWeekly interval:2 end:end];
+                    break;
+                case SRMEventRepeatEveryMonth:
+                    rule = [[EKRecurrenceRule alloc] initRecurrenceWithFrequency:EKRecurrenceFrequencyMonthly interval:1 end:end];
+                    break;
+                case SRMEventRepeatEveryYear:
+                    rule = [[EKRecurrenceRule alloc] initRecurrenceWithFrequency:EKRecurrenceFrequencyYearly interval:1 end:end];
+                    break;
+                default:
+                    break;
+            }
+        }
         
         BOOL isSuccess = [[SRMEventStore sharedStore] addEvent:self.titleText.text
-                                     calendar:0
-                                       allDay:self.allDaySwitch.value
-                                    startDate:self.startDate
-                                      endDate:self.endDate];
+                                                      calendar:0
+                                                        allDay:self.allDaySwitch.value
+                                                     startDate:self.startDate
+                                                       endDate:self.endDate
+                                                      location:self.locationText.text
+                                                          note:self.noteText.text
+                                                recurrenceRule:rule];
         
         NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
         if (self.didDismiss) {
@@ -308,14 +340,14 @@
 
 - (void)selectView:(SRMEventSelectMode)selectMode didBackWithSelectRow:(NSInteger)selectRow
 {
-    if (selectMode == SRMEventRepeat) {
+    if (selectMode == SRMEventSelectRepeat) {
         self.repeatMode = selectRow;
     }
 }
 
 #pragma mark - <SRMRepeatEndDelegate>
 
-- (void)repeadEndViewDidBackWithDate:(NSDate *)endDate
+- (void)repeatEndViewDidBackWithDate:(NSDate *)endDate
 {
     self.repeatEndDate = endDate;
     if (endDate) {
@@ -323,6 +355,32 @@
     } else {
         self.repeatEndDateLabel.text = @"Never";
     }
+}
+
+#pragma mark - <SRMSwitchDelegate>
+
+- (void)switchView:(SRMSwitch *)switchView didEndToggleWithValue:(BOOL)value
+{
+    __weak SRMEventEditViewController *weakSelf = self;
+    if (value) {
+        
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             weakSelf.datePicker.datePickerMode = UIDatePickerModeDate;
+                         }];
+        
+    } else {
+        [UIView animateWithDuration:0.3
+                         animations:^{
+                             weakSelf.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
+                             weakSelf.datePicker.minuteInterval = 5;
+                         }];
+        
+    }
+    
+    self.startDate = self.startDate;
+    self.endDate = self.endDate;
+    
 }
 
 #pragma mark - <UITextFieldDelegate>
@@ -391,33 +449,6 @@
     visibleRect.size.height -= self.tableView.contentInset.top + self.tableView.contentInset.bottom;
     
     return CGRectContainsRect(visibleRect, rect);
-}
-
-#pragma mark - <SRMSwitchDelegate>
-
-- (void)switchView:(SRMSwitch *)switchView didEndToggleWithValue:(BOOL)value
-{
-    __weak SRMEventEditViewController *weakSelf = self;
-    if (value) {
-
-        
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             weakSelf.datePicker.datePickerMode = UIDatePickerModeDate;
-                         }];
-
-    } else {
-        [UIView animateWithDuration:0.3
-                         animations:^{
-                             weakSelf.datePicker.datePickerMode = UIDatePickerModeDateAndTime;
-                             weakSelf.datePicker.minuteInterval = 5;
-                         }];
-
-    }
-    
-    self.startDate = self.startDate;
-    self.endDate = self.endDate;
-    
 }
 
 #pragma mark - <UITableViewDelegate>

@@ -181,6 +181,10 @@
                                         <exclude reference="vll-Po-3Tz"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="dataSource" destination="ZNe-Lb-uvi" id="qIA-Rz-6Zj"/>
+                                    <outlet property="delegate" destination="ZNe-Lb-uvi" id="0gX-qq-s7T"/>
+                                </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mwg-TE-lQa" customClass="SRMMonthWeekdayHeader">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
@@ -216,7 +220,7 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" bounces="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dpK-xs-UIc">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="751" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dpK-xs-UIc">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -796,7 +800,6 @@
                         <outlet property="dayScrollViewHeight" destination="Se7-CV-14l" id="fUm-Zn-GzN"/>
                         <outlet property="headerView" destination="F3C-Zo-w14" id="sSX-HW-Ne7"/>
                         <outlet property="monthCollectionView" destination="VGO-i8-Jik" id="vXz-qg-NY9"/>
-                        <outlet property="monthCollectionViewDelegate" destination="vC2-CC-euQ" id="8Ch-m3-VFQ"/>
                         <outlet property="monthItemTableTop" destination="3G5-d3-s4l" id="LzN-Qe-jMw"/>
                         <outlet property="monthItemTableView" destination="W6V-UO-pvr" id="bqb-lw-lXF"/>
                         <outlet property="monthWeekdayViewTop" destination="oBs-jk-QQj" id="Q6c-GA-CWA"/>
@@ -807,7 +810,6 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eu9-zh-TXs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <customObject id="vC2-CC-euQ"/>
             </objects>
             <point key="canvasLocation" x="-1711.5" y="-21"/>
         </scene>
