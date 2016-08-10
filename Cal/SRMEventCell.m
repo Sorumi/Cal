@@ -18,6 +18,8 @@
 @property (nonatomic) IBOutlet UIView *categoryColorView;
 @property (nonatomic) IBOutlet UIImageView *iconImage;
 @property (weak, nonatomic) IBOutlet UILabel *titleLable;
+@property (weak, nonatomic) IBOutlet UIStackView *locationStackView;
+@property (weak, nonatomic) IBOutlet UILabel *locationLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *durationLabel;
@@ -61,8 +63,8 @@
         
         NSInteger hour = [tool hoursFromDate:event.startDate toDate:event.endDate];
         NSInteger minute = [tool minutesFromDate:event.startDate toDate:event.endDate];
-        NSString *hourStr = hour == 0 ? @"" : [NSString stringWithFormat:@"%luh", hour];
-        NSString *minuteStr = minute == 0 ? @"" : [NSString stringWithFormat:@"%lum", minute];
+        NSString *hourStr = hour == 0 ? @" " : [NSString stringWithFormat:@"%luh", hour];
+        NSString *minuteStr = minute == 0 ? @" " : [NSString stringWithFormat:@"%lum", minute];
         self.durationLabel.text = [hourStr stringByAppendingString:minuteStr];
         
     } else {
@@ -72,6 +74,12 @@
         self.durationLabel.text = [NSString stringWithFormat:@"%lud", day];
     }
     
+    if (![event.location isEqual:@""]) {
+        self.locationStackView.hidden = NO;
+        self.locationLabel.text = event.location;
+    } else {
+        self.locationStackView.hidden = YES;
+    }
     
 }
 

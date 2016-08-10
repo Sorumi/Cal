@@ -21,4 +21,9 @@
     return self;
 }
 
+- (void)setEditMode
+{
+    self.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.2];
+}
+
 @end

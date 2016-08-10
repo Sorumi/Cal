@@ -10,4 +10,6 @@
 
 @interface SRMMonthBoardView : UICollectionReusableView
 
+- (void)setEditMode;
+
 @end

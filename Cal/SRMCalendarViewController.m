@@ -12,10 +12,13 @@
 #import "SRMCalendarConstance.h"
 #import "SRMCalendarTool.h"
 #import "SRMCalendarHeader.h"
+
+#import "SRMMonthViewDelegate.h"
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
 #import "SRMMonthBoardView.h"
+
 #import "SRMDayHeader.h"
 #import "SRMListHeader.h"
 #import "SRMEvent.h"
@@ -24,6 +27,7 @@
 #import "SRMTask.h"
 #import "SRMTaskStore.h"
 #import "SRMTaskCell.h"
+#import "SRMDayScheduleCell.h"
 #import "SRMEventEditViewController.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate>
@@ -33,7 +37,7 @@
 @property (nonatomic) CGFloat const viewWidth;
 
 //@property (nonatomic, strong) SRMCalendarTool *tool;
-@property (nonatomic, strong) NSDate *date;
+
 @property (nonatomic, strong) NSDate *today;
 @property (nonatomic) NSInteger selectedYear;
 @property (nonatomic) NSInteger selectedMonth;
@@ -47,6 +51,8 @@
 @property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
+
+@property (strong, nonatomic) IBOutlet SRMMonthViewDelegate *monthCollectionViewDelegate;
 
 #pragma mark - Item
 
@@ -77,7 +83,7 @@ static NSString * const reuseWeekCellIdentifier = @"WeekDateCell";
 static NSString * const reuseMonthBoardIdentifier = @"MonthBoard";
 static NSString * const reuseEventCellIdentifier = @"EventCell";
 static NSString * const reuseTaskCellIdentifier = @"TaskCell";
-
+static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 
 #pragma mark - Properties
 
@@ -134,18 +140,21 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
     [self.monthCollectionView registerClass:[SRMMonthBoardView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier];
     
-    self.monthCollectionView.bounces = NO;
-    self.monthCollectionView.pagingEnabled = YES;
-    self.monthCollectionView.showsVerticalScrollIndicator = NO;
-    self.monthCollectionView.showsHorizontalScrollIndicator = NO;
+//    self.monthCollectionView.bounces = NO;
+//    self.monthCollectionView.pagingEnabled = YES;
+//    self.monthCollectionView.showsVerticalScrollIndicator = NO;
+//    self.monthCollectionView.showsHorizontalScrollIndicator = NO;
+    
+//    self.monthCollectionView.delegate = self.monthCollectionViewDelegate;
+//    self.monthCollectionView.dataSource = self.monthCollectionViewDelegate;
     
     self.monthCollectionView.delegate = self;
     self.monthCollectionView.dataSource = self;
     
-    self.weekCollectionView.bounces = NO;
-    self.weekCollectionView.pagingEnabled = YES;
-    self.weekCollectionView.showsVerticalScrollIndicator = NO;
-    self.weekCollectionView.showsHorizontalScrollIndicator = NO;
+//    self.weekCollectionView.bounces = NO;
+//    self.weekCollectionView.pagingEnabled = YES;
+//    self.weekCollectionView.showsVerticalScrollIndicator = NO;
+//    self.weekCollectionView.showsHorizontalScrollIndicator = NO;
     
     self.weekCollectionView.delegate = self;
     self.weekCollectionView.dataSource = self;
@@ -173,6 +182,8 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     self.dayItemTableView.dataSource = self;
     
     // day collection
+    [self.dayItemCollectionView registerNib:[UINib nibWithNibName:@"SRMDayScheduleCell" bundle:nil] forCellWithReuseIdentifier:reuseDayScheduleCellIdentifier];
+    
     self.dayItemCollectionView.delegate = self;
     self.dayItemCollectionView.dataSource = self;
     
@@ -236,6 +247,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 - (void)didFetchDayEvent
 {
     [self.dayItemTableView reloadData];
+    [self.dayItemCollectionView reloadData];
 
 }
 
@@ -408,6 +420,13 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
     }
 }
 
+- (IBAction)showBoard:(id)sender
+{
+//    NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
+//    SRMMonthBoardView *board = (SRMMonthBoardView *)[self.monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:page]];
+//    [board setEditMode];
+}
+
 #pragma mark - Segue
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -435,7 +454,6 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
 {
-    
     if (scrollView == self.monthItemTableView) {
         if (self.lastContentOffset == scrollView.contentOffset.y && scrollView.contentOffset.y == 0) {
             [self downMonthItemTable];
@@ -574,6 +592,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         if (indexPath.section == 0) {
             SRMTaskCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseTaskCellIdentifier forIndexPath:indexPath];
             return cell;
+            
         } else if (indexPath.section == 1) {
             SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
             NSArray *items = [[SRMEventStore sharedStore] dayEvents:self.date];
@@ -665,6 +684,7 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
         
     } else if (collectionView == self.dayItemCollectionView) {
         
+        return [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date].count;
     }
     return 0;
 }
@@ -719,9 +739,24 @@ static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 
         return cell;
     } else if (collectionView == self.dayItemCollectionView) {
+        SRMDayScheduleCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseDayScheduleCellIdentifier forIndexPath:indexPath];
+        NSArray *items = [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date];
+        EKEvent *item = items[indexPath.row];
+        
+        [cell setEvent:item];
+        
+        return cell;
     }
     
     return nil;
+}
+
+
+///!!!!!!!!!!
+- (EKEvent *)eventForRow:(NSInteger)row
+{
+    NSArray *items = [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date];
+    return items[row];
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath

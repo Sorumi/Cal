@@ -28,7 +28,7 @@
                                         <color key="sectionIndexBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <color key="sectionIndexTrackingBackgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </tableView>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="YoZ-jR-2XY">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="YoZ-jR-2XY">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                         <color key="backgroundColor" red="0.98823529409999999" green="0.98823529409999999" blue="0.98823529409999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ycK-qo-3cU" customClass="SRMDayScheduleLayout">
@@ -181,10 +181,6 @@
                                         <exclude reference="vll-Po-3Tz"/>
                                     </mask>
                                 </variation>
-                                <connections>
-                                    <outlet property="dataSource" destination="ZNe-Lb-uvi" id="O15-jb-nDE"/>
-                                    <outlet property="delegate" destination="ZNe-Lb-uvi" id="QMe-Wa-WzO"/>
-                                </connections>
                             </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mwg-TE-lQa" customClass="SRMMonthWeekdayHeader">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
@@ -251,11 +247,18 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VoG-yy-Vsx" customClass="SRMCalendarToolbar">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ARH-fr-lgz">
-                                        <rect key="frame" x="331" y="-3" width="66" height="66"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="svd-bh-2QG">
+                                        <rect key="frame" x="-20" y="-11" width="440" height="62"/>
                                         <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vDX-zn-YfA">
+                                                <rect key="frame" x="20" y="20" width="200" height="22"/>
+                                                <state key="normal" image="system_icon_sticker"/>
+                                                <connections>
+                                                    <action selector="showBoard:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="ewe-ms-60H"/>
+                                                </connections>
+                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5P7-MV-Lzx">
-                                                <rect key="frame" x="20" y="20" width="26" height="26"/>
+                                                <rect key="frame" x="220" y="20" width="200" height="22"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                 <state key="normal" image="system_icon_add"/>
                                                 <connections>
@@ -263,36 +266,33 @@
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <variation key="widthClass=compact" axis="vertical"/>
                                     </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.81960784310000001" green="0.90196078430000004" blue="0.8862745098" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="ARH-fr-lgz" firstAttribute="centerY" secondItem="VoG-yy-Vsx" secondAttribute="centerY" id="6jl-nR-GP0"/>
                                     <constraint firstAttribute="height" constant="60" id="8V1-qs-zmp">
                                         <variation key="widthClass=compact" constant="40"/>
                                     </constraint>
-                                    <constraint firstItem="ARH-fr-lgz" firstAttribute="leading" secondItem="VoG-yy-Vsx" secondAttribute="leading" constant="351" id="bp6-4U-QFP">
-                                        <variation key="widthClass=compact" constant="0.0"/>
-                                    </constraint>
-                                    <constraint firstAttribute="trailing" secondItem="ARH-fr-lgz" secondAttribute="trailing" constant="23" id="yHs-jd-XDa">
+                                    <constraint firstItem="svd-bh-2QG" firstAttribute="leading" secondItem="VoG-yy-Vsx" secondAttribute="leading" id="aEw-0o-X5h"/>
+                                    <constraint firstItem="svd-bh-2QG" firstAttribute="centerY" secondItem="VoG-yy-Vsx" secondAttribute="centerY" id="nM8-P2-02t"/>
+                                    <constraint firstAttribute="trailing" secondItem="svd-bh-2QG" secondAttribute="trailing" constant="356" id="zvO-e9-FEf">
                                         <variation key="widthClass=compact" constant="0.0"/>
                                     </constraint>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="8V1-qs-zmp"/>
-                                        <exclude reference="6jl-nR-GP0"/>
-                                        <exclude reference="bp6-4U-QFP"/>
-                                        <exclude reference="yHs-jd-XDa"/>
+                                        <exclude reference="aEw-0o-X5h"/>
+                                        <exclude reference="nM8-P2-02t"/>
+                                        <exclude reference="zvO-e9-FEf"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="8V1-qs-zmp"/>
-                                        <include reference="6jl-nR-GP0"/>
-                                        <include reference="bp6-4U-QFP"/>
-                                        <include reference="yHs-jd-XDa"/>
+                                        <include reference="aEw-0o-X5h"/>
+                                        <include reference="nM8-P2-02t"/>
+                                        <include reference="zvO-e9-FEf"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -796,6 +796,7 @@
                         <outlet property="dayScrollViewHeight" destination="Se7-CV-14l" id="fUm-Zn-GzN"/>
                         <outlet property="headerView" destination="F3C-Zo-w14" id="sSX-HW-Ne7"/>
                         <outlet property="monthCollectionView" destination="VGO-i8-Jik" id="vXz-qg-NY9"/>
+                        <outlet property="monthCollectionViewDelegate" destination="vC2-CC-euQ" id="8Ch-m3-VFQ"/>
                         <outlet property="monthItemTableTop" destination="3G5-d3-s4l" id="LzN-Qe-jMw"/>
                         <outlet property="monthItemTableView" destination="W6V-UO-pvr" id="bqb-lw-lXF"/>
                         <outlet property="monthWeekdayViewTop" destination="oBs-jk-QQj" id="Q6c-GA-CWA"/>
@@ -806,6 +807,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eu9-zh-TXs" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="vC2-CC-euQ"/>
             </objects>
             <point key="canvasLocation" x="-1711.5" y="-21"/>
         </scene>
@@ -2788,7 +2790,8 @@
         <image name="prev_arrow" width="11" height="21"/>
         <image name="system_icom_cancel" width="20" height="20"/>
         <image name="system_icom_done" width="25" height="18"/>
-        <image name="system_icon_add" width="26" height="26"/>
+        <image name="system_icon_add" width="22" height="22"/>
+        <image name="system_icon_sticker" width="22" height="22"/>
         <image name="task_icon_finished" width="20" height="20"/>
         <image name="task_icon_unfinished" width="20" height="20"/>
     </resources>

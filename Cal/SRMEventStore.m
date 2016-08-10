@@ -30,7 +30,10 @@
 
 - (NSArray *)recentEvents
 {
-    return self.privateRecentEvents;
+    NSArray *sortedArray = [self.privateRecentEvents sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
+        return [event1.startDate compare:event2.startDate];
+    }];;
+    return sortedArray;
 }
 
 #pragma mark - Initialization
@@ -167,7 +170,36 @@
 
 - (NSArray *)dayEvents:(NSDate *)date
 {
-    return self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:date]];
+    NSArray *sortedArray = [self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:date]] sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
+        return [event1.startDate compare:event2.startDate];
+    }];;
+    return sortedArray;
+}
+
+- (NSArray *)dayEventsAllDay:(NSDate *)date
+{
+    NSMutableArray *allDayEvents = [[NSMutableArray alloc] init];
+    NSArray *dayEvents = [self dayEvents:date];
+    
+    for (EKEvent *event in dayEvents) {
+        if (event.allDay) {
+            [allDayEvents addObject:event];
+        }
+    }
+    return allDayEvents;
+}
+
+- (NSArray *)dayEventsNotAllDay:(NSDate *)date
+{
+    NSMutableArray *notAllDayEvents = [[NSMutableArray alloc] init];
+    NSArray *dayEvents = [self dayEvents:date];
+    
+    for (EKEvent *event in dayEvents) {
+        if (!event.allDay) {
+            [notAllDayEvents addObject:event];
+        }
+    }
+    return notAllDayEvents;
 }
 
 #pragma mark - Icon

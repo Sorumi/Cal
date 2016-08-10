@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class EKEvent;
+
 @interface SRMDayScheduleCell : UICollectionViewCell
+
+- (void)setEvent:(EKEvent *)event;
 
 @end

@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class EKEvent;
+
 @interface SRMCalendarViewController : UIViewController
 
-
+@property (nonatomic, strong) NSDate *date;
+- (EKEvent *)eventForRow:(NSInteger)row;
 
 @end
