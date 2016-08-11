@@ -60,10 +60,6 @@
 
         if (!_monthStamps) {
             _monthStamps = [[NSMutableDictionary alloc] init];
-            
-            //
-            SRMStamp *stamp = [[SRMStamp alloc] initWithName:@"stamp_blackcloud@2x.png" xProp:0.5 yProp:0.5];
-            [self addStamp:stamp forYear:2016 month:8];
         }
     }
     return self;

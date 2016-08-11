@@ -19,6 +19,8 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    
+
 }
 
 - (void)setStamp:(NSInteger)num

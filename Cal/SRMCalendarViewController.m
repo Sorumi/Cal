@@ -30,6 +30,7 @@
 
 #import "SRMStampStore.h"
 #import "SRMStampCell.h"
+#import "SRMStamp.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate>
 
@@ -65,10 +66,11 @@
 
 #pragma mark - AppearanceSetting
 
-
 @property (weak, nonatomic) IBOutlet UICollectionView *appearanceCollectionView;
 @property (weak, nonatomic) IBOutlet UIPageControl *appearancePageControl;
 
+@property (nonatomic, strong) UIImageView *tmpStamp;
+@property (nonatomic, strong) NSString *tmpStampName;
 
 #pragma mark - Constraint
 
@@ -82,7 +84,6 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *appearanceSettingViewHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *appearanceSettingViewBottom;
-
 
 @end
 
@@ -203,6 +204,11 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
     UISwipeGestureRecognizer *upMonthItem = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(upMonthItemTable:)];
     upMonthItem.direction = UISwipeGestureRecognizerDirectionUp;
     [self.monthItemTableView addGestureRecognizer:upMonthItem];
+    
+    UIPanGestureRecognizer *panStamp = [[UIPanGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(addStamp:)];
+    [self.appearanceCollectionView addGestureRecognizer:panStamp];
     
     self.isFirstTimeViewDidLayoutSubviews = YES;
 
@@ -444,10 +450,6 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
         self.viewMode = SRMCalendarMonthViewMode;
         [self toggleAppearanceSettingView:NO];
     }
-   
-    
-//    NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
-//    SRMMonthBoardView *board = (SRMMonthBoardView *)[self.monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:page]];
 //    [board setEditMode];
 }
 
@@ -463,6 +465,51 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
                          [self.view layoutIfNeeded];
                      }];
 }
+
+- (void)addStamp:(UIPanGestureRecognizer *)gesture
+{
+    
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        CGPoint point = [gesture locationInView:self.appearanceCollectionView];
+        NSInteger num = [self.appearanceCollectionView indexPathForItemAtPoint:point].row;
+        _tmpStamp = [[UIImageView alloc] initWithImage:[[SRMStampStore sharedStore] stampForNum:num]];
+        _tmpStamp.center = [gesture locationInView:self.view];
+        _tmpStampName = [SRMStampStore sharedStore].allStampsPath[num];
+        [self.view addSubview:_tmpStamp];
+        
+    } else if (gesture.state == UIGestureRecognizerStateChanged) {
+        CGPoint point = [gesture translationInView:self.view];
+
+        CGFloat x = _tmpStamp.center.x + point.x;
+        CGFloat y = _tmpStamp.center.y + point.y;
+        
+        _tmpStamp.center = CGPointMake(x, y);
+                [gesture setTranslation:CGPointZero inView:self.view];
+
+    } else if (gesture.state == UIGestureRecognizerStateEnded) {
+        if (CGRectContainsPoint(self.monthCollectionView.frame, _tmpStamp.center)) {
+            
+            SRMCalendarTool *tool = [SRMCalendarTool tool];
+            
+            NSInteger page = round(self.monthCollectionView.contentOffset.x/self.viewWidth);
+            NSDate *date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+            NSInteger year = [tool yearOfDate:date];
+            NSInteger month = [tool monthOfDate:date];
+            
+            SRMMonthBoardView *board = (SRMMonthBoardView *)[self.monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:page]];
+            
+            CGPoint center = [board convertPoint:_tmpStamp.center fromView:self.view];
+
+            SRMStamp *stamp = [[SRMStamp alloc] initWithName:_tmpStampName xProp:center.x/self.viewWidth yProp:center.y/(self.viewWidth/7*6)] ;
+            [[SRMStampStore sharedStore] addStamp:stamp forYear:year month:month];
+            
+            [board setStampsForYear:year month:month];
+        }
+        [_tmpStamp removeFromSuperview];
+        _tmpStamp = nil;
+    }
+}
+
 
 #pragma mark - Segue
 
