@@ -86,7 +86,7 @@
     
     // SRMDayScheduleCellAttribute
     for (NSInteger i=0; i<number; i++) {
-        EKEvent *event = [datasource eventForRow:i];
+        EKEvent *event = [datasource dayEventForRow:i];
         SRMDayScheduleCellAttribute *srmAttribute = [SRMDayScheduleCellAttribute attributeForIndex:1 num:1];
         
 //        NSLog(@"%@ %@ %@ %@", event.title, event.startDate, event.endDate, event.occurrenceDate);

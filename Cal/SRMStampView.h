@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class SRMStamp;
+
 @interface SRMStampView : UIView
 
-- (instancetype)initWithImage:(UIImage *)image x:(CGFloat)x y:(CGFloat)y;
+- (instancetype)initWithStamp:(SRMStamp *)stamp image:(UIImage *)image x:(CGFloat)x y:(CGFloat)y;
 
 @end

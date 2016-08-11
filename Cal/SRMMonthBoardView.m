@@ -13,6 +13,9 @@
 
 @interface SRMMonthBoardView ()
 
+@property (nonatomic) NSInteger year;
+@property (nonatomic) NSInteger month;
+
 @end
 
 @implementation SRMMonthBoardView
@@ -21,31 +24,47 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-//        self.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.5];
-//        self.layer.borderWidth = 3;
-//        self.layer.borderColor = [UIColor blackColor].CGColor;
+
     }
     return self;
 }
 
-- (void)setEditMode
+- (void)setEditMode:(BOOL)isEditMode
 {
-    self.backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.2];
+    if (isEditMode) {
+        self.userInteractionEnabled = YES;
+        self.backgroundColor = [UIColor colorWithWhite:0.9 alpha:0.2];
+        
+    } else {
+        self.userInteractionEnabled = NO;
+        self.backgroundColor = nil;
+    }
 }
 
-- (void)setStampsForYear:(NSInteger)year month:(NSInteger)month
+- (void)setYear:(NSInteger)year month:(NSInteger)month
+{
+    _year = year;
+    _month = month;
+}
+
+- (void)setStamps
 {
     [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
     
     CGFloat width = self.frame.size.width;
     CGFloat height = self.frame.size.height;
     
-    NSArray *stamps = [[SRMStampStore sharedStore] monthStampsForYear:year month:month];
+    NSArray *stamps = [[SRMStampStore sharedStore] monthStampsForYear:_year month:_month];
     
     for (SRMStamp *stamp in stamps) {
-        SRMStampView *view = [[SRMStampView alloc] initWithImage:[[SRMStampStore sharedStore] stampForName:stamp.name] x:stamp.xProportion*width y:stamp.yProportion*height];
+        SRMStampView *view = [[SRMStampView alloc] initWithStamp:stamp image:[[SRMStampStore sharedStore] stampForName:stamp.name] x:stamp.xProportion*width y:stamp.yProportion*height];
         [self addSubview:view];
     }
+}
+
+- (void)deleteStamp:(SRMStamp *)stamp
+{
+    [[SRMStampStore sharedStore] deleteStamp:stamp forYear:_year month:_month];
 }
 
 @end

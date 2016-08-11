@@ -69,14 +69,12 @@
 
 - (void)getPNGPath
 {
-    //得到文件的路径
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Stamp" ofType:@"bundle"];
-    //创建文件管理器
+
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:path];
     
     while((path = [enumerator nextObject]) != nil) {
-        //把得到的图片添加到数组中
         [_stampsPath addObject:path];
     }
 }
@@ -113,6 +111,15 @@
     }
     
     [stamps addObject:stamp];
+    self.monthStamps[[NSString stringWithFormat:@"%lu-%lu", year, month]] = stamps;
+    
+    [self saveChanges];
+}
+
+- (void)deleteStamp:(SRMStamp *)stamp forYear:(NSInteger)year month:(NSInteger)month
+{
+    NSMutableArray *stamps = [[self monthStampsForYear:year month:month] mutableCopy];
+    [stamps removeObject:stamp];
     self.monthStamps[[NSString stringWithFormat:@"%lu-%lu", year, month]] = stamps;
     
     [self saveChanges];

@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+@class SRMStamp;
+
 @interface SRMMonthBoardView : UICollectionReusableView
 
-- (void)setEditMode;
-
-- (void)setStampsForYear:(NSInteger)year month:(NSInteger)month;
+- (void)setEditMode:(BOOL)isEditMode;
+- (void)setYear:(NSInteger)year month:(NSInteger)month;
+- (void)setStamps;
+- (void)deleteStamp:(SRMStamp *)stamp;
 
 @end

@@ -13,6 +13,7 @@
 @interface SRMCalendarViewController : UIViewController
 
 @property (nonatomic, strong) NSDate *date;
-- (EKEvent *)eventForRow:(NSInteger)row;
+
+- (EKEvent *)dayEventForRow:(NSInteger)row;
 
 @end
