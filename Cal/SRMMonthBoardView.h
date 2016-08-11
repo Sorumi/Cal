@@ -12,4 +12,6 @@
 
 - (void)setEditMode;
 
+- (void)setStampsForYear:(NSInteger)year month:(NSInteger)month;
+
 @end

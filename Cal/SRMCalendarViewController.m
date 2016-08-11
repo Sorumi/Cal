@@ -28,6 +28,9 @@
 #import "SRMDayScheduleCell.h"
 #import "SRMEventEditViewController.h"
 
+#import "SRMStampStore.h"
+#import "SRMStampCell.h"
+
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate>
 
 @property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
@@ -60,6 +63,13 @@
 @property (weak, nonatomic) IBOutlet UITableView *dayItemTableView;
 @property (weak, nonatomic) IBOutlet UICollectionView *dayItemCollectionView;
 
+#pragma mark - AppearanceSetting
+
+
+@property (weak, nonatomic) IBOutlet UICollectionView *appearanceCollectionView;
+@property (weak, nonatomic) IBOutlet UIPageControl *appearancePageControl;
+
+
 #pragma mark - Constraint
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthWeekdayViewTop;
@@ -69,6 +79,10 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *dayScrollViewHeight;
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *monthItemTableTop;
+
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *appearanceSettingViewHeight;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *appearanceSettingViewBottom;
+
 
 @end
 
@@ -80,6 +94,7 @@ static NSString * const reuseMonthBoardIdentifier = @"MonthBoard";
 static NSString * const reuseEventCellIdentifier = @"EventCell";
 static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
+static NSString * const reuseStampCellIdentifier = @"StampCell";
 
 #pragma mark - Properties
 
@@ -169,6 +184,12 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
     
     self.dayItemCollectionView.delegate = self;
     self.dayItemCollectionView.dataSource = self;
+
+    // appearance collection
+    [self.appearanceCollectionView registerNib:[UINib nibWithNibName:@"SRMStampCell" bundle:nil] forCellWithReuseIdentifier:reuseStampCellIdentifier];
+    
+    self.appearanceCollectionView.delegate = self;
+    self.appearanceCollectionView.dataSource = self;
     
     // add custum gesture
     UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(monthToWeek:)];
@@ -194,6 +215,8 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
                                              selector:@selector(eventStoreDidChanged)
                                                  name:EKEventStoreChangedNotification object:nil];
     
+    // appearance setting
+
 
 }
 
@@ -208,7 +231,10 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
         self.date = self.today;
         self.isFirstTimeViewDidLayoutSubviews = NO;
 
+        // constraint
         self.dayScrollViewHeight.constant = - SRMHeaderHeight - SRMDayHeaderHeight - SRMToolbarHeight - self.viewWidth/7;
+        self.appearanceSettingViewHeight.constant = self.view.frame.size.height - SRMHeaderHeight - SRMToolbarHeight - SRMMonthViewWeekdayHeight -self.viewWidth/7*6;
+        self.appearanceSettingViewBottom.constant = self.appearanceSettingViewHeight.constant;
     }
 }
 
@@ -281,7 +307,7 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 - (IBAction)backToToday:(id)sender
 {
     self.date = self.today;
-    if (self.viewMode == SRMCalendarMonthViewMode) {
+    if (self.viewMode == SRMCalendarMonthViewMode || self.viewMode == SRMCalendarEditViewMode) {
         [self monthScrollToDate:self.date animated:YES];
     } else if (self.viewMode == SRMCalendarWeekViewMode) {
         [self weekScrollToDate:self.date animated:YES];
@@ -410,9 +436,32 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 
 - (IBAction)showBoard:(id)sender
 {
+    if (self.viewMode != SRMCalendarEditViewMode) {
+        [self backToMode:nil];
+        self.viewMode = SRMCalendarEditViewMode;
+        [self toggleAppearanceSettingView:YES];
+    } else {
+        self.viewMode = SRMCalendarMonthViewMode;
+        [self toggleAppearanceSettingView:NO];
+    }
+   
+    
 //    NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
 //    SRMMonthBoardView *board = (SRMMonthBoardView *)[self.monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:page]];
 //    [board setEditMode];
+}
+
+- (void)toggleAppearanceSettingView:(BOOL)show
+{
+    if (show) {
+        self.appearanceSettingViewBottom.constant = 0;
+    } else {
+        self.appearanceSettingViewBottom.constant = self.appearanceSettingViewHeight.constant;
+    }
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         [self.view layoutIfNeeded];
+                     }];
 }
 
 #pragma mark - Segue
@@ -478,12 +527,7 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
 
-    if (scrollView == self.dayScrollView) {
-        
-//        NSInteger page = scrollView.contentOffset.x / self.viewWidth;
-//        [self.dayHeader setBorderViewPos:page animated:YES];
-        
-    } else if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
+    if (scrollView == self.monthCollectionView) {
 
         SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
@@ -495,7 +539,7 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 
         }
         
-    } else if (scrollView == self.weekCollectionView && self.viewMode == SRMCalendarWeekViewMode) {
+    } else if (scrollView == self.weekCollectionView) {
         
         SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = self.weekCollectionView.contentOffset.x / self.viewWidth;
@@ -513,7 +557,7 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 // use code to scroll
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
 {
-    if (scrollView == self.monthCollectionView && self.viewMode == SRMCalendarMonthViewMode) {
+    if (scrollView == self.monthCollectionView) {
 
         SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = self.monthCollectionView.contentOffset.x / self.viewWidth;
@@ -654,6 +698,9 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
         
     } else if (collectionView == self.dayItemCollectionView) {
         return 1;
+        
+    } else if (collectionView == self.appearanceCollectionView) {
+        return 1;
     }
     
     return 0;
@@ -673,6 +720,9 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
     } else if (collectionView == self.dayItemCollectionView) {
         
         return [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date].count;
+        
+    } else if (collectionView == self.appearanceCollectionView) {
+        return [[SRMStampStore sharedStore] allStampsPath].count;
     }
     return 0;
 }
@@ -734,6 +784,12 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
         [cell setEvent:item];
         
         return cell;
+        
+    } else if (collectionView == self.appearanceCollectionView) {
+        SRMStampCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseStampCellIdentifier forIndexPath:indexPath];
+        [cell setStamp:indexPath.row];
+        
+        return cell;
     }
     
     return nil;
@@ -746,10 +802,12 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
     if (collectionView == self.monthCollectionView || collectionView == self.weekCollectionView) {
         CGFloat cellWidth = self.viewWidth / 7.0;
         CGSize size = CGSizeMake(cellWidth, cellWidth);
-        
         return size;
-    } else if (collectionView == self.dayItemCollectionView) {
         
+    } else if (collectionView == self.appearanceCollectionView) {
+        CGFloat cellWidth = self.viewWidth / 7.0;
+        CGFloat cellHeight = collectionView.frame.size.height / 3.0;
+        return CGSizeMake(cellWidth, cellHeight);
     }
     return CGSizeZero;
 }
@@ -760,6 +818,10 @@ static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
         if (kind == UICollectionElementKindSectionHeader) {
             SRMMonthBoardView *board = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier forIndexPath:indexPath];
             board.userInteractionEnabled = NO;
+
+            SRMCalendarTool *tool = [SRMCalendarTool tool];
+            NSDate *date = [tool dateByAddingMonths:indexPath.section toDate:tool.minimumDate];
+            [board setStampsForYear:[tool yearOfDate:date] month:[tool monthOfDate:date]];
             return board;
         }
     }

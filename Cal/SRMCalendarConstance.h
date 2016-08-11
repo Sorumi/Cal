@@ -26,7 +26,8 @@ UIKIT_EXTERN CGFloat const SRMDayBoardCellHeight;
 typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
     SRMCalendarMonthViewMode    = 0,
     SRMCalendarWeekViewMode     = 1,
-    SRMCalendarItemViewMode     = 2
+    SRMCalendarItemViewMode     = 2,
+    SRMCalendarEditViewMode     = 3,
 };
 
 typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {

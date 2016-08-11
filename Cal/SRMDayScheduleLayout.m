@@ -154,7 +154,7 @@
     SRMDayScheduleCellAttribute *attr = self.dayScheduleCellAttributes[indexPath.row];
     attributes.frame = CGRectMake(leftMargin, attr.startY, width - leftMargin - rightMargin, MAX(attr.endY-attr.startY, 60)-10);
     
-    NSLog(@"%f %f", attr.startY, attr.endY);
+//    NSLog(@"%f %f", attr.startY, attr.endY);
     
     return attributes;
 }

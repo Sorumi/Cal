@@ -15,7 +15,6 @@
 @property (nonatomic, strong) EKEventStore *eventStore;
 
 @property (nonatomic, strong) NSArray<EKEvent *> *privateRecentEvents;
-
 @property (nonatomic, strong) NSMutableDictionary *privateDayEvents;
 
 @property (nonatomic, strong) NSArray<EKCalendar *> *calendars;
