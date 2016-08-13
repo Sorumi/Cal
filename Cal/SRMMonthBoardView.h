@@ -12,9 +12,11 @@
 
 @interface SRMMonthBoardView : UICollectionReusableView
 
+@property (weak, nonatomic) IBOutlet UICollectionView *boardCollectionView;
+
 - (void)setEditMode:(BOOL)isEditMode;
 - (void)setYear:(NSInteger)year month:(NSInteger)month;
-- (void)setStamps;
 - (void)deleteStamp:(SRMStamp *)stamp;
+//- (void)setStamps;
 
 @end

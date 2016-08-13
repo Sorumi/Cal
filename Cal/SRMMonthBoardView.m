@@ -7,11 +7,12 @@
 //
 
 #import "SRMMonthBoardView.h"
+#import "SRMMonthBoardViewLayout.h"
+#import "SRMBoardStampCell.h"
 #import "SRMStamp.h"
 #import "SRMStampStore.h"
-#import "SRMStampView.h"
 
-@interface SRMMonthBoardView ()
+@interface SRMMonthBoardView () <UICollectionViewDataSource, UICollectionViewDelegate, SRMMonthBoardViewLayoutDelegate>
 
 @property (nonatomic) NSInteger year;
 @property (nonatomic) NSInteger month;
@@ -20,14 +21,21 @@
 
 @implementation SRMMonthBoardView
 
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
+static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
-    }
-    return self;
+- (void)awakeFromNib
+{
+    self.backgroundColor = [UIColor colorWithWhite:0.9 alpha:0.2];
+    
+    [self.boardCollectionView registerNib:[UINib nibWithNibName:@"SRMBoardStampCell" bundle:nil] forCellWithReuseIdentifier:reuseBoardStampCellIdentifier];
+    
+    self.boardCollectionView.dataSource = self;
+    self.boardCollectionView.delegate = self;
+    SRMMonthBoardViewLayout *layout = (SRMMonthBoardViewLayout *)self.boardCollectionView.collectionViewLayout;
+    layout.delegate = self;
 }
+
+#pragma mark - Public
 
 - (void)setEditMode:(BOOL)isEditMode
 {
@@ -47,24 +55,68 @@
     _month = month;
 }
 
-- (void)setStamps
-{
-    [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
-    
-    CGFloat width = self.frame.size.width;
-    CGFloat height = self.frame.size.height;
-    
-    NSArray *stamps = [[SRMStampStore sharedStore] monthStampsForYear:_year month:_month];
-    
-    for (SRMStamp *stamp in stamps) {
-        SRMStampView *view = [[SRMStampView alloc] initWithStamp:stamp image:[[SRMStampStore sharedStore] stampForName:stamp.name] x:stamp.xProportion*width y:stamp.yProportion*height];
-        [self addSubview:view];
-    }
-}
-
 - (void)deleteStamp:(SRMStamp *)stamp
 {
     [[SRMStampStore sharedStore] deleteStamp:stamp forYear:_year month:_month];
 }
+
+#pragma mark - <SRMMonthBoardViewLayoutDelegate>
+
+- (SRMStamp *)stampAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [[SRMStampStore sharedStore] monthStampsForYear:_year month:_month][indexPath.row];
+}
+
+#pragma mark - <UICollectionViewDataSource>
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    NSArray *stamps = [[SRMStampStore sharedStore] monthStampsForYear:_year month:_month];
+    return stamps.count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SRMBoardStampCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseBoardStampCellIdentifier forIndexPath:indexPath];
+    NSArray *stamps = [[SRMStampStore sharedStore] monthStampsForYear:_year month:_month];
+    SRMStamp *stamp = stamps[indexPath.row];
+    [cell setStamp:stamp];
+    [cell setEditMode:NO];
+    
+    cell.selected = YES;
+    [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
+    
+    return cell;
+}
+
+#pragma mark - <UICollectionViewDelegate>
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SRMBoardStampCell *cell = (SRMBoardStampCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    [cell setEditMode:YES];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didDeselectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SRMBoardStampCell *cell = (SRMBoardStampCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    [cell setEditMode:NO];
+}
+
 
 @end

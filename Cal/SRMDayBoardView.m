@@ -70,8 +70,8 @@ alpha:1.0]
     CAShapeLayer *shapeLayer = [CAShapeLayer layer];
     [shapeLayer setBounds:self.bounds];
     [shapeLayer setPosition:self.center];
-    [shapeLayer setFillColor:UIColorFromRGB(0xDDDDDD).CGColor];
-    [shapeLayer setStrokeColor:[UIColor colorWithWhite:0.9 alpha:1].CGColor];
+//    [shapeLayer setFillColor:UIColorFromRGB(0xDDDDDD).CGColor];
+    [shapeLayer setStrokeColor:UIColorFromRGB(0xDDDDDD).CGColor];
     [shapeLayer setLineWidth:0.5f];
     [shapeLayer setLineJoin:kCALineJoinRound];
     [shapeLayer setLineDashPattern:@[@(3), @(4)]];
@@ -83,9 +83,9 @@ alpha:1.0]
         CGPathMoveToPoint(path, NULL, 0, y);
         CGPathAddLineToPoint(path, NULL, width, y);
         
-        [shapeLayer setPath:path];
     }
-
+    
+    [shapeLayer setPath:path];
     CGPathRelease(path);
     
     [[self layer] addSublayer:shapeLayer];

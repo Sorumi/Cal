@@ -126,30 +126,6 @@
 //    CGFloat cellSpacing = 10;
     
     UICollectionViewLayoutAttributes *attributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
-
-//    SRMCalendarViewController *datasource = (SRMCalendarViewController *)self.collectionView.dataSource;
-//    EKEvent *event = [datasource eventForRow:indexPath.row];
-//    
-//    
-//    NSDate *startDate = datasource.date;
-//    NSDate *endDate = [[SRMCalendarTool tool] dateByAddingDays:1 toDate:startDate];
-//    
-//    CGFloat originY;
-//    CGFloat height;
-//    
-//    if ([event.startDate timeIntervalSinceDate: startDate] < 0) {
-//        originY = 0;
-//    } else {
-//        originY = [[SRMCalendarTool tool] hourOfDate:event.startDate] * SRMDayBoardCellHeight + (CGFloat)[[SRMCalendarTool tool] miniuteOfDate:event.startDate] / 60 * SRMDayBoardCellHeight;
-//    }
-//    
-//    if ([event.endDate timeIntervalSinceDate: endDate] > 0) {
-//        height = 24 * SRMDayBoardCellHeight - originY;
-//    } else {
-//        height = [[SRMCalendarTool tool] hourOfDate:event.endDate] * SRMDayBoardCellHeight + (CGFloat)[[SRMCalendarTool tool] miniuteOfDate:event.endDate] / 60 * SRMDayBoardCellHeight - originY;
-//    }
-//    NSLog(@"cell: %f %f", originY, height);
-    
     
     SRMDayScheduleCellAttribute *attr = self.dayScheduleCellAttributes[indexPath.row];
     attributes.frame = CGRectMake(leftMargin, attr.startY, width - leftMargin - rightMargin, MAX(attr.endY-attr.startY, 60)-10);

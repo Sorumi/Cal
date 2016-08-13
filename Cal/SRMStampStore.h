@@ -23,4 +23,6 @@
 - (void)addStamp:(SRMStamp *)stamp forYear:(NSInteger)year month:(NSInteger)month;
 - (void)deleteStamp:(SRMStamp *)stamp forYear:(NSInteger)year month:(NSInteger)month;
 
+- (BOOL)saveChanges;
+
 @end

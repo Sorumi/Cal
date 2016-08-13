@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionReusableView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="MonthBoard" id="IX1-Ub-7ge" customClass="SRMMonthBoardView">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="50"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="LLG-lY-oXf">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4rA-ER-bs3" customClass="SRMMonthBoardViewLayout">
+                        <size key="itemSize" width="50" height="50"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="LLG-lY-oXf" firstAttribute="height" secondItem="IX1-Ub-7ge" secondAttribute="height" id="6PK-Bj-5wi"/>
+                <constraint firstItem="LLG-lY-oXf" firstAttribute="centerX" secondItem="IX1-Ub-7ge" secondAttribute="centerX" id="9GW-G0-93O"/>
+                <constraint firstItem="LLG-lY-oXf" firstAttribute="width" secondItem="IX1-Ub-7ge" secondAttribute="width" id="W4t-il-hNC"/>
+                <constraint firstItem="LLG-lY-oXf" firstAttribute="centerY" secondItem="IX1-Ub-7ge" secondAttribute="centerY" id="iNG-cP-0g6"/>
+            </constraints>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="LLG-lY-oXf"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="6PK-Bj-5wi"/>
+                    <exclude reference="9GW-G0-93O"/>
+                    <exclude reference="W4t-il-hNC"/>
+                    <exclude reference="iNG-cP-0g6"/>
+                </mask>
+            </variation>
+            <variation key="widthClass=compact">
+                <mask key="subviews">
+                    <include reference="LLG-lY-oXf"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="6PK-Bj-5wi"/>
+                    <include reference="9GW-G0-93O"/>
+                    <include reference="W4t-il-hNC"/>
+                    <include reference="iNG-cP-0g6"/>
+                </mask>
+            </variation>
+            <connections>
+                <outlet property="boardCollectionView" destination="LLG-lY-oXf" id="rhp-q8-8GJ"/>
+            </connections>
+            <point key="canvasLocation" x="84" y="420.5"/>
+        </collectionReusableView>
+    </objects>
+</document>

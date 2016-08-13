@@ -31,6 +31,7 @@
 #import "SRMStampStore.h"
 #import "SRMStampCell.h"
 #import "SRMStamp.h"
+#import "SRMBoardStampCell.h"
 
 @interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate>
 
@@ -95,6 +96,7 @@ static NSString * const reuseEventCellIdentifier = @"EventCell";
 static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
 static NSString * const reuseStampCellIdentifier = @"StampCell";
+static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 #pragma mark - Properties
 
@@ -148,12 +150,13 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
 
     // collection
     [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthDayCell" bundle:nil] forCellWithReuseIdentifier:reuseMonthCellIdentifier];
+//    [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMBoardStampCell" bundle:nil] forCellWithReuseIdentifier:reuseBoardStampCellIdentifier];
     [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
-    [self.monthCollectionView registerClass:[SRMMonthBoardView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier];
+    [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthBoardView" bundle:nil] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier];
     
     self.monthCollectionView.delegate = self;
     self.monthCollectionView.dataSource = self;
-    
+
     self.weekCollectionView.delegate = self;
     self.weekCollectionView.dataSource = self;
     
@@ -346,7 +349,6 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
                          [self.view layoutIfNeeded];
                      }
                      completion:NULL];
-
 }
 
 - (void)weekToMonth:(UISwipeGestureRecognizer *)gesture
@@ -373,7 +375,6 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
                          [self.view layoutIfNeeded];
                      }
                      completion:NULL];
-
 }
 
 - (void)upMonthItemTable:(UISwipeGestureRecognizer *)gesture
@@ -400,7 +401,6 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
                              self.monthItemTableView.scrollEnabled = YES;
                          }
                      }];
-
 }
 
 - (void)downMonthItemTable
@@ -428,7 +428,6 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
                              self.monthItemTableView.scrollEnabled = NO;
                          }
                      }];
-    
 }
 
 - (IBAction)backToMode:(id)sender
@@ -492,20 +491,14 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
     } else if (gesture.state == UIGestureRecognizerStateEnded) {
         if (CGRectContainsPoint(self.monthCollectionView.frame, _tmpStamp.center)) {
             
-//            SRMCalendarTool *tool = [SRMCalendarTool tool];
-
-//            NSDate *date = [tool dateByAddingMonths:self.monthPage toDate:tool.minimumDate];
-//            NSInteger year = [tool yearOfDate:date];
-//            NSInteger month = [tool monthOfDate:date];
-            
             SRMMonthBoardView *board = (SRMMonthBoardView *)[self.monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:self.monthPage]];
-            
+
             CGPoint center = [board convertPoint:_tmpStamp.center fromView:self.view];
 
             SRMStamp *stamp = [[SRMStamp alloc] initWithName:_tmpStampName xProp:center.x/self.viewWidth yProp:center.y/(self.viewWidth/7*6)] ;
             [[SRMStampStore sharedStore] addStamp:stamp forYear:_selectedYear month:_selectedMonth];
-            
-            [board setStamps];
+
+            [board.boardCollectionView reloadData];
 
         }
         [_tmpStamp removeFromSuperview];
@@ -567,9 +560,7 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
         NSInteger month = [tool monthOfDate:date];
 
         [self.headerView setMonthHeaderYear:year month:month];
-        
     }
-
 }
 
 // use finger ti scroll
@@ -759,15 +750,12 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     if (collectionView == self.monthCollectionView) {
-        
         return 42;
-        
+
     } else if (collectionView == self.weekCollectionView) {
-        
         return 7;
         
     } else if (collectionView == self.dayItemCollectionView) {
-        
         return [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date].count;
         
     } else if (collectionView == self.appearanceCollectionView) {
@@ -791,7 +779,7 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
         
         NSDate *prevDate = [tool dateByAddingMonths:-1 toDate:date];
         NSInteger previousMonthDayCount = [tool dayCountOfMonthofDate:prevDate];
-
+        
         date = [tool dateByAddingDays:(indexPath.row - blankDayCount) toDate:date];
         cell.date = date;
         
@@ -807,7 +795,7 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
         
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
-
+        
         return cell;
         
     } else if (collectionView == self.weekCollectionView) {
@@ -848,7 +836,7 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
 
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (collectionView == self.monthCollectionView || collectionView == self.weekCollectionView) {
+    if (collectionView == self.weekCollectionView) {
         CGFloat cellWidth = self.viewWidth / 7.0;
         CGSize size = CGSizeMake(cellWidth, cellWidth);
         return size;
@@ -872,7 +860,7 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
             
             [board setYear:[tool yearOfDate:date] month:[tool monthOfDate:date]];
             [board setEditMode:self.viewMode == SRMCalendarEditViewMode ? YES : NO];
-            [board setStamps];
+            [board.boardCollectionView reloadData];
             return board;
         }
     }
@@ -893,7 +881,6 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
 {
     if (collectionView == self.monthCollectionView) {
         SRMMonthDayCell *cell = (SRMMonthDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
-
         if ([[SRMCalendarTool tool] monthOfDate:cell.date] != self.selectedMonth) {
             [self monthScrollToDate:cell.date animated:YES];
             self.date = cell.date;
@@ -902,7 +889,7 @@ static NSString * const reuseStampCellIdentifier = @"StampCell";
             self.date = cell.date;
             [self monthToWeek:nil];
         }
-        
+
     } else if (collectionView == self.weekCollectionView) {
         SRMWeekDayCell *cell = (SRMWeekDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
         self.date = cell.date;
