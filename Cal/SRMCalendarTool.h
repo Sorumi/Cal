@@ -37,6 +37,7 @@
 - (NSDate *)dateByAddingWeeks:(NSInteger)weeks toDate:(NSDate *)date;
 - (NSDate *)dateByAddingDays:(NSInteger)days toDate:(NSDate *)date;
 - (NSDate *)dateByAddingHours:(NSInteger)hours toDate:(NSDate *)date;
+- (NSDate *)dateByAddingMinutes:(NSInteger)minutes toDate:(NSDate *)date;
 
 - (NSDate *)beginningOfMonthOfDate:(NSDate *)date;
 - (NSDate *)beginningOfWeekOfDate:(NSDate *)date;

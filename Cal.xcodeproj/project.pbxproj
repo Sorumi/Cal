@@ -64,6 +64,7 @@
 		4DD6CFA51D5EB732009A686A /* SRMBoardStampCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD6CFA31D5EB732009A686A /* SRMBoardStampCell.xib */; };
 		4DD6CFA71D5F1D0A009A686A /* SRMMonthBoardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD6CFA61D5F1D0A009A686A /* SRMMonthBoardView.xib */; };
 		4DD6CFAA1D5F2C9F009A686A /* SRMMonthBoardViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFA91D5F2C9F009A686A /* SRMMonthBoardViewLayout.m */; };
+		4DD6CFAD1D6189B0009A686A /* SRMEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFAC1D6189B0009A686A /* SRMEventDetailViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -188,6 +189,8 @@
 		4DD6CFA61D5F1D0A009A686A /* SRMMonthBoardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMMonthBoardView.xib; sourceTree = "<group>"; };
 		4DD6CFA81D5F2C9F009A686A /* SRMMonthBoardViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthBoardViewLayout.h; sourceTree = "<group>"; };
 		4DD6CFA91D5F2C9F009A686A /* SRMMonthBoardViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMMonthBoardViewLayout.m; sourceTree = "<group>"; };
+		4DD6CFAB1D6189B0009A686A /* SRMEventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMEventDetailViewController.h; sourceTree = "<group>"; };
+		4DD6CFAC1D6189B0009A686A /* SRMEventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMEventDetailViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,6 +254,8 @@
 				4D1E5D611D46F95A0057DC76 /* SRMCalendarTool.m */,
 				4D1E5D691D4891880057DC76 /* SRMCalendarViewController.h */,
 				4D95A9B11D5B5E9E00526D78 /* SRMCalendarViewController.m */,
+				4DD6CFAB1D6189B0009A686A /* SRMEventDetailViewController.h */,
+				4DD6CFAC1D6189B0009A686A /* SRMEventDetailViewController.m */,
 				4D3513AE1D4CD77B00D2B128 /* SRMEventEditViewController.h */,
 				4D3513AF1D4CD77B00D2B128 /* SRMEventEditViewController.m */,
 				4DB2A9E21D54896600DE9693 /* SRMSelectViewController.h */,
@@ -559,6 +564,7 @@
 				4D1E5CC81D44EC740057DC76 /* SRMMonthDayCell.m in Sources */,
 				4D3513CF1D4E29E800D2B128 /* SRMEventCell.m in Sources */,
 				4D95A99A1D5873B800526D78 /* SRMMonthBoardView.m in Sources */,
+				4DD6CFAD1D6189B0009A686A /* SRMEventDetailViewController.m in Sources */,
 				4D95A9A81D58B2C700526D78 /* SRMDayScheduleLayout.m in Sources */,
 				4D95A9BC1D5C1C2900526D78 /* SRMStampStore.m in Sources */,
 				4DB2A9D41D5328CB00DE9693 /* StaticDataTableViewController.m in Sources */,

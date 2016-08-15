@@ -256,6 +256,15 @@
     return d;
 }
 
+- (NSDate *)dateByAddingMinutes:(NSInteger)minutes toDate:(NSDate *)date
+{
+    NSDateComponents *components = self.components;
+    components.minute = minutes;
+    NSDate *d = [self.calendar dateByAddingComponents:components toDate:date options:0];
+    components.minute = NSIntegerMax;
+    return d;
+}
+
 #pragma mrak -
 
 - (NSDate *)dateByIgnoringTimeComponentsOfDate:(NSDate *)date

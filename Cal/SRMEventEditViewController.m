@@ -261,8 +261,10 @@
         if (self.repeatMode != SRMEventRepeatNever) {
             EKRecurrenceEnd *end;
             
-            if (self.endDate) {
+            if (self.repeatEndDate) {
                 end = [EKRecurrenceEnd recurrenceEndWithEndDate:self.repeatEndDate];
+            } else {
+                end = nil;
             }
             
             switch (self.repeatMode) {
@@ -334,9 +336,8 @@
                         break;
                 }
             }
-
         }
-        
+    
         BOOL isSuccess = [[SRMEventStore sharedStore] addEvent:self.titleText.text
                                                       calendar:0
                                                         allDay:self.allDaySwitch.value
@@ -347,7 +348,7 @@
                                                 recurrenceRule:rule
                                                          alarm:alarm];
         
-//        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
+        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
         if (self.didDismiss) {
             self.didDismiss();
         }

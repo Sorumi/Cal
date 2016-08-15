@@ -27,6 +27,7 @@
 #import "SRMTaskCell.h"
 #import "SRMDayScheduleCell.h"
 #import "SRMEventEditViewController.h"
+#import "SRMEventDetailViewController.h"
 
 #import "SRMStampStore.h"
 #import "SRMStampCell.h"
@@ -718,6 +719,19 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         return header;
 //    }
     return nil;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (tableView == self.monthItemTableView && indexPath.section == 1) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"DetailNavigation"];
+        SRMEventDetailViewController *vc = nvc.viewControllers[0];
+        NSArray *items = [[SRMEventStore sharedStore] recentEvents];
+        vc.event = items[indexPath.row];
+        
+        [self presentViewController:nvc animated:YES completion:nil];
+    }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
