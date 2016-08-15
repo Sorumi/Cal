@@ -16,11 +16,12 @@
 @interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate, SRMRepeatEndDelegate>
 
 @property (nonatomic, strong) NSArray *repeatType;
-@property (nonatomic, strong) NSArray *reminderType;
+@property (nonatomic, strong) NSArray *reminderNotAllDayType;
 @property (nonatomic, strong) NSArray *reminderAllDayType;
 
 @property (nonatomic) SRMTimeSelectMode timeSelectMode;
 @property (nonatomic) SRMEventRepeatMode repeatMode;
+@property (nonatomic) SRMEventReminderMode reminderMode;
 
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
@@ -46,8 +47,11 @@
 
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
 @property (weak, nonatomic) IBOutlet SRMSwitch *allDaySwitch;
+
 @property (weak, nonatomic) IBOutlet UILabel *repeatValueLabel;
 @property (weak, nonatomic) IBOutlet UILabel *repeatEndDateLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *reminderValueLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *moreButton;
 
@@ -67,7 +71,7 @@
     // Do any additional setup after loading the view.
     
     self.repeatType = @[@"Never", @"Every Day", @"Every Week", @"Every 2 Weeks", @"Every Month", @"Every Year"];
-    self.reminderType = @[@"None", @"On time of event", @"5 minutes before", @"15 minutes before", @"30 minutes before", @"1 hour before", @"1 day before", @"1 week before"];
+    self.reminderNotAllDayType = @[@"None", @"On time of event", @"5 minutes before", @"15 minutes before", @"30 minutes before", @"1 hour before", @"1 day before"];
     self.reminderAllDayType = @[@"None", @"On the day of event", @"1 day before", @"2 days before", @"1 week before"];
     
     self.title = @"Add Event";
@@ -110,7 +114,7 @@
     
     self.timeSelectMode = SRMTimeSelectNone;
     self.repeatMode = SRMEventRepeatNever;
-    
+    self.reminderMode = SRMEventReminderNone;
 }
 
 #pragma mark - Properties
@@ -171,6 +175,12 @@
     }
 }
 
+- (void)setReminderMode:(SRMEventReminderMode)reminderMode
+{
+    _reminderMode = reminderMode;
+    self.reminderValueLabel.text = self.allDaySwitch.value ? self.reminderAllDayType[reminderMode] : self.reminderNotAllDayType[reminderMode];
+}
+
 - (void)setStartDate:(NSDate *)date
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
@@ -223,7 +233,13 @@
         if (self.repeatEndDate) {
             vc.date = self.repeatEndDate;
         }
-
+    } else if ([segue.identifier isEqual: @"RemainderType"]) {
+        SRMSelectViewController *vc = segue.destinationViewController;
+        vc.selectMode = SRMEventSelectReminder;
+        vc.title = @"Reminder";
+        vc.delegate = self;
+        vc.titleArray = self.allDaySwitch.value ? self.reminderAllDayType : self.reminderNotAllDayType;
+        vc.selectedRow = self.reminderMode;
     }
 }
 
@@ -270,6 +286,57 @@
             }
         }
         
+        EKAlarm *alarm;
+        
+        if (self.reminderMode != SRMEventReminderNone) {
+            if (self.allDaySwitch.value) {
+                NSDate *date = [[SRMCalendarTool tool] date:self.startDate onDefiniteHour:9];
+                
+                switch (self.reminderMode) {
+                    case SRMEventReminderADOnDay:
+                        date = [[SRMCalendarTool tool] dateByAddingDays:0 toDate:date];
+                        break;
+                    case SRMEventReminderADOneDay:
+                        date = [[SRMCalendarTool tool] dateByAddingDays:-1 toDate:date];
+                        break;
+                    case SRMEventReminderADTwoDay:
+                        date = [[SRMCalendarTool tool] dateByAddingDays:-2 toDate:date];
+                        break;
+                    case SRMEventReminderADOneWeek:
+                        date = [[SRMCalendarTool tool] dateByAddingDays:-7 toDate:date];
+                        break;
+                    default:
+                        break;
+                }
+                alarm = [EKAlarm alarmWithAbsoluteDate:date];
+                
+            } else {
+                switch (self.reminderMode) {
+                    case SRMEventReminderNADOnTime:
+                        alarm = [EKAlarm alarmWithRelativeOffset:0];
+                        break;
+                    case SRMEventReminderNADFiveMin:
+                        alarm = [EKAlarm alarmWithRelativeOffset:-5 * 60];
+                        break;
+                    case SRMEventReminderNADFifteenMin:
+                        alarm = [EKAlarm alarmWithRelativeOffset:-15 * 60];
+                        break;
+                    case SRMEventReminderNADThirtyMin:
+                        alarm = [EKAlarm alarmWithRelativeOffset:-30 * 60];
+                        break;
+                    case SRMEventReminderNADOneHour:
+                        alarm = [EKAlarm alarmWithRelativeOffset:-60 * 60];
+                        break;
+                    case SRMEventReminderNADOneDay:
+                        alarm = [EKAlarm alarmWithRelativeOffset:-24 * 60  * 60];
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+        }
+        
         BOOL isSuccess = [[SRMEventStore sharedStore] addEvent:self.titleText.text
                                                       calendar:0
                                                         allDay:self.allDaySwitch.value
@@ -277,9 +344,10 @@
                                                        endDate:self.endDate
                                                       location:self.locationText.text
                                                           note:self.noteText.text
-                                                recurrenceRule:rule];
+                                                recurrenceRule:rule
+                                                         alarm:alarm];
         
-        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
+//        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
         if (self.didDismiss) {
             self.didDismiss();
         }
@@ -342,6 +410,8 @@
 {
     if (selectMode == SRMEventSelectRepeat) {
         self.repeatMode = selectRow;
+    } else if (selectMode == SRMEventSelectReminder) {
+        self.reminderMode = selectRow;
     }
 }
 
@@ -380,6 +450,8 @@
     
     self.startDate = self.startDate;
     self.endDate = self.endDate;
+    
+    self.reminderMode = SRMEventReminderNone;
     
 }
 

@@ -51,3 +51,25 @@ typedef NS_ENUM(NSInteger, SRMEventRepeatMode) {
     SRMEventRepeatEveryMonth    = 4,
     SRMEventRepeatEveryYear     = 5
 };
+
+typedef NS_ENUM(NSInteger, SRMEventReminderMode) {
+    SRMEventReminderNone   = 0,
+    SRMEventReminderNADOnTime   = 1,
+    SRMEventReminderNADFiveMin   = 2,
+    SRMEventReminderNADFifteenMin   = 3,
+    SRMEventReminderNADThirtyMin   = 4,
+    SRMEventReminderNADOneHour   = 5,
+    SRMEventReminderNADOneDay   = 6,
+    
+    SRMEventReminderADOnDay   = 1,
+    SRMEventReminderADOneDay   = 2,
+    SRMEventReminderADTwoDay   = 3,
+    SRMEventReminderADOneWeek   = 4,
+};
+
+
+
+
+
+
+

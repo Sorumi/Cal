@@ -2298,7 +2298,7 @@
                                                                 </mask>
                                                             </variation>
                                                         </imageView>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Remainder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7aw-Qg-9QD">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" verticalCompressionResistancePriority="751" text="Reminder" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7aw-Qg-9QD">
                                                             <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                                             <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="14"/>
                                                             <color key="textColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -2505,6 +2505,7 @@
                         <outlet property="moreButton" destination="gtb-SL-y73" id="d6C-p5-naK"/>
                         <outlet property="noteLabel" destination="5aV-fs-sVb" id="W6M-7b-szo"/>
                         <outlet property="noteText" destination="MXY-AI-zkd" id="nNw-pi-wbI"/>
+                        <outlet property="reminderValueLabel" destination="YnH-4s-9C9" id="Tqx-wm-M5s"/>
                         <outlet property="repeatEndCell" destination="9Lf-S1-cOs" id="8G9-Dk-BId"/>
                         <outlet property="repeatEndDateLabel" destination="MGF-20-bvS" id="NHK-hY-A2t"/>
                         <outlet property="repeatValueLabel" destination="aaz-wr-a2z" id="TYB-7q-h1d"/>

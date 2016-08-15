@@ -325,6 +325,7 @@
     return [dateFormatter stringFromDate:date];
 }
 
+////
 - (NSString *)dateFormat:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -369,6 +370,16 @@
     components.minute = 0;
     components.second = 0;
     NSDate *result = [self.calendar dateFromComponents:components];
+    return result;
+}
+
+- (NSDate *)date:(NSDate *)date onDefiniteHour:(NSInteger)hour
+{
+    NSDate *result = [self.calendar dateBySettingHour:hour
+                                               minute:0
+                                               second:0
+                                               ofDate:date
+                                              options:0];
     return result;
 }
 

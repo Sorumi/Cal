@@ -53,5 +53,6 @@
 - (NSString *)weekdayFormat:(NSDate *)date;
 
 - (NSDate *)dateOnHour:(NSDate *)date;
+- (NSDate *)date:(NSDate *)date onDefiniteHour:(NSInteger)hour;
 
 @end

@@ -23,7 +23,7 @@
                             <constraint firstAttribute="height" constant="12" id="Hph-AV-pED"/>
                             <constraint firstAttribute="width" constant="12" id="kQP-mK-yc3"/>
                         </constraints>
-                        <state key="normal" image="system_icon_scale"/>
+                        <state key="normal" image="stamp_icon_scale"/>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MkE-U6-kCS">
                         <rect key="frame" x="99" y="0.0" width="12" height="12"/>
@@ -32,7 +32,7 @@
                             <constraint firstAttribute="height" constant="12" id="1bV-mQ-5hW"/>
                             <constraint firstAttribute="width" constant="12" id="X1u-rk-yVB"/>
                         </constraints>
-                        <state key="normal" image="system_icon_delete"/>
+                        <state key="normal" image="stamp_icon_delete"/>
                         <connections>
                             <action selector="deleteStamp:" destination="gTV-IL-0wX" eventType="touchUpInside" id="s8T-tI-NkA"/>
                         </connections>
@@ -67,7 +67,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="system_icon_delete" width="8" height="6"/>
-        <image name="system_icon_scale" width="8" height="8"/>
+        <image name="stamp_icon_delete" width="8" height="6"/>
+        <image name="stamp_icon_scale" width="8" height="8"/>
     </resources>
 </document>
