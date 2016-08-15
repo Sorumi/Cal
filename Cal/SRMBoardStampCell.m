@@ -15,6 +15,7 @@
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIButton *deleteButton;
+@property (weak, nonatomic) IBOutlet UIButton *scaleButton;
 
 @end
 
@@ -23,51 +24,25 @@
 - (void)awakeFromNib {
     // Initialization code
     
-    UIPanGestureRecognizer *panStamp = [[UIPanGestureRecognizer alloc]
-                                        initWithTarget:self
-                                        action:@selector(moveStamp:)];
+    UIPanGestureRecognizer *panStamp = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                               action:@selector(moveStamp:)];
     [self addGestureRecognizer:panStamp];
     
     self.deleteButton.layer.cornerRadius = 6;
     self.deleteButton.hidden = YES;
+    
+    self.scaleButton.layer.cornerRadius = 6;
+    self.scaleButton.hidden = YES;
+    
+    UIPanGestureRecognizer *scaleStamp = [[UIPanGestureRecognizer alloc] initWithTarget:self
+                                                                                 action:@selector(scaleStamp:)];
+    [self.scaleButton addGestureRecognizer:scaleStamp];
 }
 
 - (void)setEditMode:(BOOL)isEditMode
 {
     self.deleteButton.hidden = !isEditMode;
-//    if (isEditMode) {
-//        if ([[[self layer] sublayers] objectAtIndex:0]) {
-//            self.layer.sublayers = nil;
-//        }
-////
-//        CAShapeLayer *shapeLayer = [CAShapeLayer layer];
-//        [shapeLayer setBounds:self.bounds];
-//        [shapeLayer setPosition:self.center];
-////        [shapeLayer setFillColor:[UIColor colorWithWhite:0.3 alpha:1].CGColor];
-//        [shapeLayer setStrokeColor:[UIColor colorWithWhite:0.3 alpha:1].CGColor];
-//        [shapeLayer setLineWidth:0.5f];
-//        [shapeLayer setLineJoin:kCALineJoinRound];
-//        [shapeLayer setLineDashPattern:@[@(2), @(3)]];
-//        
-//        CGMutablePathRef path = CGPathCreateMutable();
-//        
-//        CGFloat width = self.frame.size.width;
-//        CGFloat height = self.frame.size.height;
-//        
-//        CGPathMoveToPoint(path, NULL, 6, 6);
-//        CGPathAddLineToPoint(path, NULL, width-6, 6);
-//        CGPathAddLineToPoint(path, NULL, width-6, height-6);
-//        CGPathAddLineToPoint(path, NULL, 6, height-6);
-//        CGPathAddLineToPoint(path, NULL, 6, 6);
-//            
-//        [shapeLayer setPath:path];
-//        
-//        CGPathRelease(path);
-//        
-//        [[self layer] addSublayer:shapeLayer];
-//    } else {
-////        self.layer.sublayers = nil;
-//    }
+    self.scaleButton.hidden = !isEditMode;
 }
 
 - (void)setStamp:(SRMStamp *)stamp
@@ -78,11 +53,11 @@
 
 - (void)moveStamp:(UIPanGestureRecognizer *)gesture
 {
-    if (gesture.state == UIGestureRecognizerStateBegan) {
+//    if (gesture.state == UIGestureRecognizerStateBegan) {
 
 //        UICollectionView *collectionView = (UICollectionView *)[self superview];
 //        [collectionView selectItemAtIndexPath:[collectionView indexPathForCell:self] animated:YES scrollPosition:UICollectionViewScrollPositionNone];
-    }
+//    }
     if (gesture.state == UIGestureRecognizerStateChanged) {
         CGPoint point = [gesture translationInView:self];
         
@@ -93,11 +68,31 @@
         [gesture setTranslation:CGPointZero inView:self];
         
     } else if (gesture.state == UIGestureRecognizerStateEnded) {
-        
-//        NSLog(@"%f", self.superview.bounds.size.width);
         _stamp.xProportion = self.center.x / self.superview.bounds.size.width;
         _stamp.yProportion = self.center.y / self.superview.bounds.size.height;
         [[SRMStampStore sharedStore] saveChanges];
+    }
+}
+
+- (void)scaleStamp:(UIPanGestureRecognizer *)gesture
+{
+    if (gesture.state == UIGestureRecognizerStateChanged) {
+        CGPoint point = [gesture translationInView:self];
+        
+        CGRect frame = self.frame;
+        
+        CGFloat p = MAX(point.x / frame.size.width, point.y / frame.size.height);
+        
+        CGFloat width = frame.size.width * (1 + p);
+        CGFloat height = frame.size.height * (1 + p);
+        
+        if (width>24 && height>24) {
+            frame.size.width = width;
+            frame.size.height = height;
+            self.frame = frame;
+            
+        }
+        [gesture setTranslation:CGPointZero inView:self];
     }
 }
 
