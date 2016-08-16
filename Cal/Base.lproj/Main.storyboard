@@ -251,10 +251,10 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NIw-yo-2Jt">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                 <subviews>
-                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Fid-oj-lLB">
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Fid-oj-lLB">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Cua-Vf-WlG">
+                                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="Cua-Vf-WlG" customClass="SRMAppearanceViewLayout">
                                             <size key="itemSize" width="50" height="50"/>
                                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
@@ -311,7 +311,9 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="128" id="QpG-Je-Q35"/>
-                                    <constraint firstAttribute="bottom" secondItem="GPb-88-Qqf" secondAttribute="bottom" id="U3t-G9-4zk"/>
+                                    <constraint firstAttribute="bottom" secondItem="GPb-88-Qqf" secondAttribute="bottom" id="U3t-G9-4zk">
+                                        <variation key="widthClass=compact" constant="5"/>
+                                    </constraint>
                                     <constraint firstItem="Fid-oj-lLB" firstAttribute="top" secondItem="NIw-yo-2Jt" secondAttribute="top" id="VBu-Nq-4il">
                                         <variation key="widthClass=compact" constant="20"/>
                                     </constraint>
@@ -322,7 +324,7 @@
                                     <constraint firstItem="Fid-oj-lLB" firstAttribute="centerX" secondItem="NIw-yo-2Jt" secondAttribute="centerX" id="dHj-4f-sdq"/>
                                     <constraint firstItem="GPb-88-Qqf" firstAttribute="centerX" secondItem="NIw-yo-2Jt" secondAttribute="centerX" id="sRi-j4-OlP"/>
                                     <constraint firstItem="GPb-88-Qqf" firstAttribute="top" secondItem="Fid-oj-lLB" secondAttribute="bottom" constant="-20" id="tbS-1K-Cej">
-                                        <variation key="widthClass=compact" constant="20"/>
+                                        <variation key="widthClass=compact" constant="0.0"/>
                                     </constraint>
                                 </constraints>
                                 <variation key="default">

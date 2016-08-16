@@ -65,6 +65,7 @@
 		4DD6CFA71D5F1D0A009A686A /* SRMMonthBoardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD6CFA61D5F1D0A009A686A /* SRMMonthBoardView.xib */; };
 		4DD6CFAA1D5F2C9F009A686A /* SRMMonthBoardViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFA91D5F2C9F009A686A /* SRMMonthBoardViewLayout.m */; };
 		4DD6CFAD1D6189B0009A686A /* SRMEventDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFAC1D6189B0009A686A /* SRMEventDetailViewController.m */; };
+		4DD6CFB01D62CAE9009A686A /* SRMAppearanceViewLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFAF1D62CAE9009A686A /* SRMAppearanceViewLayout.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -191,6 +192,8 @@
 		4DD6CFA91D5F2C9F009A686A /* SRMMonthBoardViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMMonthBoardViewLayout.m; sourceTree = "<group>"; };
 		4DD6CFAB1D6189B0009A686A /* SRMEventDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMEventDetailViewController.h; sourceTree = "<group>"; };
 		4DD6CFAC1D6189B0009A686A /* SRMEventDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMEventDetailViewController.m; sourceTree = "<group>"; };
+		4DD6CFAE1D62CAE9009A686A /* SRMAppearanceViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMAppearanceViewLayout.h; sourceTree = "<group>"; };
+		4DD6CFAF1D62CAE9009A686A /* SRMAppearanceViewLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMAppearanceViewLayout.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -404,6 +407,8 @@
 				4DD6CFA61D5F1D0A009A686A /* SRMMonthBoardView.xib */,
 				4DD6CFA81D5F2C9F009A686A /* SRMMonthBoardViewLayout.h */,
 				4DD6CFA91D5F2C9F009A686A /* SRMMonthBoardViewLayout.m */,
+				4DD6CFAE1D62CAE9009A686A /* SRMAppearanceViewLayout.h */,
+				4DD6CFAF1D62CAE9009A686A /* SRMAppearanceViewLayout.m */,
 			);
 			name = AppearanceView;
 			sourceTree = "<group>";
@@ -577,6 +582,7 @@
 				4DB2A9E81D549FC600DE9693 /* SRMSelectCell.m in Sources */,
 				4D3513A51D4ACB0900D2B128 /* SRMCalendarConstance.m in Sources */,
 				4DB2A9D11D52F79900DE9693 /* SRMSwitch.m in Sources */,
+				4DD6CFB01D62CAE9009A686A /* SRMAppearanceViewLayout.m in Sources */,
 				4D95A9B91D5C16E500526D78 /* SRMPageControl.m in Sources */,
 				4D3513B91D4D9B7600D2B128 /* SRMWeekWeekdayHeader.m in Sources */,
 				4D3513B31D4CE85900D2B128 /* SRMMonthWeekdayHeader.m in Sources */,

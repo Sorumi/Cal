@@ -28,10 +28,10 @@
                                                                                action:@selector(moveStamp:)];
     [self addGestureRecognizer:panStamp];
     
-    self.deleteButton.layer.cornerRadius = 6;
+    self.deleteButton.layer.cornerRadius = 10;
     self.deleteButton.hidden = YES;
     
-    self.scaleButton.layer.cornerRadius = 6;
+    self.scaleButton.layer.cornerRadius = 10;
     self.scaleButton.hidden = YES;
     
     UIPanGestureRecognizer *scaleStamp = [[UIPanGestureRecognizer alloc] initWithTarget:self
@@ -79,20 +79,30 @@
     if (gesture.state == UIGestureRecognizerStateChanged) {
         CGPoint point = [gesture translationInView:self];
         
-        CGRect frame = self.frame;
+        CGRect bounds = self.bounds;
         
-        CGFloat p = MAX(point.x / frame.size.width, point.y / frame.size.height);
+        CGFloat p = MAX(point.x / bounds.size.width, point.y / bounds.size.height);
         
-        CGFloat width = frame.size.width * (1 + p);
-        CGFloat height = frame.size.height * (1 + p);
+        CGFloat width = bounds.size.width * (1 + p);
+        CGFloat height = bounds.size.height * (1 + p);
         
-        if (width>24 && height>24) {
-            frame.size.width = width;
-            frame.size.height = height;
-            self.frame = frame;
+        if (width>40 && height>40) {
+            bounds.size.width = width;
+            bounds.size.height = height;
+            CGFloat x = self.center.x + bounds.size.width * p / 2;
+            CGFloat y = self.center.y + bounds.size.height * p / 2;
+            self.bounds = bounds;
+            self.center = CGPointMake(x, y);
             
         }
         [gesture setTranslation:CGPointZero inView:self];
+    } else if (gesture.state == UIGestureRecognizerStateEnded) {
+        _stamp.xScale = (self.bounds.size.width-20) / _imageView.image.size.width;
+        _stamp.yScale = (self.bounds.size.height-20) / _imageView.image.size.height;
+        _stamp.xProportion = self.center.x / self.superview.bounds.size.width;
+        _stamp.yProportion = self.center.y / self.superview.bounds.size.height;
+        
+        [[SRMStampStore sharedStore] saveChanges];
     }
 }
 

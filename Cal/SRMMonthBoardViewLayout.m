@@ -57,9 +57,10 @@
 
     CGSize imageSize = [[SRMStampStore sharedStore] stampForName:stamp.name].size;
     
-    attributes.frame = CGRectMake(0, 0, imageSize.width+12, imageSize.height+12);
+    attributes.frame = CGRectMake(0, 0, imageSize.width*stamp.xScale+20, imageSize.height*stamp.yScale+20);
     attributes.center = CGPointMake(stamp.xProportion*collectionView.frame.size.width, stamp.yProportion*collectionView.frame.size.height);
-
+    attributes.zIndex = indexPath.row;
+    
     return attributes;
 }
 

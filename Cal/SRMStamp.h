@@ -13,7 +13,9 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic) float xProportion;
 @property (nonatomic) float yProportion;
+@property (nonatomic) float xScale;
+@property (nonatomic) float yScale;
 
-- (instancetype)initWithName:(NSString *)name xProp:(float)xProp yProp:(float)yProp;
+- (instancetype)initWithName:(NSString *)name xProp:(float)xProp yProp:(float)yProp xScale:(float)xScale yScale:(float)yScale;
 
 @end

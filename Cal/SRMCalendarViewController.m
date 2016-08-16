@@ -33,8 +33,9 @@
 #import "SRMStampCell.h"
 #import "SRMStamp.h"
 #import "SRMBoardStampCell.h"
+#import "SRMAppearanceViewLayout.h"
 
-@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate>
+@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate, SRMAppearanceViewLayoutDelegate>
 
 @property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
 
@@ -194,6 +195,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     
     self.appearanceCollectionView.delegate = self;
     self.appearanceCollectionView.dataSource = self;
+    SRMAppearanceViewLayout *layout = (SRMAppearanceViewLayout *)self.appearanceCollectionView.collectionViewLayout;
+    layout.delegate = self;
     
     // add custum gesture
     UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(monthToWeek:)];
@@ -211,6 +214,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     UIPanGestureRecognizer *panStamp = [[UIPanGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(addStamp:)];
+    panStamp.delegate = self;
     [self.appearanceCollectionView addGestureRecognizer:panStamp];
     
     self.isFirstTimeViewDidLayoutSubviews = YES;
@@ -446,15 +450,16 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     if (self.viewMode != SRMCalendarEditViewMode) {
         [self backToMode:nil];
         self.viewMode = SRMCalendarEditViewMode;
+        self.monthCollectionView.scrollEnabled = NO;
         [self toggleAppearanceSettingView:YES];
         [self.monthCollectionView reloadData];
         
     } else {
         self.viewMode = SRMCalendarMonthViewMode;
+        self.monthCollectionView.scrollEnabled = YES;
         [self toggleAppearanceSettingView:NO];
         [self.monthCollectionView reloadData];
     }
-//    [board setEditMode];
 }
 
 - (void)toggleAppearanceSettingView:(BOOL)show
@@ -473,14 +478,28 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)addStamp:(UIPanGestureRecognizer *)gesture
 {
     if (gesture.state == UIGestureRecognizerStateBegan) {
+        
         CGPoint point = [gesture locationInView:self.appearanceCollectionView];
-        NSInteger num = [self.appearanceCollectionView indexPathForItemAtPoint:point].row;
+        NSIndexPath *indexPath = [self.appearanceCollectionView indexPathForItemAtPoint:point];
+        if (!indexPath) {
+            return;
+        }
+        NSInteger num = indexPath.row;
         _tmpStamp = [[UIImageView alloc] initWithImage:[[SRMStampStore sharedStore] stampForNum:num]];
-        _tmpStamp.center = [gesture locationInView:self.view];
+        CGRect bounds = _tmpStamp.bounds;
+        bounds.size.width /= 2;
+        bounds.size.height /= 2;
+        _tmpStamp.bounds = bounds;
+        CGPoint center = [gesture locationInView:self.view];
+        center.y -= 40;
+        _tmpStamp.center = center;
         _tmpStampName = [SRMStampStore sharedStore].allStampsPath[num];
         [self.view addSubview:_tmpStamp];
         
     } else if (gesture.state == UIGestureRecognizerStateChanged) {
+        if (!_tmpStamp) {
+            return;
+        }
         CGPoint point = [gesture translationInView:self.view];
 
         CGFloat x = _tmpStamp.center.x + point.x;
@@ -490,13 +509,16 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                 [gesture setTranslation:CGPointZero inView:self.view];
 
     } else if (gesture.state == UIGestureRecognizerStateEnded) {
+        if (!_tmpStamp) {
+            return;
+        }
         if (CGRectContainsPoint(self.monthCollectionView.frame, _tmpStamp.center)) {
             
             SRMMonthBoardView *board = (SRMMonthBoardView *)[self.monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:self.monthPage]];
 
             CGPoint center = [board convertPoint:_tmpStamp.center fromView:self.view];
 
-            SRMStamp *stamp = [[SRMStamp alloc] initWithName:_tmpStampName xProp:center.x/self.viewWidth yProp:center.y/(self.viewWidth/7*6)] ;
+            SRMStamp *stamp = [[SRMStamp alloc] initWithName:_tmpStampName xProp:center.x/self.viewWidth yProp:center.y/(self.viewWidth/7*6) xScale:0.5 yScale:0.5] ;
             [[SRMStampStore sharedStore] addStamp:stamp forYear:_selectedYear month:_selectedMonth];
 
             [board.boardCollectionView reloadData];
@@ -530,6 +552,28 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     [self.dayScrollView setContentOffset:CGPointMake(self.viewWidth*num, 0) animated:YES];
 }
 
+#pragma mark - <SRMAppearanceViewLayoutDelegate>
+
+- (void)didPrepareLayout:(SRMAppearanceViewLayout *)layout
+{
+    self.appearancePageControl.numberOfPages = layout.page;
+}
+
+#pragma mark - <UIGestureRecognizerDelegate>
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
+    CGPoint velocity = [panGestureRecognizer velocityInView:panGestureRecognizer.view];
+    return fabs(velocity.y) > fabs(velocity.x);
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldBeRequiredToFailByGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer{
+    if (otherGestureRecognizer == self.appearanceCollectionView.panGestureRecognizer) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 #pragma mark - <UIScrollViewDelegate>
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
@@ -542,16 +586,14 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     }
 }
 
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     if (scrollView == self.dayScrollView) {
         
         NSInteger page = round(scrollView.contentOffset.x / self.viewWidth);
         [self.dayHeader setBorderViewPos:page animated:YES];
-    }
-    //month view change the label
-    if (scrollView == self.monthCollectionView) {
+        
+    } else if (scrollView == self.monthCollectionView) {
         NSDate *date;
         SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = round(self.monthCollectionView.contentOffset.x / self.viewWidth);
@@ -561,6 +603,10 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         NSInteger month = [tool monthOfDate:date];
 
         [self.headerView setMonthHeaderYear:year month:month];
+    
+    } else if (scrollView == self.appearanceCollectionView) {
+        NSInteger page = round(scrollView.contentOffset.x / scrollView.frame.size.width);
+        self.appearancePageControl.currentPage = page;
     }
 }
 

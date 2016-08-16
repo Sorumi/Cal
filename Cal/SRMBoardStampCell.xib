@@ -14,23 +14,23 @@
                 <rect key="frame" x="0.0" y="0.0" width="111" height="83"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="GLv-Kf-WHD">
-                        <rect key="frame" x="6" y="6" width="99" height="71"/>
+                        <rect key="frame" x="10" y="10" width="91" height="63"/>
                     </imageView>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MXm-7N-bxl">
-                        <rect key="frame" x="99" y="71" width="12" height="12"/>
+                        <rect key="frame" x="91" y="63" width="20" height="20"/>
                         <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="12" id="Hph-AV-pED"/>
-                            <constraint firstAttribute="width" constant="12" id="kQP-mK-yc3"/>
+                            <constraint firstAttribute="height" constant="20" id="Hph-AV-pED"/>
+                            <constraint firstAttribute="width" constant="20" id="kQP-mK-yc3"/>
                         </constraints>
                         <state key="normal" image="stamp_icon_scale"/>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MkE-U6-kCS">
-                        <rect key="frame" x="99" y="0.0" width="12" height="12"/>
+                        <rect key="frame" x="91" y="0.0" width="20" height="20"/>
                         <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="12" id="1bV-mQ-5hW"/>
-                            <constraint firstAttribute="width" constant="12" id="X1u-rk-yVB"/>
+                            <constraint firstAttribute="height" constant="20" id="1bV-mQ-5hW"/>
+                            <constraint firstAttribute="width" constant="20" id="X1u-rk-yVB"/>
                         </constraints>
                         <state key="normal" image="stamp_icon_delete"/>
                         <connections>
@@ -43,10 +43,10 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="GLv-Kf-WHD" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="1aL-Jx-L5h"/>
-                <constraint firstItem="GLv-Kf-WHD" firstAttribute="height" secondItem="gTV-IL-0wX" secondAttribute="height" constant="-12" id="3ky-hG-Wh3"/>
+                <constraint firstItem="GLv-Kf-WHD" firstAttribute="height" secondItem="gTV-IL-0wX" secondAttribute="height" constant="-20" id="3ky-hG-Wh3"/>
                 <constraint firstItem="MXm-7N-bxl" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="3sg-C8-MFo"/>
                 <constraint firstAttribute="bottom" secondItem="MXm-7N-bxl" secondAttribute="bottom" id="M91-iV-FJr"/>
-                <constraint firstItem="GLv-Kf-WHD" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" constant="-12" id="QT4-Ge-HZ8"/>
+                <constraint firstItem="GLv-Kf-WHD" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" constant="-20" id="QT4-Ge-HZ8"/>
                 <constraint firstAttribute="trailing" secondItem="MkE-U6-kCS" secondAttribute="trailing" id="hQk-nx-aLd"/>
                 <constraint firstItem="MkE-U6-kCS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="r1b-Ya-ZHg"/>
                 <constraint firstItem="GLv-Kf-WHD" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="tio-lD-cKf"/>
@@ -67,7 +67,7 @@
         </collectionViewCell>
     </objects>
     <resources>
-        <image name="stamp_icon_delete" width="8" height="6"/>
-        <image name="stamp_icon_scale" width="8" height="8"/>
+        <image name="stamp_icon_delete" width="11" height="11"/>
+        <image name="stamp_icon_scale" width="12" height="12"/>
     </resources>
 </document>

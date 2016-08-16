@@ -33,6 +33,11 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     self.boardCollectionView.delegate = self;
     SRMMonthBoardViewLayout *layout = (SRMMonthBoardViewLayout *)self.boardCollectionView.collectionViewLayout;
     layout.delegate = self;
+    
+    //gesture
+    UITapGestureRecognizer *tapBlank = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapBlank:)];
+    self.boardCollectionView.backgroundView = [[UIView alloc] initWithFrame:self.boardCollectionView.frame];
+    [self.boardCollectionView.backgroundView addGestureRecognizer:tapBlank];
 }
 
 #pragma mark - Public
@@ -58,6 +63,17 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)deleteStamp:(SRMStamp *)stamp
 {
     [[SRMStampStore sharedStore] deleteStamp:stamp forYear:_year month:_month];
+}
+
+#pragma mark - Action
+
+- (void)tapBlank:(UITapGestureRecognizer *)gesture
+{
+//    NSLog(@"%lu", [self.boardCollectionView indexPathsForSelectedItems].count);
+    for (NSIndexPath *indexPath in [self.boardCollectionView indexPathsForSelectedItems]) {
+        SRMBoardStampCell *cell = (SRMBoardStampCell *)[self.boardCollectionView cellForItemAtIndexPath:indexPath];
+        [cell setEditMode:NO];
+    }
 }
 
 #pragma mark - <SRMMonthBoardViewLayoutDelegate>
