@@ -12,13 +12,11 @@
 
 - (void)awakeFromNib
 {
-
     CALayer *layer = self.layer;
     layer.shadowOffset = CGSizeMake(0, 0);
     layer.shadowRadius = 0.5;
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.3;
-
 }
 
 @end

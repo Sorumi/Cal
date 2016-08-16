@@ -153,7 +153,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
     // collection
     [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthDayCell" bundle:nil] forCellWithReuseIdentifier:reuseMonthCellIdentifier];
-//    [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMBoardStampCell" bundle:nil] forCellWithReuseIdentifier:reuseBoardStampCellIdentifier];
     [self.weekCollectionView registerNib:[UINib nibWithNibName:@"SRMWeekDayCell" bundle:nil] forCellWithReuseIdentifier:reuseWeekCellIdentifier];
     [self.monthCollectionView registerNib:[UINib nibWithNibName:@"SRMMonthBoardView" bundle:nil] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:reuseMonthBoardIdentifier];
     
@@ -173,6 +172,12 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     
     self.monthItemTableView.delegate = self;
     self.monthItemTableView.dataSource = self;
+    
+    CALayer *layer = self.monthItemTableView.layer;
+    layer.shadowOffset = CGSizeMake(0, 0);
+    layer.shadowRadius = 1;
+    layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    layer.shadowOpacity = 0.3;
     
     // day scroll
     self.dayScrollView.delegate = self;
@@ -200,17 +205,31 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     layout.delegate = self;
     
     // add custum gesture
-    UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(monthToWeek:)];
-    monthToWeek.direction = UISwipeGestureRecognizerDirectionUp;
-    [self.monthCollectionView addGestureRecognizer:monthToWeek];
+//    UISwipeGestureRecognizer *monthToWeek = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(monthToWeek:)];
+//    monthToWeek.direction = UISwipeGestureRecognizerDirectionUp;
+//    [self.monthCollectionView addGestureRecognizer:monthToWeek];
     
-    UISwipeGestureRecognizer *weekToMonth = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(weekToMonth:)];
-    weekToMonth.direction = UISwipeGestureRecognizerDirectionDown;
-    [self.weekCollectionView addGestureRecognizer:weekToMonth];
+    UIPanGestureRecognizer *panMonthCalender = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panMonthCalender:)];
+    panMonthCalender.delegate = self;
+    [self.monthCollectionView addGestureRecognizer:panMonthCalender];
+    
+//    UISwipeGestureRecognizer *weekToMonth = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(weekToMonth:)];
+//    weekToMonth.direction = UISwipeGestureRecognizerDirectionDown;
+//    [self.weekCollectionView addGestureRecognizer:weekToMonth];
+
+    UIPanGestureRecognizer *panWeekCalender = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panWeekCalender:)];
+    panWeekCalender.delegate = self;
+    [self.weekCollectionView addGestureRecognizer:panWeekCalender];
     
     UISwipeGestureRecognizer *upMonthItem = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(upMonthItemTable:)];
     upMonthItem.direction = UISwipeGestureRecognizerDirectionUp;
     [self.monthItemTableView addGestureRecognizer:upMonthItem];
+    
+//    UIPanGestureRecognizer *panMonthItem = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panMonthItem:)];
+//    panMonthItem.delegate = self;
+//    [self.monthItemTableView addGestureRecognizer:panMonthItem];
+    
+    
     
     _downMonthItem = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(downMonthItemTable:)];
     _downMonthItem.direction = UISwipeGestureRecognizerDirectionDown;
@@ -337,7 +356,68 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     }
 }
 
-- (void)monthToWeek:(UISwipeGestureRecognizer *)gesture
+- (void)panMonthCalender:(UIPanGestureRecognizer *)gesture
+{
+    if (_viewMode != SRMCalendarMonthViewMode) {
+        return;
+    }
+    CGFloat maxHeight = - _monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight + _viewWidth / 7;
+    
+    if (gesture.state == UIGestureRecognizerStateChanged) {
+    
+        CGPoint point = [gesture translationInView:_monthItemTableView];
+        
+        CGFloat top = _monthWeekdayViewTop.constant + point.y;
+        if (top <= 0 && top >= maxHeight ) {
+            
+            _monthWeekdayViewTop.constant = top;
+            _weekViewBottom.constant += point.y / maxHeight * _weekCollectionView.frame.size.height;
+            _monthItemTableTop.constant += point.y / maxHeight * (self.view.frame.size.height - SRMHeaderHeight-self.viewWidth / 7);
+        }
+        [self.view layoutIfNeeded];
+        
+        [gesture setTranslation:CGPointZero inView:self.view];
+        
+    } else if (gesture.state == UIGestureRecognizerStateEnded) {
+        [self monthToWeek];
+    }
+}
+
+- (void)panWeekCalender:(UIPanGestureRecognizer *)gesture
+{
+    if (_viewMode != SRMCalendarWeekViewMode) {
+        return;
+    }
+    CGFloat maxHeight = - _monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight + _viewWidth / 7;
+    if (gesture.state == UIGestureRecognizerStateChanged) {
+        
+        CGPoint point = [gesture translationInView:self.view];
+        
+        CGFloat top = _monthWeekdayViewTop.constant + point.y;
+        if (top <= 0 && top >= maxHeight ) {
+            
+            _monthWeekdayViewTop.constant = top;
+            _weekViewBottom.constant += point.y / maxHeight * _weekCollectionView.frame.size.height;
+            _monthItemTableTop.constant += point.y / maxHeight * (self.view.frame.size.height - SRMHeaderHeight-self.viewWidth / 7);
+        }
+        [self.view layoutIfNeeded];
+        
+        [gesture setTranslation:CGPointZero inView:self.view];
+        
+    } else if (gesture.state == UIGestureRecognizerStateEnded) {
+        [self weekToMonth];
+    }
+}
+
+- (void)panMonthItem:(UIPanGestureRecognizer *)gesture
+{
+    if (_viewMode != SRMCalendarMonthViewMode) {
+        return;
+    }
+    
+}
+
+- (void)monthToWeek
 {
     if (self.viewMode != SRMCalendarMonthViewMode) {
         return;
@@ -364,7 +444,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                      completion:NULL];
 }
 
-- (void)weekToMonth:(UISwipeGestureRecognizer *)gesture
+- (void)weekToMonth
 {
     if (self.viewMode != SRMCalendarWeekViewMode) {
         return;
@@ -446,7 +526,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (IBAction)backToMode:(id)sender
 {
     if (self.viewMode == SRMCalendarWeekViewMode) {
-        [self weekToMonth:nil];
+        [self weekToMonth];
         
     } else if (self.viewMode == SRMCalendarItemViewMode) {
         [self downMonthItemTable:nil];
@@ -961,7 +1041,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
             
         } else {
             self.date = cell.date;
-            [self monthToWeek:nil];
+            [self monthToWeek];
         }
 
     } else if (collectionView == self.weekCollectionView) {
