@@ -9,8 +9,13 @@
 #import "SRMMonthDayCell.h"
 #import "SRMCalendarAppearance.h"
 
-@implementation SRMMonthDayCell
+@interface SRMMonthDayCell ()
 
+//@property (weak, nonatomic) IBOutlet SRMMonthDayTriangleView *triangleView;
+
+@end
+
+@implementation SRMMonthDayCell
 
 - (void)awakeFromNib
 {
@@ -31,5 +36,30 @@
     self.dateLabel.textColor = [UIColor lightGrayColor];
 }
 
+- (void)setToday:(BOOL)isToday
+{
+//    self.triangleView.backgroundColor = isToday ? [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"CalendarMonthBorderColor"] : nil;
+}
+
+
+@end
+
+@implementation SRMMonthDayTriangleView
+
+- (void)awakeFromNib
+{
+//    self.backgroundColor = [UIColor redColor];
+    
+    UIBezierPath *path = [UIBezierPath bezierPath];
+    [path moveToPoint:CGPointMake(0, 0)];
+    [path addLineToPoint:CGPointMake(self.frame.size.width, 0)];
+    [path addLineToPoint:CGPointMake(self.frame.size.width, self.frame.size.height)];
+    [path closePath];
+    
+    CAShapeLayer *mask = [CAShapeLayer layer];
+    mask.path = path.CGPath;
+    
+    self.layer.mask = mask;
+}
 
 @end

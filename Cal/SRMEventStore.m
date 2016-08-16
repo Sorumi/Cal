@@ -201,6 +201,32 @@
     return notAllDayEvents;
 }
 
+- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm
+{
+    EKEvent *event  = [EKEvent eventWithEventStore:self.eventStore];
+    [event setCalendar:[self.eventStore defaultCalendarForNewEvents]];
+    event.title = title;
+    event.allDay = allday;
+    event.startDate = startDate;
+    event.endDate = endDate;
+    event.location = location;
+    event.notes = note;
+    if (rule) {
+        [event addRecurrenceRule:rule];
+    }
+    if (alarm) {
+        [event addAlarm:alarm];
+    }
+    return [self.eventStore saveEvent:event span:EKSpanThisEvent commit:YES error:nil];
+}
+
+- (BOOL)deleteEvent:(NSString *)eventIdentifier
+{
+    EKEvent* event = [self.eventStore eventWithIdentifier:eventIdentifier];
+    return [self.eventStore removeEvent:event span:EKSpanFutureEvents commit:YES error:nil];
+}
+
+
 #pragma mark - Icon
 
 - (void)setIcon:(NSInteger)iconNum forEventIdentifier:(NSString *)eventIdentifier
@@ -246,26 +272,5 @@
                                         }
                                     }];
 }
-
-- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm
-{
-    EKEvent *event  = [EKEvent eventWithEventStore:self.eventStore];
-    [event setCalendar:[self.eventStore defaultCalendarForNewEvents]];
-    event.title = title;
-    event.allDay = allday;
-    event.startDate = startDate;
-    event.endDate = endDate;
-    event.location = location;
-    event.notes = note;
-    if (rule) {
-        [event addRecurrenceRule:rule];
-    }
-    if (alarm) {
-        [event addAlarm:alarm];
-    }
-    return [self.eventStore saveEvent:event span:EKSpanThisEvent commit:YES error:nil];
-}
-
-
 
 @end

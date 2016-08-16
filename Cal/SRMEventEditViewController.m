@@ -544,9 +544,14 @@
 {
     if (self.timeSelectMode != SRMTimeSelectNone) {
         self.timeSelectMode = SRMTimeSelectNone;
-
     }
-    if (indexPath.section == 1 && indexPath.row == 1) {
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        [self.titleText becomeFirstResponder];
+        
+    } else if (indexPath.section == 1 && indexPath.row == 0) {
+        [self.locationText becomeFirstResponder];
+        
+    } else if (indexPath.section == 1 && indexPath.row == 1) {
         [self.noteText becomeFirstResponder];
     }
 }

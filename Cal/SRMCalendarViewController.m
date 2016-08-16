@@ -60,6 +60,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *monthItemTableView;
 @property (nonatomic) CGFloat lastContentOffset;
+@property (nonatomic, strong) UISwipeGestureRecognizer *downMonthItem;
 
 @property (weak, nonatomic) IBOutlet SRMDayHeader *dayHeader;
 @property (weak, nonatomic) IBOutlet UIScrollView *dayScrollView;
@@ -211,6 +212,9 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     upMonthItem.direction = UISwipeGestureRecognizerDirectionUp;
     [self.monthItemTableView addGestureRecognizer:upMonthItem];
     
+    _downMonthItem = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(downMonthItemTable:)];
+    _downMonthItem.direction = UISwipeGestureRecognizerDirectionDown;
+    
     UIPanGestureRecognizer *panStamp = [[UIPanGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(addStamp:)];
@@ -229,7 +233,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                                                  name:EKEventStoreChangedNotification object:nil];
     
     // appearance setting
-
 
 }
 
@@ -271,6 +274,11 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)didFetchRecentEvent
 {
     [self.monthItemTableView reloadData];
+    if (self.monthItemTableView.contentSize.height < self.monthItemTableView.frame.size.height) {
+        [self.monthItemTableView addGestureRecognizer:self.downMonthItem];
+    } else {
+        [self.monthItemTableView removeGestureRecognizer:self.downMonthItem];
+    }
 }
 
 - (void)didFetchDayEvent
@@ -388,7 +396,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         return;
     }
     self.viewMode = SRMCalendarItemViewMode;
-    
+
     // animation
     [self.view bringSubviewToFront:self.headerView];
     self.monthWeekdayViewTop.constant = - self.monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight;
@@ -408,7 +416,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                      }];
 }
 
-- (void)downMonthItemTable
+- (void)downMonthItemTable:(UISwipeGestureRecognizer *)gesture
 {
     if (self.viewMode != SRMCalendarItemViewMode) {
         return;
@@ -441,7 +449,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         [self weekToMonth:nil];
         
     } else if (self.viewMode == SRMCalendarItemViewMode) {
-        [self downMonthItemTable];
+        [self downMonthItemTable:nil];
     }
 }
 
@@ -580,7 +588,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     if (scrollView == self.monthItemTableView) {
         if (self.lastContentOffset == scrollView.contentOffset.y && scrollView.contentOffset.y == 0) {
-            [self downMonthItemTable];
+            [self downMonthItemTable:nil];
         }
         self.lastContentOffset = scrollView.contentOffset.y;
     }
@@ -852,6 +860,12 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         } else {
             [cell setCurrentMonthDate:indexPath.row - blankDayCount + 1];
         }
+        
+//        if ([tool date:date isEqualToDate:_today]) {
+//            [cell setToday:YES];
+//        } else {
+//            [cell setToday:NO];
+//        }
         
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];

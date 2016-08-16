@@ -15,6 +15,7 @@
 @property (nonatomic) NSInteger colorNum;
 @property (nonatomic, strong) NSDate *dueDate;
 @property (nonatomic, strong) NSDate *finishDate;
+@property (nonatomic, strong) NSString *notes;
 
 - (instancetype)initWithTitle:(NSString *)title;
 - (instancetype)initWithTitle:(NSString *)title dueDate:(NSDate *)dueDate;

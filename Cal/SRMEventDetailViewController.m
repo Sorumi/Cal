@@ -8,6 +8,7 @@
 
 #import "SRMEventDetailViewController.h"
 #import "SRMCalendarTool.h"
+#import "SRMEventStore.h"
 
 @interface SRMEventDetailViewController ()
 
@@ -174,7 +175,11 @@
 
 - (void)deleteEvent:(id)sender
 {
-    
+    BOOL isSuccess = [[SRMEventStore sharedStore] deleteEvent:self.event.eventIdentifier];
+    if (isSuccess) {
+        [self.presentingViewController dismissViewControllerAnimated:YES
+                                                          completion:nil];
+    }
 }
 
 - (CGFloat)heightForLabel:(UILabel *)label

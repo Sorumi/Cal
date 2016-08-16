@@ -15,5 +15,10 @@
 
 - (void)setCurrentMonthDate:(NSInteger)day;
 - (void)setOtherMonthDate:(NSInteger)day;
+//- (void)setToday:(BOOL)isToday;
+
+@end
+
+@interface SRMMonthDayTriangleView : UIView
 
 @end

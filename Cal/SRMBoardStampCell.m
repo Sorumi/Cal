@@ -49,6 +49,7 @@
 {
     _stamp = stamp;
     self.imageView.image = [[SRMStampStore sharedStore] stampForName:stamp.name];
+    self.imageView.alpha = 0.8;
 }
 
 - (void)moveStamp:(UIPanGestureRecognizer *)gesture

@@ -34,5 +34,6 @@
 - (NSArray *)dayEventsNotAllDay:(NSDate *)date;
 
 - (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm;
+- (BOOL)deleteEvent:(NSString *)eventIdentifier;
 
 @end
