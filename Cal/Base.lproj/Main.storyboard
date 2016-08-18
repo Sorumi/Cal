@@ -370,7 +370,7 @@
                                                 <rect key="frame" x="20" y="20" width="200" height="22"/>
                                                 <state key="normal" image="system_icon_design"/>
                                                 <connections>
-                                                    <action selector="showBoard:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="ewe-ms-60H"/>
+                                                    <action selector="appearanceEdit:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="tjA-Ph-2Sh"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5P7-MV-Lzx">
@@ -383,14 +383,46 @@
                                             </button>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" alpha="0.0" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="t6V-LD-mhP">
+                                        <rect key="frame" x="113" y="-11" width="173.5" height="62"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MXs-DQ-6UQ">
+                                                <rect key="frame" x="20" y="20" width="133.5" height="22"/>
+                                                <state key="normal" image="prev_arrow"/>
+                                                <connections>
+                                                    <action selector="endAppearanceEdit:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="Rd4-Na-vWr"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVX-Ku-JtM">
+                                                <rect key="frame" x="20" y="20" width="133" height="22"/>
+                                                <state key="normal" image="system_icon_stamp"/>
+                                                <connections>
+                                                    <action selector="setStampMode:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="p6m-0X-Mtz"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EGe-fi-fO5">
+                                                <rect key="frame" x="20" y="20" width="133.5" height="22"/>
+                                                <state key="normal" image="content_icon_calendar"/>
+                                                <connections>
+                                                    <action selector="setThemeMode:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="dfC-4E-3nx"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <variation key="widthClass=compact" axis="horizontal"/>
+                                    </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.81960784310000001" green="0.90196078430000004" blue="0.8862745098" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="60" id="8V1-qs-zmp">
                                         <variation key="widthClass=compact" constant="40"/>
                                     </constraint>
+                                    <constraint firstItem="t6V-LD-mhP" firstAttribute="centerY" secondItem="VoG-yy-Vsx" secondAttribute="centerY" id="XJd-Nw-YrH"/>
                                     <constraint firstItem="svd-bh-2QG" firstAttribute="leading" secondItem="VoG-yy-Vsx" secondAttribute="leading" id="aEw-0o-X5h"/>
                                     <constraint firstItem="svd-bh-2QG" firstAttribute="centerY" secondItem="VoG-yy-Vsx" secondAttribute="centerY" id="nM8-P2-02t"/>
+                                    <constraint firstItem="t6V-LD-mhP" firstAttribute="leading" secondItem="VoG-yy-Vsx" secondAttribute="leading" constant="133" id="pwp-gI-TrV">
+                                        <variation key="widthClass=compact" constant="100"/>
+                                    </constraint>
+                                    <constraint firstItem="t6V-LD-mhP" firstAttribute="width" secondItem="VoG-yy-Vsx" secondAttribute="width" id="zm4-uN-lg1"/>
                                     <constraint firstAttribute="trailing" secondItem="svd-bh-2QG" secondAttribute="trailing" constant="356" id="zvO-e9-FEf">
                                         <variation key="widthClass=compact" constant="0.0"/>
                                     </constraint>
@@ -401,6 +433,9 @@
                                         <exclude reference="aEw-0o-X5h"/>
                                         <exclude reference="nM8-P2-02t"/>
                                         <exclude reference="zvO-e9-FEf"/>
+                                        <exclude reference="XJd-Nw-YrH"/>
+                                        <exclude reference="pwp-gI-TrV"/>
+                                        <exclude reference="zm4-uN-lg1"/>
                                     </mask>
                                 </variation>
                                 <variation key="widthClass=compact">
@@ -409,6 +444,9 @@
                                         <include reference="aEw-0o-X5h"/>
                                         <include reference="nM8-P2-02t"/>
                                         <include reference="zvO-e9-FEf"/>
+                                        <include reference="XJd-Nw-YrH"/>
+                                        <include reference="pwp-gI-TrV"/>
+                                        <include reference="zm4-uN-lg1"/>
                                     </mask>
                                 </variation>
                             </view>
@@ -956,6 +994,8 @@
                         <outlet property="appearancePageControl" destination="qHy-Cz-OhT" id="yvr-2z-fQB"/>
                         <outlet property="appearanceSettingViewBottom" destination="gHZ-xV-3Rs" id="xMB-fK-THN"/>
                         <outlet property="appearanceSettingViewHeight" destination="QpG-Je-Q35" id="TgD-XW-3QH"/>
+                        <outlet property="appearanceToolbar" destination="t6V-LD-mhP" id="ESY-LM-8IX"/>
+                        <outlet property="appearanceToolbarLeading" destination="pwp-gI-TrV" id="nec-t8-i7D"/>
                         <outlet property="backButtonLeading" destination="3Vn-uE-63B" id="B12-Zz-c7X"/>
                         <outlet property="dayHeader" destination="KFP-rm-UQd" id="hoI-fe-2jJ"/>
                         <outlet property="dayItemCollectionView" destination="YoZ-jR-2XY" id="2eq-gr-iaX"/>
@@ -970,6 +1010,7 @@
                         <outlet property="monthItemTableTop" destination="3G5-d3-s4l" id="LzN-Qe-jMw"/>
                         <outlet property="monthItemTableView" destination="W6V-UO-pvr" id="bqb-lw-lXF"/>
                         <outlet property="monthWeekdayViewTop" destination="oBs-jk-QQj" id="Q6c-GA-CWA"/>
+                        <outlet property="toolbar" destination="svd-bh-2QG" id="M9F-yv-qhk"/>
                         <outlet property="weekCollectionView" destination="dpK-xs-UIc" id="hEc-xp-9RN"/>
                         <outlet property="weekHeaderTrailing" destination="yT5-tr-8cR" id="m71-a3-Wb5"/>
                         <outlet property="weekViewBottom" destination="3e1-bZ-794" id="P6s-kx-8Ru"/>
@@ -4012,6 +4053,7 @@
         <image name="system_icom_done" width="25" height="18"/>
         <image name="system_icon_add" width="22" height="22"/>
         <image name="system_icon_design" width="24" height="24"/>
+        <image name="system_icon_stamp" width="22" height="22"/>
         <image name="task_icon_finished" width="20" height="20"/>
         <image name="task_icon_unfinished" width="20" height="20"/>
     </resources>

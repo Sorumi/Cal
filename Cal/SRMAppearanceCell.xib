@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="StampCell" id="gTV-IL-0wX" customClass="SRMStampCell">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="AppearanceCell" id="gTV-IL-0wX" customClass="SRMAppearanceCell">
             <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -27,7 +27,7 @@
                 <constraint firstItem="XDz-h4-waN" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="nSv-dU-cx3"/>
             </constraints>
             <connections>
-                <outlet property="stampImageView" destination="XDz-h4-waN" id="IAR-vn-s9T"/>
+                <outlet property="imageView" destination="XDz-h4-waN" id="hGX-wb-L7R"/>
             </connections>
         </collectionViewCell>
     </objects>

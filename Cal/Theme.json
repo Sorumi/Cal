@@ -1,0 +1,11 @@
+{
+    "theme 1": {
+        "HeaderColor": "FF0000",
+        "TextColor": "000000"
+    },
+    
+    "theme 2": {
+        "HeaderColor": "00FF00",
+        "TextColor": "000000"
+    }
+}

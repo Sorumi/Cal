@@ -11,8 +11,8 @@
 #import "SRMCalendarViewController.h"
 #import "SRMCalendarConstance.h"
 #import "SRMCalendarTool.h"
-#import "SRMCalendarHeader.h"
 
+#import "SRMCalendarHeader.h"
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
@@ -30,7 +30,8 @@
 #import "SRMEventDetailViewController.h"
 
 #import "SRMStampStore.h"
-#import "SRMStampCell.h"
+#import "SRMCalendarThemeStore.h"
+#import "SRMAppearanceCell.h"
 #import "SRMStamp.h"
 #import "SRMBoardStampCell.h"
 #import "SRMAppearanceViewLayout.h"
@@ -51,10 +52,15 @@
 #pragma mark - Calendar
 
 @property (nonatomic) SRMCalendarViewMode viewMode;
+@property (nonatomic) SRMAppearanceEditMode appearanceMode;
+
 @property (nonatomic) NSInteger monthPage;
 
 @property (weak, nonatomic) IBOutlet SRMCalendarFrontHeader *headerFrontView;
 @property (weak, nonatomic) IBOutlet SRMCalendarBackHeader *headerBackView;
+@property (weak, nonatomic) IBOutlet UIStackView *toolbar;
+
+
 @property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
@@ -73,9 +79,12 @@
 
 #pragma mark - AppearanceSetting
 
+@property (weak, nonatomic) IBOutlet UIStackView *appearanceToolbar;
+
 @property (weak, nonatomic) IBOutlet UICollectionView *appearanceCollectionView;
 @property (weak, nonatomic) IBOutlet UIPageControl *appearancePageControl;
 
+@property (nonatomic, strong) UIPanGestureRecognizer *panStamp;
 @property (nonatomic, strong) UIImageView *tmpStamp;
 @property (nonatomic, strong) NSString *tmpStampName;
 
@@ -94,6 +103,7 @@
 
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *appearanceSettingViewHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *appearanceSettingViewBottom;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *appearanceToolbarLeading;
 
 @end
 
@@ -105,7 +115,7 @@ static NSString * const reuseMonthBoardIdentifier = @"MonthBoard";
 static NSString * const reuseEventCellIdentifier = @"EventCell";
 static NSString * const reuseTaskCellIdentifier = @"TaskCell";
 static NSString * const reuseDayScheduleCellIdentifier = @"DayScheduleCell";
-static NSString * const reuseStampCellIdentifier = @"StampCell";
+static NSString * const reuseAppearanceCellIdentifier = @"AppearanceCell";
 static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 #pragma mark - Properties
@@ -206,7 +216,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     _dayItemCollectionView.dataSource = self;
 
     // appearance collection
-    [_appearanceCollectionView registerNib:[UINib nibWithNibName:@"SRMStampCell" bundle:nil] forCellWithReuseIdentifier:reuseStampCellIdentifier];
+    [_appearanceCollectionView registerNib:[UINib nibWithNibName:@"SRMAppearanceCell" bundle:nil] forCellWithReuseIdentifier:reuseAppearanceCellIdentifier];
     
     _appearanceCollectionView.delegate = self;
     _appearanceCollectionView.dataSource = self;
@@ -227,11 +237,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     [_monthItemTableView addGestureRecognizer:_panMonthItem];
     
    
-    UIPanGestureRecognizer *panStamp = [[UIPanGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(addStamp:)];
-    panStamp.delegate = self;
-    [_appearanceCollectionView addGestureRecognizer:panStamp];
+    _panStamp = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(addStamp:)];
+    _panStamp.delegate = self;
     
     _isFirstTimeViewDidLayoutSubviews = YES;
 
@@ -547,7 +554,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     self.viewMode = SRMCalendarItemViewMode;
 
     // animation
-//    [self.view bringSubviewToFront:self.headerView];
     _monthWeekdayViewTop.constant = - _monthCollectionView.frame.size.height - SRMMonthViewWeekdayHeight;
     _backButtonLeading.constant = -42;
 
@@ -575,7 +581,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     self.viewMode = SRMCalendarMonthViewMode;
     
     // animation
-//    [self.view bringSubviewToFront:self.headerView];
     _monthWeekdayViewTop.constant = 0;
     _backButtonLeading.constant = 0;
     [_monthItemTableView setContentOffset:CGPointZero  animated:YES];
@@ -608,7 +613,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     }
 }
 
-- (IBAction)showBoard:(id)sender
+- (IBAction)appearanceEdit:(id)sender
 {
     if (self.viewMode != SRMCalendarEditViewMode) {
         [self backToMode:nil];
@@ -617,7 +622,13 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         [self toggleAppearanceSettingView:YES];
         [_monthCollectionView reloadData];
         
-    } else {
+        [self setStampMode:nil];
+    }
+}
+
+- (IBAction)endAppearanceEdit:(id)sender
+{
+    if (self.viewMode == SRMCalendarEditViewMode) {
         self.viewMode = SRMCalendarMonthViewMode;
         _monthCollectionView.scrollEnabled = YES;
         [self toggleAppearanceSettingView:NO];
@@ -629,13 +640,31 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     if (show) {
         _appearanceSettingViewBottom.constant = 0;
+        _appearanceToolbarLeading.constant = 0;
     } else {
         _appearanceSettingViewBottom.constant = self.appearanceSettingViewHeight.constant;
+        _appearanceToolbarLeading.constant = 100;
     }
     [UIView animateWithDuration:0.5
                      animations:^{
+                         _toolbar.alpha = show ? 0 : 1;
+                         _appearanceToolbar.alpha = show ? 1 : 0;
                          [self.view layoutIfNeeded];
                      }];
+}
+
+- (IBAction)setStampMode:(id)sender
+{
+    self.appearanceMode = SRMAppearanceEditStampMode;
+    [_appearanceCollectionView addGestureRecognizer:_panStamp];
+    [_appearanceCollectionView reloadData];
+}
+
+- (IBAction)setThemeMode:(id)sender
+{
+    self.appearanceMode = SRMAppearanceEditThemeMode;
+    [_appearanceCollectionView removeGestureRecognizer:_panStamp];
+    [_appearanceCollectionView reloadData];
 }
 
 - (void)addStamp:(UIPanGestureRecognizer *)gesture
@@ -1002,7 +1031,12 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         return [[SRMEventStore sharedStore] dayEventsNotAllDay:self.date].count;
         
     } else if (collectionView == _appearanceCollectionView) {
-        return [[SRMStampStore sharedStore] allStampsPath].count;
+        if (self.appearanceMode == SRMAppearanceEditStampMode) {
+            return [[SRMStampStore sharedStore] allStampsPath].count;
+            
+        } else if (self.appearanceMode == SRMAppearanceEditThemeMode) {
+            return [[SRMCalendarThemeStore sharedStore] allThemePath].count;
+        }
     }
     return 0;
 }
@@ -1072,8 +1106,13 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         return cell;
         
     } else if (collectionView == _appearanceCollectionView) {
-        SRMStampCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseStampCellIdentifier forIndexPath:indexPath];
-        [cell setStamp:indexPath.row];
+        SRMAppearanceCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseAppearanceCellIdentifier forIndexPath:indexPath];
+        if (self.appearanceMode == SRMAppearanceEditStampMode) {
+            [cell setStamp:indexPath.row];
+            
+        } else if (self.appearanceMode == SRMAppearanceEditThemeMode) {
+            [cell setTheme:indexPath.row];
+        }
         
         return cell;
     }

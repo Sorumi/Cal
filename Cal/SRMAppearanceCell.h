@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SRMStampCell : UICollectionViewCell
+@interface SRMAppearanceCell : UICollectionViewCell
 
 - (void)setStamp:(NSInteger)num;
+- (void)setTheme:(NSInteger)num;
 
 @end
