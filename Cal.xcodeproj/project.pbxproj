@@ -30,7 +30,6 @@
 		4D3513BF1D4DDACE00D2B128 /* SRMEventStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513BE1D4DDACE00D2B128 /* SRMEventStore.m */; };
 		4D3513CF1D4E29E800D2B128 /* SRMEventCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513CD1D4E29E800D2B128 /* SRMEventCell.m */; };
 		4D3513D01D4E29E800D2B128 /* SRMEventCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D3513CE1D4E29E800D2B128 /* SRMEventCell.xib */; };
-		4D3513D31D4EC32500D2B128 /* SRMMonthBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513D21D4EC32500D2B128 /* SRMMonthBackground.m */; };
 		4D3513D61D4ED93D00D2B128 /* SRMListHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513D51D4ED93D00D2B128 /* SRMListHeader.m */; };
 		4D3513D81D4EDD8900D2B128 /* SRMListHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D3513D71D4EDD8900D2B128 /* SRMListHeader.xib */; };
 		4D3513E11D4F04D500D2B128 /* SRMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513E01D4F04D500D2B128 /* SRMTask.m */; };
@@ -129,8 +128,6 @@
 		4D3513CC1D4E29E800D2B128 /* SRMEventCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMEventCell.h; sourceTree = "<group>"; };
 		4D3513CD1D4E29E800D2B128 /* SRMEventCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMEventCell.m; sourceTree = "<group>"; };
 		4D3513CE1D4E29E800D2B128 /* SRMEventCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMEventCell.xib; sourceTree = "<group>"; };
-		4D3513D11D4EC32500D2B128 /* SRMMonthBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthBackground.h; sourceTree = "<group>"; };
-		4D3513D21D4EC32500D2B128 /* SRMMonthBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMMonthBackground.m; sourceTree = "<group>"; };
 		4D3513D41D4ED93D00D2B128 /* SRMListHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMListHeader.h; sourceTree = "<group>"; };
 		4D3513D51D4ED93D00D2B128 /* SRMListHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMListHeader.m; sourceTree = "<group>"; };
 		4D3513D71D4EDD8900D2B128 /* SRMListHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMListHeader.xib; sourceTree = "<group>"; };
@@ -317,8 +314,6 @@
 				4D3513B21D4CE85900D2B128 /* SRMMonthWeekdayHeader.m */,
 				4D3513B71D4D9B7600D2B128 /* SRMWeekWeekdayHeader.h */,
 				4D3513B81D4D9B7600D2B128 /* SRMWeekWeekdayHeader.m */,
-				4D3513D11D4EC32500D2B128 /* SRMMonthBackground.h */,
-				4D3513D21D4EC32500D2B128 /* SRMMonthBackground.m */,
 				4D1E5CC61D44EC740057DC76 /* SRMMonthDayCell.h */,
 				4D1E5CC71D44EC740057DC76 /* SRMMonthDayCell.m */,
 				4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */,
@@ -576,7 +571,6 @@
 				4DD6CF9D1D5C412F009A686A /* SRMStamp.m in Sources */,
 				4DB2A9CE1D52F3C200DE9693 /* SRMTimeDecoration.m in Sources */,
 				4D95A9A51D58AB9100526D78 /* SRMDayBoardView.m in Sources */,
-				4D3513D31D4EC32500D2B128 /* SRMMonthBackground.m in Sources */,
 				4D95A9C21D5C1EF700526D78 /* SRMStampCell.m in Sources */,
 				4D3513B01D4CD77B00D2B128 /* SRMEventEditViewController.m in Sources */,
 				4DB2A9E81D549FC600DE9693 /* SRMSelectCell.m in Sources */,

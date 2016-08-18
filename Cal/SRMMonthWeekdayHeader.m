@@ -10,6 +10,24 @@
 #import "SRMCalendarConstance.h"
 #import "SRMCalendarAppearance.h"
 
+@interface SRMMonthBackground : UIView
+
+@end
+
+@implementation SRMMonthBackground
+
+- (void)awakeFromNib
+{
+    CALayer *layer = self.layer;
+    layer.shadowOffset = CGSizeMake(0, 0);
+    layer.shadowRadius = 1;
+    layer.shadowColor = [UIColor darkGrayColor].CGColor;
+    layer.shadowOpacity = 0.3;
+}
+
+@end
+
+
 @interface SRMMonthWeekdayHeader ()
 
 @property (nonatomic, strong) NSArray *weekday;
@@ -41,3 +59,4 @@
 }
 
 @end
+

@@ -69,7 +69,6 @@
 
 - (void)click:(id)sender
 {
-//    UIButton button = (UIButton *)sender;
     NSInteger num = [self.buttonArray indexOfObject:sender];
     
     if ([_delegate respondsToSelector:@selector(dayHeaderBeginChange:)]) {
