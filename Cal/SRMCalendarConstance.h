@@ -28,6 +28,7 @@ typedef NS_ENUM(NSInteger, SRMCalendarViewMode) {
     SRMCalendarWeekViewMode     = 1,
     SRMCalendarItemViewMode     = 2,
     SRMCalendarEditViewMode     = 3,
+    SRMCalendarHeaderViewMode   = 4
 };
 
 typedef NS_ENUM(NSInteger, SRMTimeSelectMode) {
