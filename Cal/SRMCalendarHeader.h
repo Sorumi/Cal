@@ -11,10 +11,16 @@
 @interface SRMCalendarFrontHeader : UIView
 
 @property (nonatomic, weak) IBOutlet UIView* monthHeader;
-@property(nonatomic, weak) IBOutlet UIView* weekHeader;
+@property (nonatomic, weak) IBOutlet UIView* weekHeader;
 
 - (void)setMonthHeaderYear:(NSInteger)year month:(NSInteger)month;
 - (void)setWeekHeaderYear:(NSInteger)year month:(NSInteger)month day:(NSInteger)day weekday:(NSInteger)weekday;
+
+
+@property (nonatomic, strong) UIColor *headerTextColorNormal;
+@property (nonatomic, strong) UIColor *headerTextColorFull;
+
+- (void)updateTheme;
 
 @end
 

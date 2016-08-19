@@ -7,6 +7,8 @@
 //
 
 #import <QuartzCore/QuartzCore.h>
+#import "NSString+IconFont.h"
+#import "UIFont+IconFont.h"
 #import "SRMCalendarHeader.h"
 
 @interface SRMCalendarFrontHeader ()
@@ -34,36 +36,25 @@
     
     _monthArray = @[@"January", @"February", @"March", @"April", @"May", @"June", @"July", @"August", @"September", @"October", @"November", @"December"];
     _weekArray = @[@"Sunday", @"Monday", @"Tuesday", @"Wednesday", @"Thursday", @"Friday", @"Saturday"];
-}
-
-- (instancetype)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        _monthViewYearLabel.textColor = self.tintColor;
-        _monthViewMonthLabel.textColor = self.tintColor;
-        
-        UIImage *image = [_prevButton.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        [_prevButton setImage:image forState:UIControlStateNormal];
-        _prevButton.tintColor = self.tintColor;
-        image = [_nextButton.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        [_nextButton setImage:image forState:UIControlStateNormal];
-        _nextButton.tintColor = self.tintColor;
-    }
-    return self;
+    
+    _prevButton.titleLabel.font = [UIFont iconfontOfSize:20];
+    [_prevButton setTitle:[NSString iconfontIconStringForEnum:IFArrowLeft] forState:UIControlStateNormal];
+    [_prevButton setTitleColor:self.tintColor forState:UIControlStateNormal];
+    
+    _nextButton.titleLabel.font = [UIFont iconfontOfSize:20];
+    [_nextButton setTitle:[NSString iconfontIconStringForEnum:IFArrowRight] forState:UIControlStateNormal];
+    [_nextButton setTitleColor:self.tintColor forState:UIControlStateNormal];
+    
+    _monthViewYearLabel.textColor = self.tintColor;
+    _monthViewMonthLabel.textColor = self.tintColor;
 }
 
 - (void)tintColorDidChange
 {
     _monthViewYearLabel.textColor = self.tintColor;
     _monthViewMonthLabel.textColor = self.tintColor;
-    
-    UIImage *image = [_prevButton.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    [_prevButton setImage:image forState:UIControlStateNormal];
-    _prevButton.tintColor = self.tintColor;
-    image = [_nextButton.imageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    [_nextButton setImage:image forState:UIControlStateNormal];
-    _nextButton.tintColor = self.tintColor;
+    [_prevButton setTitleColor:self.tintColor forState:UIControlStateNormal];
+    [_nextButton setTitleColor:self.tintColor forState:UIControlStateNormal];
 }
 
 - (void)setMonthHeaderYear:(NSInteger)year month:(NSInteger)month
@@ -78,6 +69,21 @@
     self.weekViewMonthYearLable.text = [[NSString stringWithFormat:@"%lu ", year] stringByAppendingString:self.monthArray[month-1]];
     self.weekViewWeekdayLable.text = self.weekArray[weekday];
 }
+
+#pragma mark - Theme
+
+- (void)setHeaderTextColorNormal:(UIColor *)headerTextColorNormal
+{
+    _headerTextColorNormal = headerTextColorNormal;
+    self.tintColor = _headerTextColorNormal;
+    [self setNeedsDisplay];
+}
+
+- (void)updateTheme
+{
+
+}
+
 
 @end
 

@@ -133,7 +133,7 @@
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [documentDirectories firstObject];
     
-    return [documentDirectory stringByAppendingString:@"item.archive"];
+    return [documentDirectory stringByAppendingString:@"monthStamp.archive"];
 }
 
 - (BOOL)saveChanges

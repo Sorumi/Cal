@@ -6,6 +6,12 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="iconfont.ttf">
+            <string>iconfont</string>
+            <string>iconfont</string>
+        </mutableArray>
+    </customFonts>
     <scenes>
         <!--Calendar View Controller-->
         <scene sceneID="BNN-HH-TJl">
@@ -482,8 +488,8 @@
                                                     <constraint firstAttribute="width" constant="32" id="tcX-QE-BQU"/>
                                                     <constraint firstAttribute="height" constant="32" id="whD-kf-sz3"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="15"/>
-                                                <state key="normal" image="next_arrow">
+                                                <fontDescription key="fontDescription" name="iconfont" family="iconfont" pointSize="20"/>
+                                                <state key="normal" title="\U0000e602">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <variation key="default">
@@ -509,8 +515,8 @@
                                                     <constraint firstAttribute="width" constant="32" id="ABq-ur-vkb"/>
                                                     <constraint firstAttribute="height" constant="32" id="Sqw-cr-0Ks"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="15"/>
-                                                <state key="normal" image="prev_arrow">
+                                                <fontDescription key="fontDescription" name="iconfont" family="iconfont" pointSize="20"/>
+                                                <state key="normal" title="\U0000e601">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <variation key="default">
@@ -4047,7 +4053,6 @@
         <image name="content_icon_select" width="20" height="20"/>
         <image name="content_icon_time" width="21" height="21"/>
         <image name="event_icon_default" width="20" height="20"/>
-        <image name="next_arrow" width="11" height="21"/>
         <image name="prev_arrow" width="11" height="21"/>
         <image name="system_icom_cancel" width="20" height="20"/>
         <image name="system_icom_done" width="25" height="18"/>

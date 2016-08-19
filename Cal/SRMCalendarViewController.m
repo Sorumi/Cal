@@ -8,6 +8,8 @@
 
 
 #import <EventKit/EventKit.h>
+#import "ColorUtils.h"
+
 #import "SRMCalendarViewController.h"
 #import "SRMCalendarConstance.h"
 #import "SRMCalendarTool.h"
@@ -30,7 +32,7 @@
 #import "SRMEventDetailViewController.h"
 
 #import "SRMStampStore.h"
-#import "SRMCalendarThemeStore.h"
+#import "SRMThemeStore.h"
 #import "SRMAppearanceCell.h"
 #import "SRMStamp.h"
 #import "SRMBoardStampCell.h"
@@ -137,6 +139,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         [_weekWeekdayHeader setCirclePos:[[SRMCalendarTool tool] weekdayOfDate:_date] animated:YES];
     }
     [[SRMEventStore sharedStore] fetchDayEvents:date];
+    [self updateTheme];
 
 }
 
@@ -251,7 +254,11 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                                              selector:@selector(eventStoreDidChanged)
                                                  name:EKEventStoreChangedNotification object:nil];
     
-    // appearance setting
+    // appearance
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateTheme)
+                                                 name:@"SRMNotificationThemeChange"
+                                               object:nil];
 
 }
 
@@ -384,7 +391,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         } else if (headerTop >= 0 && headerTop <= maxHeight && _monthWeekdayViewTop.constant == 0) {
             _headerFrontTop.constant = headerTop;
             _headerBackHeight.constant += point.y / maxHeight * (maxHeight-SRMHeaderHeight);
-            _headerFrontView.tintColor = [self fadeFromColor:[UIColor whiteColor] toColor:_headerBackView.backgroundColor withPercentage:headerTop/maxHeight];
+            _headerFrontView.tintColor = [self fadeFromColor:_headerFrontView.headerTextColorNormal toColor:_headerFrontView.headerTextColorFull withPercentage:headerTop/maxHeight];
 //            _headerFrontView.alpha -= fabs(point.y) / maxHeight;
             [self.view layoutIfNeeded];
         }
@@ -474,8 +481,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         _headerFrontView.tintColor = _headerBackView.backgroundColor;
-                         _headerFrontView.alpha = 1;
+                         _headerFrontView.tintColor = _headerFrontView.headerTextColorFull;
+//                         _headerFrontView.alpha = 1;
                          [self.view layoutIfNeeded];
                      }
                      completion:NULL];
@@ -493,8 +500,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                           delay:0.0
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         _headerFrontView.tintColor = [UIColor whiteColor];
-                         _headerFrontView.alpha = 1;
+                         _headerFrontView.tintColor = _headerFrontView.headerTextColorNormal;
+//                         _headerFrontView.alpha = 1;
                          [self.view layoutIfNeeded];
                      }
                      completion:NULL];
@@ -735,6 +742,16 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
             [weakSelf.monthItemTableView reloadData];
         };
     }
+}
+#pragma mark - Theme
+
+- (void)updateTheme
+{
+    NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:_selectedYear month:_selectedMonth];
+    _headerBackView.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
+    _headerFrontView.headerTextColorNormal = [UIColor colorWithString:theme[@"HeaderTextColorNormal"]];
+    _headerFrontView.headerTextColorFull = [UIColor colorWithString:theme[@"HeaderTextColorFull"]];
+    
 }
 
 #pragma mark - Color
@@ -1035,7 +1052,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
             return [[SRMStampStore sharedStore] allStampsPath].count;
             
         } else if (self.appearanceMode == SRMAppearanceEditThemeMode) {
-            return [[SRMCalendarThemeStore sharedStore] allThemePath].count;
+            return [[SRMThemeStore sharedStore] allThemePath].count;
         }
     }
     return 0;
@@ -1181,6 +1198,9 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     } else if (collectionView == _weekCollectionView) {
         SRMWeekDayCell *cell = (SRMWeekDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
         self.date = cell.date;
+        
+    } else if (collectionView == _appearanceCollectionView) {
+        [[SRMThemeStore sharedStore] setTheme:indexPath.row forYear:_selectedYear month:_selectedMonth];
     }
 }
 

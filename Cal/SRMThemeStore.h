@@ -1,5 +1,5 @@
 //
-//  SRMCalendarThemeManager.h
+//  SRMThemeStore.h
 //  Cal
 //
 //  Created by Sorumi on 16/8/18.
@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface SRMCalendarThemeStore : NSObject
+@interface SRMThemeStore : NSObject
 
 @property (nonatomic, strong) NSMutableArray<NSString *> *allThemePath;
 
 + (instancetype)sharedStore;
 
 - (UIImage *)themeImageForNum:(NSInteger)num;
+
+- (NSDictionary *)monthThemesForYear:(NSInteger)year month:(NSInteger)month;
+- (void)setTheme:(NSInteger)num forYear:(NSInteger)year month:(NSInteger)month;
 
 @end

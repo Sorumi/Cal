@@ -8,7 +8,7 @@
 
 #import "SRMAppearanceCell.h"
 #import "SRMStampStore.h"
-#import "SRMCalendarThemeStore.h"
+#import "SRMThemeStore.h"
 
 @interface SRMAppearanceCell ()
 
@@ -29,7 +29,7 @@
 
 - (void)setTheme:(NSInteger)num
 {
-    self.imageView.image = [[SRMCalendarThemeStore sharedStore] themeImageForNum:num];
+    self.imageView.image = [[SRMThemeStore sharedStore] themeImageForNum:num];
 }
 
 @end

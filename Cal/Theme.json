@@ -1,11 +1,19 @@
 {
-    "theme 1": {
-        "HeaderColor": "FF0000",
-        "TextColor": "000000"
+    "theme_0": {
+        "HeaderColor": "D1E6E2",
+        "HeaderTextColorNormal": "FFFFFF",
+        "HeaderTextColorFull": "D1E6E2"
     },
     
-    "theme 2": {
-        "HeaderColor": "00FF00",
-        "TextColor": "000000"
+    "theme_1": {
+        "HeaderColor": "EDCABF",
+        "HeaderTextColorNormal": "FFFFFF",
+        "HeaderTextColorFull": "EDCABF"
+    },
+    
+    "theme_2": {
+        "HeaderColor": "646464",
+        "HeaderTextColorNormal": "FFFFFF",
+        "HeaderTextColorFull": "646464"
     }
 }
