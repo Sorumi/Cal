@@ -10,6 +10,8 @@
 
 @interface SRMCalendarFrontHeader : UIView
 
+@property (nonatomic) BOOL isFull;
+
 @property (nonatomic, weak) IBOutlet UIView* monthHeader;
 @property (nonatomic, weak) IBOutlet UIView* weekHeader;
 

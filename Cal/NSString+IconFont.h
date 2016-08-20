@@ -18,11 +18,15 @@ typedef NS_ENUM(NSInteger, IFIcon) {
     IFClock,
     IFCross,
     IFLocation,
+    IFNote,
     IFPaintRoll,
     IFRepeat,
     IFSquareBlank,
     IFSquareCheck,
-    IFTick
+    IFTick,
+    IFTrashCan,
+    IFAdd,
+    IFSquareSelect
 };
 
 @interface NSString (IconFont)

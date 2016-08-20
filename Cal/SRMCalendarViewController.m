@@ -15,6 +15,7 @@
 #import "SRMCalendarTool.h"
 
 #import "SRMCalendarHeader.h"
+#import "SRMCalendarToolbar.h"
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
 #import "SRMWeekWeekdayHeader.h"
@@ -60,7 +61,7 @@
 
 @property (weak, nonatomic) IBOutlet SRMCalendarFrontHeader *headerFrontView;
 @property (weak, nonatomic) IBOutlet SRMCalendarBackHeader *headerBackView;
-@property (weak, nonatomic) IBOutlet UIStackView *toolbar;
+@property (weak, nonatomic) IBOutlet SRMCalendarToolbar *toolbar;
 
 
 @property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
@@ -81,7 +82,7 @@
 
 #pragma mark - AppearanceSetting
 
-@property (weak, nonatomic) IBOutlet UIStackView *appearanceToolbar;
+//@property (weak, nonatomic) IBOutlet UIStackView *appearanceToolbar;
 
 @property (weak, nonatomic) IBOutlet UICollectionView *appearanceCollectionView;
 @property (weak, nonatomic) IBOutlet UIPageControl *appearancePageControl;
@@ -256,8 +257,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     
     // appearance
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateTheme)
-                                                 name:@"SRMNotificationThemeChange"
+                                             selector:@selector(selectTheme)
+                                                 name:@"SRMNotificationThemeSelect"
                                                object:nil];
 
 }
@@ -313,7 +314,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     [_dayItemTableView reloadData];
     [_dayItemCollectionView reloadData];
-
 }
 
 #pragma mark - Private
@@ -392,7 +392,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
             _headerFrontTop.constant = headerTop;
             _headerBackHeight.constant += point.y / maxHeight * (maxHeight-SRMHeaderHeight);
             _headerFrontView.tintColor = [self fadeFromColor:_headerFrontView.headerTextColorNormal toColor:_headerFrontView.headerTextColorFull withPercentage:headerTop/maxHeight];
-//            _headerFrontView.alpha -= fabs(point.y) / maxHeight;
             [self.view layoutIfNeeded];
         }
         
@@ -472,6 +471,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)monthToFullHeader
 {
     self.viewMode = SRMCalendarHeaderViewMode;
+    _headerFrontView.isFull = YES;
     
     // animation
     _headerBackHeight.constant = self.view.frame.size.height - SRMHeaderHeight - SRMMonthViewWeekdayHeight - _monthViewHeight - SRMToolbarHeight;
@@ -491,6 +491,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)fullHeaderToMonth
 {
     self.viewMode = SRMCalendarMonthViewMode;
+    _headerFrontView.isFull = NO;
     
     // animation
     _headerBackHeight.constant = SRMHeaderHeight;
@@ -654,8 +655,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     }
     [UIView animateWithDuration:0.5
                      animations:^{
-                         _toolbar.alpha = show ? 0 : 1;
-                         _appearanceToolbar.alpha = show ? 1 : 0;
+                         _toolbar.mainToolbar.alpha = show ? 0 : 1;
+                         _toolbar.appearanceToolbar.alpha = show ? 1 : 0;
                          [self.view layoutIfNeeded];
                      }];
 }
@@ -748,10 +749,38 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)updateTheme
 {
     NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:_selectedYear month:_selectedMonth];
-    _headerBackView.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
-    _headerFrontView.headerTextColorNormal = [UIColor colorWithString:theme[@"HeaderTextColorNormal"]];
-    _headerFrontView.headerTextColorFull = [UIColor colorWithString:theme[@"HeaderTextColorFull"]];
     
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         _headerBackView.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
+                         _headerFrontView.headerTextColorNormal = [UIColor colorWithString:theme[@"HeaderTextColorNormal"]];
+                         _headerFrontView.headerTextColorFull = [UIColor colorWithString:theme[@"HeaderTextColorFull"]];
+                         
+                         _toolbar.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
+                         _toolbar.toollbarTextColor =  [UIColor colorWithString:theme[@"ToolbarTextColor"]];
+                         
+                         [_headerFrontView updateTheme];
+                     }];    
+}
+
+- (void)selectTheme
+{
+    NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:_selectedYear month:_selectedMonth];
+    SRMMonthBoardView *board = (SRMMonthBoardView *)[_monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:_monthPage]];
+    
+    
+    [UIView animateWithDuration:0.5
+                     animations:^{
+                         _headerBackView.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
+                         _headerFrontView.headerTextColorNormal = [UIColor colorWithString:theme[@"HeaderTextColorNormal"]];
+                         _headerFrontView.headerTextColorFull = [UIColor colorWithString:theme[@"HeaderTextColorFull"]];
+                         
+                         _toolbar.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
+                         _toolbar.toollbarTextColor =  [UIColor colorWithString:theme[@"ToolbarTextColor"]];
+                         
+                         [_headerFrontView updateTheme];
+                         [board updateThemeAnimate:YES];
+                     }];
 }
 
 #pragma mark - Color
@@ -1166,6 +1195,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
             [board setYear:[tool yearOfDate:date] month:[tool monthOfDate:date]];
             [board setEditMode:self.viewMode == SRMCalendarEditViewMode ? YES : NO];
             [board.boardCollectionView reloadData];
+            [board updateThemeAnimate:NO];
             return board;
         }
     }
@@ -1199,7 +1229,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         SRMWeekDayCell *cell = (SRMWeekDayCell *)[collectionView cellForItemAtIndexPath:indexPath];
         self.date = cell.date;
         
-    } else if (collectionView == _appearanceCollectionView) {
+    } else if (collectionView == _appearanceCollectionView && self.appearanceMode == SRMAppearanceEditThemeMode) {
         [[SRMThemeStore sharedStore] setTheme:indexPath.row forYear:_selectedYear month:_selectedMonth];
     }
 }

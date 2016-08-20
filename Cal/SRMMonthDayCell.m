@@ -19,9 +19,7 @@
 
 - (void)awakeFromNib
 {
-    
-    self.layer.borderColor = [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"CalendarMonthBorderColor"].CGColor;
-    self.layer.borderWidth = 0.3;
+
 }
 
 - (void)setCurrentMonthDate:(NSInteger)day

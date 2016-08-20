@@ -10,4 +10,9 @@
 
 @interface SRMCalendarToolbar : UIView
 
+@property (weak, nonatomic) IBOutlet UIStackView *mainToolbar;
+@property (weak, nonatomic) IBOutlet UIStackView *appearanceToolbar;
+
+@property (nonatomic, strong) UIColor *toollbarTextColor;
+
 @end

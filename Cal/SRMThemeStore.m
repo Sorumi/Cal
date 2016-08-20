@@ -84,18 +84,6 @@
     NSError *error;
     NSDictionary *allThemes = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
     return allThemes[theme];
-    
-//    self.styles = styleDic[theme];
-//    if (!jsonData || error) {
-//        NSLog(@"JSON解码失败");
-////        return nil;
-//    } else {
-//            for (NSString *key in jsonObj) {
-//                NSString *value = jsonObj[key];
-//                NSLog(@"%@", value);
-//            }
-////        return jsonObj;
-//    }
 }
 
 #pragma mark - Public
@@ -109,16 +97,18 @@
 
 - (NSDictionary *)monthThemesForYear:(NSInteger)year month:(NSInteger)month
 {
-    NSDictionary *themeDic = self.monthThemes[[NSString stringWithFormat:@"%lu-%lu", year, month]];
+    NSString *themeName = self.monthThemes[[NSString stringWithFormat:@"%lu-%lu", year, month]];
+    NSDictionary *themeDic = [self loadTheme:themeName];
     return themeDic ? themeDic : [self loadTheme:@"theme_0"];
 }
 
 - (void)setTheme:(NSInteger)num forYear:(NSInteger)year month:(NSInteger)month
 {
     NSString *themeName = [self.allThemePath[num] componentsSeparatedByString:@"@"][0];
-    NSDictionary *theme = [self loadTheme:themeName];
-    self.monthThemes[[NSString stringWithFormat:@"%lu-%lu", year, month]] = theme;
-    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"SRMNotificationThemeChange" object:nil]];
+//    NSDictionary *theme = [self loadTheme:themeName];
+    self.monthThemes[[NSString stringWithFormat:@"%lu-%lu", year, month]] = themeName;
+    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"SRMNotificationThemeSelect" object:nil]];
+    [self saveChanges];
 }
 
 

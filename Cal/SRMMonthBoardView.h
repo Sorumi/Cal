@@ -17,6 +17,10 @@
 - (void)setEditMode:(BOOL)isEditMode;
 - (void)setYear:(NSInteger)year month:(NSInteger)month;
 - (void)deleteStamp:(SRMStamp *)stamp;
-//- (void)setStamps;
+
+@property (nonatomic, strong) UIColor *horizontalBorderColor;
+@property (nonatomic, strong) UIColor *verticalBorderColor;
+
+- (void)updateThemeAnimate:(BOOL)isAnimate;
 
 @end

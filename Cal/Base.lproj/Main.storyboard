@@ -374,7 +374,7 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vDX-zn-YfA">
                                                 <rect key="frame" x="20" y="20" width="200" height="22"/>
-                                                <state key="normal" image="system_icon_design"/>
+                                                <state key="normal" title="appearance"/>
                                                 <connections>
                                                     <action selector="appearanceEdit:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="tjA-Ph-2Sh"/>
                                                 </connections>
@@ -382,7 +382,7 @@
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5P7-MV-Lzx">
                                                 <rect key="frame" x="220" y="20" width="200" height="22"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                                <state key="normal" image="system_icon_add"/>
+                                                <state key="normal" title="add"/>
                                                 <connections>
                                                     <segue destination="CkJ-LD-lwC" kind="presentation" identifier="EditEvent" id="EqP-HV-Q1C"/>
                                                 </connections>
@@ -394,21 +394,21 @@
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MXs-DQ-6UQ">
                                                 <rect key="frame" x="20" y="20" width="133.5" height="22"/>
-                                                <state key="normal" image="prev_arrow"/>
+                                                <state key="normal" title="back"/>
                                                 <connections>
                                                     <action selector="endAppearanceEdit:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="Rd4-Na-vWr"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JVX-Ku-JtM">
                                                 <rect key="frame" x="20" y="20" width="133" height="22"/>
-                                                <state key="normal" image="system_icon_stamp"/>
+                                                <state key="normal" title="stamp"/>
                                                 <connections>
                                                     <action selector="setStampMode:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="p6m-0X-Mtz"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EGe-fi-fO5">
                                                 <rect key="frame" x="20" y="20" width="133.5" height="22"/>
-                                                <state key="normal" image="content_icon_calendar"/>
+                                                <state key="normal" title="theme"/>
                                                 <connections>
                                                     <action selector="setThemeMode:" destination="ZNe-Lb-uvi" eventType="touchUpInside" id="dfC-4E-3nx"/>
                                                 </connections>
@@ -455,6 +455,15 @@
                                         <include reference="zm4-uN-lg1"/>
                                     </mask>
                                 </variation>
+                                <connections>
+                                    <outlet property="appearanceToolbar" destination="t6V-LD-mhP" id="o6Z-OX-NhF"/>
+                                    <outlet property="mainToolbar" destination="svd-bh-2QG" id="NpN-gp-WRi"/>
+                                    <outletCollection property="mainButtons" destination="vDX-zn-YfA" id="Ryi-YL-1mZ"/>
+                                    <outletCollection property="mainButtons" destination="5P7-MV-Lzx" id="Ads-w2-n8q"/>
+                                    <outletCollection property="appearanceButtons" destination="MXs-DQ-6UQ" id="zB5-kR-ffV"/>
+                                    <outletCollection property="appearanceButtons" destination="JVX-Ku-JtM" id="Zob-rY-D37"/>
+                                    <outletCollection property="appearanceButtons" destination="EGe-fi-fO5" id="eBE-Yg-Vvf"/>
+                                </connections>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1mF-rs-iOf" customClass="SRMCalendarBackHeader">
                                 <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
@@ -489,7 +498,7 @@
                                                     <constraint firstAttribute="height" constant="32" id="whD-kf-sz3"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="iconfont" family="iconfont" pointSize="20"/>
-                                                <state key="normal" title="\U0000e602">
+                                                <state key="normal" title="&gt;">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <variation key="default">
@@ -516,7 +525,7 @@
                                                     <constraint firstAttribute="height" constant="32" id="Sqw-cr-0Ks"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="iconfont" family="iconfont" pointSize="20"/>
-                                                <state key="normal" title="\U0000e601">
+                                                <state key="normal" title="&lt;">
                                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </state>
                                                 <variation key="default">
@@ -1000,7 +1009,6 @@
                         <outlet property="appearancePageControl" destination="qHy-Cz-OhT" id="yvr-2z-fQB"/>
                         <outlet property="appearanceSettingViewBottom" destination="gHZ-xV-3Rs" id="xMB-fK-THN"/>
                         <outlet property="appearanceSettingViewHeight" destination="QpG-Je-Q35" id="TgD-XW-3QH"/>
-                        <outlet property="appearanceToolbar" destination="t6V-LD-mhP" id="ESY-LM-8IX"/>
                         <outlet property="appearanceToolbarLeading" destination="pwp-gI-TrV" id="nec-t8-i7D"/>
                         <outlet property="backButtonLeading" destination="3Vn-uE-63B" id="B12-Zz-c7X"/>
                         <outlet property="dayHeader" destination="KFP-rm-UQd" id="hoI-fe-2jJ"/>
@@ -1016,7 +1024,7 @@
                         <outlet property="monthItemTableTop" destination="3G5-d3-s4l" id="LzN-Qe-jMw"/>
                         <outlet property="monthItemTableView" destination="W6V-UO-pvr" id="bqb-lw-lXF"/>
                         <outlet property="monthWeekdayViewTop" destination="oBs-jk-QQj" id="Q6c-GA-CWA"/>
-                        <outlet property="toolbar" destination="svd-bh-2QG" id="M9F-yv-qhk"/>
+                        <outlet property="toolbar" destination="VoG-yy-Vsx" id="DXA-tx-zZR"/>
                         <outlet property="weekCollectionView" destination="dpK-xs-UIc" id="hEc-xp-9RN"/>
                         <outlet property="weekHeaderTrailing" destination="yT5-tr-8cR" id="m71-a3-Wb5"/>
                         <outlet property="weekViewBottom" destination="3e1-bZ-794" id="P6s-kx-8Ru"/>
@@ -4056,9 +4064,6 @@
         <image name="prev_arrow" width="11" height="21"/>
         <image name="system_icom_cancel" width="20" height="20"/>
         <image name="system_icom_done" width="25" height="18"/>
-        <image name="system_icon_add" width="22" height="22"/>
-        <image name="system_icon_design" width="24" height="24"/>
-        <image name="system_icon_stamp" width="22" height="22"/>
         <image name="task_icon_finished" width="20" height="20"/>
         <image name="task_icon_unfinished" width="20" height="20"/>
     </resources>

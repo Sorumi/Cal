@@ -7,6 +7,15 @@
 //
 
 #import "SRMCalendarToolbar.h"
+#import "NSString+IconFont.h"
+#import "UIFont+IconFont.h"
+
+@interface SRMCalendarToolbar ()
+
+@property (nonatomic, strong) IBOutletCollection(UIButton) NSArray *mainButtons;
+@property (nonatomic, strong) IBOutletCollection(UIButton) NSArray *appearanceButtons;
+
+@end
 
 @implementation SRMCalendarToolbar
 
@@ -19,14 +28,42 @@
     layer.shadowRadius = 1;
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.5;
+    
+    IFIcon mainIFIcon[] = {IFPaintRoll, IFAdd};
+    IFIcon appearanceIFIcon[] = {IFArrowLeft, IFSquareSelect, IFCalendar};
+    
+    for (UIButton *button in _mainButtons) {
+        button.titleLabel.font = [UIFont iconfontOfSize:20];
+        IFIcon icon = mainIFIcon[[_mainButtons indexOfObject:button]];
+        [button setTitle:[NSString iconfontIconStringForEnum:icon] forState:UIControlStateNormal];
+        [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+    }
+
+    for (UIButton *button in _appearanceButtons) {
+        button.titleLabel.font = [UIFont iconfontOfSize:20];
+        IFIcon icon = appearanceIFIcon[[_appearanceButtons indexOfObject:button]];
+        [button setTitle:[NSString iconfontIconStringForEnum:icon] forState:UIControlStateNormal];
+        [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+    }
+
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect {
-    // Drawing code
+- (void)tintColorDidChange
+{
+    for (UIButton *button in _mainButtons) {
+        [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+    }
+    for (UIButton *button in _appearanceButtons) {
+        [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+    }
 }
-*/
 
+#pragma mark - Theme Properties
+
+- (void)setToollbarTextColor:(UIColor *)toollbarTextColor
+{
+    _toollbarTextColor = toollbarTextColor;
+    self.tintColor = _toollbarTextColor;
+//    [self setNeedsDisplay];
+}
 @end

@@ -2,18 +2,28 @@
     "theme_0": {
         "HeaderColor": "D1E6E2",
         "HeaderTextColorNormal": "FFFFFF",
-        "HeaderTextColorFull": "D1E6E2"
+        "HeaderTextColorFull": "D1E6E2",
+        "ToolbarTextColor": "FFFFFF",
+        "MonthHorizontalBorderColor": "D1E6E2",
+        "MonthVerticalBorderColor": "D1E6E2"
     },
     
     "theme_1": {
         "HeaderColor": "EDCABF",
         "HeaderTextColorNormal": "FFFFFF",
-        "HeaderTextColorFull": "EDCABF"
+        "HeaderTextColorFull": "EDCABF",
+        "ToolbarTextColor": "FFFFFF",
+        "MonthHorizontalBorderColor": "EDCABF",
+        "MonthVerticalBorderColor": "EDCABF"
     },
     
     "theme_2": {
         "HeaderColor": "646464",
         "HeaderTextColorNormal": "FFFFFF",
-        "HeaderTextColorFull": "646464"
+        "HeaderTextColorFull": "646464",
+        "ToolbarTextColor": "FFFFFF",
+        "MonthHorizontalBorderColor": "646464",
+        "MonthVerticalBorderColor": "646464"
+
     }
 }

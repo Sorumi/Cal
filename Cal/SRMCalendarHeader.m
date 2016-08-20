@@ -6,7 +6,6 @@
 //  Copyright © 2016年 Sorumi. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
 #import "NSString+IconFont.h"
 #import "UIFont+IconFont.h"
 #import "SRMCalendarHeader.h"
@@ -72,18 +71,11 @@
 
 #pragma mark - Theme
 
-- (void)setHeaderTextColorNormal:(UIColor *)headerTextColorNormal
-{
-    _headerTextColorNormal = headerTextColorNormal;
-    self.tintColor = _headerTextColorNormal;
-    [self setNeedsDisplay];
-}
-
 - (void)updateTheme
 {
-
+    self.tintColor = _isFull ? _headerTextColorFull : _headerTextColorNormal;
+    [self setNeedsDisplay];
 }
-
 
 @end
 

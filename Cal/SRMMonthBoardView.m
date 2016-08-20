@@ -6,11 +6,14 @@
 //  Copyright © 2016年 Sorumi. All rights reserved.
 //
 
+#import "ColorUtils.h"
 #import "SRMMonthBoardView.h"
 #import "SRMMonthBoardViewLayout.h"
 #import "SRMBoardStampCell.h"
 #import "SRMStamp.h"
 #import "SRMStampStore.h"
+
+#import "SRMThemeStore.h"
 
 @interface SRMMonthBoardView () <UICollectionViewDataSource, UICollectionViewDelegate, SRMMonthBoardViewLayoutDelegate>
 
@@ -40,6 +43,47 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     [self.boardCollectionView.backgroundView addGestureRecognizer:tapBlank];
 }
 
+- (void)drawRect:(CGRect)rect
+{
+    CGFloat width = self.frame.size.width;
+    CGFloat space = width / 7;
+    CGFloat height = space * 6;
+    // line
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetStrokeColorWithColor(context, _horizontalBorderColor.CGColor);
+    
+    CGContextSetLineWidth(context, 0.5f);
+    for (int i=0; i<=6; i++) {
+        CGFloat y = space * i;
+        CGContextMoveToPoint(context, 0, y);
+        CGContextAddLineToPoint(context, width, y);
+    }
+    CGContextStrokePath(context);
+    
+    CGContextSetStrokeColorWithColor(context, _verticalBorderColor.CGColor);
+    for (int i=0; i<=7; i++) {
+        CGFloat x = space * i;
+        CGContextMoveToPoint(context, x, 0);
+        CGContextAddLineToPoint(context, x, height);
+    }
+    
+    CGContextStrokePath(context);
+}
+
+#pragma mark - Theme Properties
+
+//-(void)setHorizontalBorderColor:(UIColor *)horizontalBorderColor
+//{
+//    _horizontalBorderColor = horizontalBorderColor;
+//    [self setNeedsDisplay];
+//}
+//
+//-(void)setVerticalBorderColor:(UIColor *)verticalBorderColor
+//{
+//    _verticalBorderColor = verticalBorderColor;
+//    [self setNeedsDisplay];
+//}
+
 #pragma mark - Public
 
 - (void)setEditMode:(BOOL)isEditMode
@@ -58,6 +102,25 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     _year = year;
     _month = month;
+}
+
+- (void)updateThemeAnimate:(BOOL)isAnimate
+{
+    NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:_year month:_month];
+    _horizontalBorderColor = [UIColor colorWithString:theme[@"MonthHorizontalBorderColor"]];
+    _verticalBorderColor = [UIColor colorWithString:theme[@"MonthVerticalBorderColor"]];
+
+    [self setNeedsDisplay];
+    if (isAnimate) {
+        [UIView transitionWithView:self
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            [self.layer displayIfNeeded];
+                        }
+                        completion:nil];
+    }
+   
 }
 
 - (void)deleteStamp:(SRMStamp *)stamp
