@@ -55,15 +55,6 @@
                 <outlet property="titleLabel" destination="ZKY-K6-6gv" id="gtY-zn-Ml4"/>
             </connections>
         </tableViewCell>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="37" id="xbU-W3-r7b">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
-            <autoresizingMask key="autoresizingMask"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xbU-W3-r7b" id="dSi-eL-wZA">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="36.5"/>
-                <autoresizingMask key="autoresizingMask"/>
-            </tableViewCellContentView>
-            <point key="canvasLocation" x="350" y="512.5"/>
-        </tableViewCell>
     </objects>
     <resources>
         <image name="task_icon_unfinished" width="20" height="20"/>
