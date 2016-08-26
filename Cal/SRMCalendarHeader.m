@@ -89,7 +89,7 @@
 {
     [super awakeFromNib];
     
-    CALayer *layer =  self.layer;
+    CALayer *layer = self.layer;
     layer.shadowOffset = CGSizeMake(0, 0);
     layer.shadowRadius = 0.5;
     layer.shadowColor = [UIColor darkGrayColor].CGColor;

@@ -12,8 +12,13 @@
 #import "SRMCalendarTool.h"
 #import "SRMSwitch.h"
 #import "SRMEventStore.h"
+#import "SRMIconCell.h"
+#import "SRMIconStore.h"
 
-@interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate, SRMRepeatEndDelegate>
+#import "NSString+IconFont.h"
+#import "UIFont+IconFont.h"
+
+@interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate, SRMRepeatEndDelegate>
 
 @property (nonatomic, strong) NSArray *repeatType;
 @property (nonatomic, strong) NSArray *reminderNotAllDayType;
@@ -55,14 +60,23 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *moreButton;
 
+#pragma mark - IBOutlet Icon
+
+@property (weak, nonatomic) IBOutlet UIButton *iconButton;
+
 #pragma mark - IBOutlet Cell
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *datePickerCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *repeatEndCell;
 
+@property (nonatomic, strong) UIView *overlay;
+@property (nonatomic, strong) UICollectionView *iconSelectView;
+
 @end
 
 @implementation SRMEventEditViewController
+
+static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 #pragma mark - Life Cycle & Initialization
 
@@ -90,9 +104,9 @@
     [self.startLabel setHighlightedTextColor:self.view.tintColor];
     [self.endLabel setHighlightedTextColor:self.view.tintColor];
     
-    self.datePicker.subviews[0].subviews[1].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
-    self.datePicker.subviews[0].subviews[2].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
-    [self.datePicker addTarget:self action:@selector(datePickerChange:) forControlEvents:UIControlEventValueChanged];
+    _datePicker.subviews[0].subviews[1].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
+    _datePicker.subviews[0].subviews[2].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
+    [_datePicker addTarget:self action:@selector(datePickerChange:) forControlEvents:UIControlEventValueChanged];
     
     // delegate
     self.noteText.delegate = self;
@@ -107,6 +121,42 @@
     [self cell:self.datePickerCell setHidden:YES];
     [self cell:self.repeatEndCell setHidden:YES];
     [self reloadDataAnimated:NO];
+    
+    // icon
+    _iconButton.titleLabel.font = [UIFont iconfontOfSize:20];
+    [_iconButton setTitle:[NSString iconfontIconStringForEnum:IFSquareSelect] forState:UIControlStateNormal];
+//    [_iconButton setTitleColor:self.tintColor forState:UIControlStateNormal];
+    [_iconButton addTarget:self action:@selector(showIconKeyboard) forControlEvents:UIControlEventTouchUpInside];
+    
+    // icon select
+    CGRect newframe = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    _overlay = [[UIView alloc] initWithFrame:newframe];
+    _overlay.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    _overlay.hidden = YES;
+    [self.navigationController.view insertSubview:_overlay belowSubview:self.navigationController.navigationBar];
+    UITapGestureRecognizer *tapOverlay = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideIconKeyboard)];
+    [_overlay addGestureRecognizer:tapOverlay];
+    
+    CGRect frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 200);
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    layout.minimumInteritemSpacing = 0;
+    layout.minimumLineSpacing = 0;
+    layout.sectionInset = UIEdgeInsetsMake(30, 30, 30, 30);
+    layout.itemSize = CGSizeMake(40, 40);
+    _iconSelectView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
+    _iconSelectView.backgroundColor = [UIColor whiteColor];
+    _iconSelectView.bounces = NO;
+    _iconSelectView.dataSource = self;
+    _iconSelectView.delegate = self;
+    [_iconSelectView registerNib:[UINib nibWithNibName:@"SRMIconCell" bundle:nil] forCellWithReuseIdentifier:reuseIconCellIdentifier];
+//    _iconSelectView.backgroundView = [[UIView alloc] initWithFrame:_iconSelectView.frame];
+//    CALayer *layer = _iconSelectView.backgroundView.layer;
+//    layer.shadowOffset = CGSizeMake(0, 0);
+//    layer.shadowRadius = 0.5;
+//    layer.shadowColor = [UIColor darkGrayColor].CGColor;
+//    layer.shadowOpacity = 0.5;
+//    [self.navigationController.view addSubview:_iconSelectView];
+    [self.navigationController.view insertSubview:_iconSelectView belowSubview:self.navigationController.navigationBar];
     
     // init - add
     self.startDate = [[SRMCalendarTool tool] dateOnHour:[NSDate date]];
@@ -244,6 +294,45 @@
 }
 
 #pragma mark - Action
+
+- (void)showIconKeyboard
+{
+
+    CGRect frame = _iconSelectView.frame;
+    if (frame.origin.y == self.view.frame.size.height) {
+        frame.origin.y -= frame.size.height;
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             _iconSelectView.frame = frame;
+                         }];
+        [UIView transitionWithView:_overlay
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            _overlay.hidden = NO;
+                        }
+                        completion:nil];
+    }
+}
+
+- (void)hideIconKeyboard
+{
+    CGRect frame = _iconSelectView.frame;
+    if (frame.origin.y == self.view.frame.size.height - frame.size.height) {
+                frame.origin.y += frame.size.height;
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             _iconSelectView.frame = frame;
+                         }];
+        [UIView transitionWithView:_overlay
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            _overlay.hidden = YES;
+                        }
+                        completion:nil];
+    }
+}
 
 - (IBAction)cancel:(id)sender
 {
@@ -468,7 +557,6 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    
     [self.tableView beginUpdates];
     [self.tableView endUpdates];
     
@@ -542,6 +630,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self hideIconKeyboard];
     if (self.timeSelectMode != SRMTimeSelectNone) {
         self.timeSelectMode = SRMTimeSelectNone;
     }
@@ -564,6 +653,36 @@
 - (CGFloat)tableView:(UITableView*)tableView heightForFooterInSection:(NSInteger)section
 {
     return 0.1;
+}
+
+#pragma mark - <UICollectionViewDataSource>
+
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
+{
+    return 1;
+}
+
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
+    return [[SRMIconStore sharedStore] allIcons].count;
+}
+
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    SRMIconCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIconCellIdentifier forIndexPath:indexPath];
+    NSInteger num = [((NSNumber *)[[SRMIconStore sharedStore] allIcons][indexPath.row]) integerValue];
+    [cell setIcon:num];
+    
+    return cell;
+}
+
+#pragma mark - <UICollectionViewDelegate>
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger num = [((NSNumber *)[[SRMIconStore sharedStore] allIcons][indexPath.row]) integerValue];
+    [_iconButton setTitle:[NSString iconfontIconStringForEnum:num] forState:UIControlStateNormal];
+    [self hideIconKeyboard];
 }
 
 #pragma mark - Others

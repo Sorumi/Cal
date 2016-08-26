@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="SRMAlertView">
+            <rect key="frame" x="0.0" y="0.0" width="200" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is a repeating event." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MON-q3-UvR">
+                    <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LXo-J0-79B">
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                    <color key="backgroundColor" red="0.81960784310000001" green="0.90196078430000004" blue="0.8862745098" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="II6-4T-gpj">
+                            <variation key="widthClass=compact" constant="40"/>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                    <state key="normal" title="Delete this event only">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="II6-4T-gpj"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="II6-4T-gpj"/>
+                        </mask>
+                    </variation>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z3w-rg-kKx">
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                    <color key="backgroundColor" red="0.81960784310000001" green="0.90196078430000004" blue="0.8862745098" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Qw2-Gm-cl1">
+                            <variation key="widthClass=compact" constant="40"/>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                    <state key="normal" title="Delete all future events">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="Qw2-Gm-cl1"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="Qw2-Gm-cl1"/>
+                        </mask>
+                    </variation>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yJp-BZ-2wG">
+                    <rect key="frame" x="-23" y="-15" width="46" height="30"/>
+                    <color key="backgroundColor" red="1" green="0.87913983842229748" blue="0.84867075653514368" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="dCu-bI-47R">
+                            <variation key="widthClass=compact" constant="40"/>
+                        </constraint>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
+                    <state key="normal" title="Cancel">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="dCu-bI-47R"/>
+                        </mask>
+                    </variation>
+                    <variation key="widthClass=compact">
+                        <mask key="constraints">
+                            <include reference="dCu-bI-47R"/>
+                        </mask>
+                    </variation>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="LXo-J0-79B" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="3O7-6c-y5E">
+                    <variation key="widthClass=compact" constant="-30"/>
+                </constraint>
+                <constraint firstItem="z3w-rg-kKx" firstAttribute="top" secondItem="LXo-J0-79B" secondAttribute="bottom" constant="17" id="7XK-aD-oy4">
+                    <variation key="widthClass=compact" constant="15"/>
+                </constraint>
+                <constraint firstItem="yJp-BZ-2wG" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="H8U-3Y-0sC"/>
+                <constraint firstItem="LXo-J0-79B" firstAttribute="top" secondItem="MON-q3-UvR" secondAttribute="bottom" constant="25" id="Nhc-Ur-glr">
+                    <variation key="widthClass=compact" constant="15"/>
+                </constraint>
+                <constraint firstItem="MON-q3-UvR" firstAttribute="leading" secondItem="LXo-J0-79B" secondAttribute="trailing" constant="-42" id="PjV-se-VNY"/>
+                <constraint firstItem="z3w-rg-kKx" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="QCK-Gm-IGT">
+                    <variation key="widthClass=compact" constant="-30"/>
+                </constraint>
+                <constraint firstItem="LXo-J0-79B" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="Vfl-iH-GKv"/>
+                <constraint firstItem="yJp-BZ-2wG" firstAttribute="top" secondItem="z3w-rg-kKx" secondAttribute="bottom" constant="7.5" id="YOK-cD-hX4">
+                    <variation key="widthClass=compact" constant="15"/>
+                </constraint>
+                <constraint firstItem="LXo-J0-79B" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="acc-ba-2bC"/>
+                <constraint firstItem="z3w-rg-kKx" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="adE-Mw-6VF"/>
+                <constraint firstItem="LXo-J0-79B" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="71" id="brW-KK-RTX"/>
+                <constraint firstItem="MON-q3-UvR" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="fZx-IJ-ws5"/>
+                <constraint firstItem="z3w-rg-kKx" firstAttribute="leading" secondItem="LXo-J0-79B" secondAttribute="trailing" constant="-46" id="hQn-On-4tD"/>
+                <constraint firstItem="MON-q3-UvR" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="25" id="hS6-89-pL1">
+                    <variation key="widthClass=compact" constant="15"/>
+                </constraint>
+                <constraint firstItem="LXo-J0-79B" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="j7I-r0-de6"/>
+                <constraint firstItem="yJp-BZ-2wG" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" id="uG4-kh-Q5G">
+                    <variation key="widthClass=compact" constant="-30"/>
+                </constraint>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="MON-q3-UvR"/>
+                    <exclude reference="LXo-J0-79B"/>
+                    <exclude reference="z3w-rg-kKx"/>
+                    <exclude reference="yJp-BZ-2wG"/>
+                </mask>
+                <mask key="constraints">
+                    <exclude reference="3O7-6c-y5E"/>
+                    <exclude reference="Nhc-Ur-glr"/>
+                    <exclude reference="Vfl-iH-GKv"/>
+                    <exclude reference="acc-ba-2bC"/>
+                    <exclude reference="brW-KK-RTX"/>
+                    <exclude reference="j7I-r0-de6"/>
+                    <exclude reference="PjV-se-VNY"/>
+                    <exclude reference="fZx-IJ-ws5"/>
+                    <exclude reference="hS6-89-pL1"/>
+                    <exclude reference="7XK-aD-oy4"/>
+                    <exclude reference="QCK-Gm-IGT"/>
+                    <exclude reference="adE-Mw-6VF"/>
+                    <exclude reference="hQn-On-4tD"/>
+                    <exclude reference="H8U-3Y-0sC"/>
+                    <exclude reference="YOK-cD-hX4"/>
+                    <exclude reference="uG4-kh-Q5G"/>
+                </mask>
+            </variation>
+            <variation key="widthClass=compact">
+                <mask key="subviews">
+                    <include reference="MON-q3-UvR"/>
+                    <include reference="LXo-J0-79B"/>
+                    <include reference="z3w-rg-kKx"/>
+                    <include reference="yJp-BZ-2wG"/>
+                </mask>
+                <mask key="constraints">
+                    <include reference="3O7-6c-y5E"/>
+                    <include reference="Nhc-Ur-glr"/>
+                    <include reference="Vfl-iH-GKv"/>
+                    <exclude reference="acc-ba-2bC"/>
+                    <exclude reference="brW-KK-RTX"/>
+                    <exclude reference="j7I-r0-de6"/>
+                    <exclude reference="PjV-se-VNY"/>
+                    <include reference="fZx-IJ-ws5"/>
+                    <include reference="hS6-89-pL1"/>
+                    <include reference="7XK-aD-oy4"/>
+                    <include reference="QCK-Gm-IGT"/>
+                    <include reference="adE-Mw-6VF"/>
+                    <exclude reference="hQn-On-4tD"/>
+                    <include reference="H8U-3Y-0sC"/>
+                    <include reference="YOK-cD-hX4"/>
+                    <include reference="uG4-kh-Q5G"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="445" y="244.5"/>
+        </view>
+    </objects>
+</document>

@@ -23,7 +23,7 @@
                                 <color key="textColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="task_icon_unfinished" translatesAutoresizingMaskIntoConstraints="NO" id="fbN-zf-4Vb">
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="task_icon_unfinished" translatesAutoresizingMaskIntoConstraints="NO" id="fbN-zf-4Vb">
                                 <rect key="frame" x="250" y="12" width="40" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="2id-xE-zJ3"/>
@@ -54,6 +54,15 @@
                 <outlet property="checkImage" destination="fbN-zf-4Vb" id="kZS-f8-mQH"/>
                 <outlet property="titleLabel" destination="ZKY-K6-6gv" id="gtY-zn-Ml4"/>
             </connections>
+        </tableViewCell>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="37" id="xbU-W3-r7b">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="37"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xbU-W3-r7b" id="dSi-eL-wZA">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="36.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </tableViewCellContentView>
+            <point key="canvasLocation" x="350" y="512.5"/>
         </tableViewCell>
     </objects>
     <resources>
