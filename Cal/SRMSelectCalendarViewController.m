@@ -39,12 +39,14 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     UITapGestureRecognizer *tapOverlay = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideColorKeyboard)];
     [_overlay addGestureRecognizer:tapOverlay];
     
-    CGRect frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 200);
+    CGFloat width = (self.view.frame.size.width - 70 - 15*6) / 7;
+    CGRect frame = CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, width*3+30+60);
     UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
     layout.minimumInteritemSpacing = 15;
     layout.minimumLineSpacing = 15;
     layout.sectionInset = UIEdgeInsetsMake(30, 30, 30, 30);
-    CGFloat width = (self.view.frame.size.width - 60 - 15*4) / 5;
+    
+//    CGFloat width = 30;
     layout.itemSize = CGSizeMake(width, width);
     _colorSelectView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
     _colorSelectView.backgroundColor = [UIColor whiteColor];
@@ -65,6 +67,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    [self hideColorKeyboard];
     [[SRMEventStore sharedStore] saveChanges];
 }
 

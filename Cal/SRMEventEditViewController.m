@@ -288,14 +288,10 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
         vc.title = @"Calendar";
         vc.delegate = self;
         NSMutableArray *titleArray = [[NSMutableArray alloc] init];
-//        NSMutableArray *colorArray = [[NSMutableArray alloc] init];
         for (EKCalendar *calendar in [[SRMEventStore sharedStore] allCalendars]) {
             [titleArray addObject:calendar.title];
-//            NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier: calendar.calendarIdentifier];
-//            [colorArray addObject:[[SRMColorStore sharedStore] allColors][num]];
         }
         vc.titleArray = titleArray;
-//        vc.colorArray = colorArray;
         vc.selectedRow = self.calendarNum;
         
     } else if ([segue.identifier isEqual: @"RepeatType"]) {
@@ -327,7 +323,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 - (void)showIconKeyboard
 {
-
+    [self.view endEditing:YES];
     CGRect frame = _iconSelectView.frame;
     if (frame.origin.y == self.view.frame.size.height) {
         frame.origin.y -= frame.size.height;

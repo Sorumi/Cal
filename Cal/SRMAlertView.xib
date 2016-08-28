@@ -14,7 +14,7 @@
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="This is a repeating event." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MON-q3-UvR">
                     <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="15"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <color key="textColor" red="0.29803922770000002" green="0.29803922770000002" blue="0.29803922770000002" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LXo-J0-79B">
@@ -135,16 +135,16 @@
                     <exclude reference="acc-ba-2bC"/>
                     <exclude reference="brW-KK-RTX"/>
                     <exclude reference="j7I-r0-de6"/>
-                    <exclude reference="PjV-se-VNY"/>
-                    <exclude reference="fZx-IJ-ws5"/>
-                    <exclude reference="hS6-89-pL1"/>
+                    <exclude reference="H8U-3Y-0sC"/>
+                    <exclude reference="YOK-cD-hX4"/>
+                    <exclude reference="uG4-kh-Q5G"/>
                     <exclude reference="7XK-aD-oy4"/>
                     <exclude reference="QCK-Gm-IGT"/>
                     <exclude reference="adE-Mw-6VF"/>
                     <exclude reference="hQn-On-4tD"/>
-                    <exclude reference="H8U-3Y-0sC"/>
-                    <exclude reference="YOK-cD-hX4"/>
-                    <exclude reference="uG4-kh-Q5G"/>
+                    <exclude reference="PjV-se-VNY"/>
+                    <exclude reference="fZx-IJ-ws5"/>
+                    <exclude reference="hS6-89-pL1"/>
                 </mask>
             </variation>
             <variation key="widthClass=compact">
@@ -161,19 +161,19 @@
                     <exclude reference="acc-ba-2bC"/>
                     <exclude reference="brW-KK-RTX"/>
                     <exclude reference="j7I-r0-de6"/>
-                    <exclude reference="PjV-se-VNY"/>
-                    <include reference="fZx-IJ-ws5"/>
-                    <include reference="hS6-89-pL1"/>
+                    <include reference="H8U-3Y-0sC"/>
+                    <include reference="YOK-cD-hX4"/>
+                    <include reference="uG4-kh-Q5G"/>
                     <include reference="7XK-aD-oy4"/>
                     <include reference="QCK-Gm-IGT"/>
                     <include reference="adE-Mw-6VF"/>
                     <exclude reference="hQn-On-4tD"/>
-                    <include reference="H8U-3Y-0sC"/>
-                    <include reference="YOK-cD-hX4"/>
-                    <include reference="uG4-kh-Q5G"/>
+                    <exclude reference="PjV-se-VNY"/>
+                    <include reference="fZx-IJ-ws5"/>
+                    <include reference="hS6-89-pL1"/>
                 </mask>
             </variation>
-            <point key="canvasLocation" x="445" y="244.5"/>
+            <point key="canvasLocation" x="505" y="63"/>
         </view>
     </objects>
 </document>
