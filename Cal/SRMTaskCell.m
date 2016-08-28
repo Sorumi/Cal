@@ -10,11 +10,14 @@
 #import "SRMTask.h"
 #import "SRMCalendarTool.h"
 
+#import "NSString+IconFont.h"
+#import "UIFont+IconFont.h"
+
 @interface SRMTaskCell ()
 
 @property (nonatomic) IBOutlet UIView *blockView;
 @property (nonatomic) IBOutlet UIView *categoryColorView;
-@property (nonatomic) IBOutlet UIButton *iconImage;
+@property (nonatomic) IBOutlet UIButton *checkButton;
 @property (weak, nonatomic) IBOutlet UILabel *titleLable;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 
@@ -33,6 +36,7 @@
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.3;
     
+    _checkButton.titleLabel.font = [UIFont iconfontOfSize:20];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -43,10 +47,11 @@
 
 - (void)setTask:(SRMTask *)task
 {
-    self.titleLable.text = task.title;
-    self.dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateFormat:task.dueDate];
-
-    self.iconImage.imageView.image = task.finishDate == nil ? [UIImage imageNamed:@"task_icon_unfinished"] : [UIImage imageNamed:@"task_icon_finished"];
+    
+    _titleLable.text = task.title;
+    _dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateFormat:task.dueDate];
+    
+    [_checkButton setTitle:[NSString iconfontIconStringForEnum:task.finishDate == nil ? IFSquareBlank : IFSquareCheck] forState:UIControlStateNormal];
 }
 
 @end

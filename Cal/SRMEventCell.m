@@ -7,16 +7,21 @@
 //
 
 #import <EventKit/EventKit.h>
-//#import "SRMEvent.h"
 #import "SRMEventCell.h"
 #import "SRMCalendarConstance.h"
 #import "SRMCalendarTool.h"
+#import "SRMEventStore.h"
+#import "SRMColorStore.h"
+#import "SRMIconStore.h"
+
+#import "NSString+IconFont.h"
+#import "UIFont+IconFont.h"
 
 @interface SRMEventCell ()
 
 @property (nonatomic) IBOutlet UIView *blockView;
 @property (nonatomic) IBOutlet UIView *categoryColorView;
-@property (nonatomic) IBOutlet UIImageView *iconImage;
+@property (nonatomic) IBOutlet UILabel *iconLabel;
 @property (weak, nonatomic) IBOutlet UILabel *titleLable;
 @property (weak, nonatomic) IBOutlet UIStackView *locationStackView;
 @property (weak, nonatomic) IBOutlet UILabel *locationLabel;
@@ -37,7 +42,6 @@
     layer.shadowRadius = 0.5;
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.3;
-
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -52,9 +56,12 @@
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
-//    EKEvent *systemEvent = event.systemEvent;
     self.titleLable.text = event.title;
-    self.categoryColorView.backgroundColor = [UIColor colorWithCGColor:event.calendar.CGColor];
+    NSInteger colorNum = [[SRMEventStore sharedStore] colorForCalendarIdentifier:event.calendar.calendarIdentifier];
+    self.categoryColorView.backgroundColor = [[SRMColorStore sharedStore] colorForNum:colorNum];
+    self.iconLabel.font = [UIFont iconfontOfSize:20];
+    NSInteger iconNum = [[SRMEventStore sharedStore] iconForEventIdentifier:event.eventIdentifier];
+    self.iconLabel.text = [NSString iconfontIconStringForEnum:[[SRMIconStore sharedStore] iconForNum:iconNum]];
     
     if (!event.allDay) {
         self.dateLabel.hidden = NO;

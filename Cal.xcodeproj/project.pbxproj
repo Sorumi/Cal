@@ -41,6 +41,11 @@
 		4D6783E91D705B0E008513D1 /* SRMIconStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6783E81D705B0E008513D1 /* SRMIconStore.m */; };
 		4D6783EC1D706810008513D1 /* SRMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6783EB1D706810008513D1 /* SRMAlertView.m */; };
 		4D6783EE1D70682C008513D1 /* SRMAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D6783ED1D70682C008513D1 /* SRMAlertView.xib */; };
+		4D6783F71D711B5D008513D1 /* SRMSelectCalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6783F51D711B5D008513D1 /* SRMSelectCalendarCell.m */; };
+		4D6783F81D711B5D008513D1 /* SRMSelectCalendarCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D6783F61D711B5D008513D1 /* SRMSelectCalendarCell.xib */; };
+		4D6783FB1D7275DD008513D1 /* SRMColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6783FA1D7275DD008513D1 /* SRMColorStore.m */; };
+		4D6783FE1D728CBE008513D1 /* SRMSelectCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6783FD1D728CBE008513D1 /* SRMSelectCalendarViewController.m */; };
+		4D6784001D72B519008513D1 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D6783FF1D72B501008513D1 /* iconfont.ttf */; };
 		4D85DEE41D580F96000B9584 /* SRMDayHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D85DEE31D580F96000B9584 /* SRMDayHeader.m */; };
 		4D95A9971D5872B700526D78 /* XSRMMonthViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D95A9961D5872B700526D78 /* XSRMMonthViewFlowLayout.m */; };
 		4D95A99A1D5873B800526D78 /* SRMMonthBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D95A9991D5873B800526D78 /* SRMMonthBoardView.m */; };
@@ -78,7 +83,6 @@
 		4DD6CFCA1D66B902009A686A /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4DD6CFC81D66B902009A686A /* FontAwesome.ttf */; };
 		4DD6CFD41D67435F009A686A /* UIFont+IconFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFD31D67435F009A686A /* UIFont+IconFont.m */; };
 		4DD6CFD71D6743F6009A686A /* NSString+IconFont.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFD61D6743F6009A686A /* NSString+IconFont.m */; };
-		4DD6CFD91D68099C009A686A /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4DD6CFD81D68098F009A686A /* iconfont.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,6 +164,14 @@
 		4D6783EA1D706810008513D1 /* SRMAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMAlertView.h; sourceTree = "<group>"; };
 		4D6783EB1D706810008513D1 /* SRMAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMAlertView.m; sourceTree = "<group>"; };
 		4D6783ED1D70682C008513D1 /* SRMAlertView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMAlertView.xib; sourceTree = "<group>"; };
+		4D6783F41D711B5D008513D1 /* SRMSelectCalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMSelectCalendarCell.h; sourceTree = "<group>"; };
+		4D6783F51D711B5D008513D1 /* SRMSelectCalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMSelectCalendarCell.m; sourceTree = "<group>"; };
+		4D6783F61D711B5D008513D1 /* SRMSelectCalendarCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMSelectCalendarCell.xib; sourceTree = "<group>"; };
+		4D6783F91D7275DD008513D1 /* SRMColorStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMColorStore.h; sourceTree = "<group>"; };
+		4D6783FA1D7275DD008513D1 /* SRMColorStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMColorStore.m; sourceTree = "<group>"; };
+		4D6783FC1D728CBE008513D1 /* SRMSelectCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMSelectCalendarViewController.h; sourceTree = "<group>"; };
+		4D6783FD1D728CBE008513D1 /* SRMSelectCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMSelectCalendarViewController.m; sourceTree = "<group>"; };
+		4D6783FF1D72B501008513D1 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		4D85DEE21D580F96000B9584 /* SRMDayHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMDayHeader.h; sourceTree = "<group>"; };
 		4D85DEE31D580F96000B9584 /* SRMDayHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMDayHeader.m; sourceTree = "<group>"; };
 		4D85DEE51D58632B000B9584 /* SRMMonthViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthViewLayout.h; sourceTree = "<group>"; };
@@ -226,7 +238,6 @@
 		4DD6CFD31D67435F009A686A /* UIFont+IconFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+IconFont.m"; sourceTree = "<group>"; };
 		4DD6CFD51D6743F6009A686A /* NSString+IconFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+IconFont.h"; sourceTree = "<group>"; };
 		4DD6CFD61D6743F6009A686A /* NSString+IconFont.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+IconFont.m"; sourceTree = "<group>"; };
-		4DD6CFD81D68098F009A686A /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,6 +310,8 @@
 				4D3513AF1D4CD77B00D2B128 /* SRMEventEditViewController.m */,
 				4DB2A9E21D54896600DE9693 /* SRMSelectViewController.h */,
 				4DB2A9E31D54896600DE9693 /* SRMSelectViewController.m */,
+				4D6783FC1D728CBE008513D1 /* SRMSelectCalendarViewController.h */,
+				4D6783FD1D728CBE008513D1 /* SRMSelectCalendarViewController.m */,
 				4DB2A9EA1D555C8200DE9693 /* SRMRepeatEndViewController.h */,
 				4DB2A9EB1D555C8200DE9693 /* SRMRepeatEndViewController.m */,
 				4D95A9B51D5C0EE000526D78 /* AppearanceModel */,
@@ -383,6 +396,8 @@
 				4D3513BE1D4DDACE00D2B128 /* SRMEventStore.m */,
 				4D6783E71D705B0E008513D1 /* SRMIconStore.h */,
 				4D6783E81D705B0E008513D1 /* SRMIconStore.m */,
+				4D6783F91D7275DD008513D1 /* SRMColorStore.h */,
+				4D6783FA1D7275DD008513D1 /* SRMColorStore.m */,
 			);
 			name = EventAndTaskModel;
 			sourceTree = "<group>";
@@ -408,6 +423,9 @@
 				4DB2A9E51D549FC600DE9693 /* SRMSelectCell.h */,
 				4DB2A9E61D549FC600DE9693 /* SRMSelectCell.m */,
 				4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */,
+				4D6783F41D711B5D008513D1 /* SRMSelectCalendarCell.h */,
+				4D6783F51D711B5D008513D1 /* SRMSelectCalendarCell.m */,
+				4D6783F61D711B5D008513D1 /* SRMSelectCalendarCell.xib */,
 				4D3513F01D4F172B00D2B128 /* SRMTaskCell.h */,
 				4D3513F11D4F172B00D2B128 /* SRMTaskCell.m */,
 				4D3513F21D4F172B00D2B128 /* SRMTaskCell.xib */,
@@ -461,7 +479,7 @@
 		4DD6CFC61D66B902009A686A /* Font */ = {
 			isa = PBXGroup;
 			children = (
-				4DD6CFD81D68098F009A686A /* iconfont.ttf */,
+				4D6783FF1D72B501008513D1 /* iconfont.ttf */,
 				4DD6CFC81D66B902009A686A /* FontAwesome.ttf */,
 			);
 			name = Font;
@@ -598,8 +616,9 @@
 				4DD6CFB61D65E159009A686A /* Theme.json in Resources */,
 				4DD6CFBA1D65EFFA009A686A /* Theme.bundle in Resources */,
 				4D95A9BE1D5C1DA300526D78 /* Stamp.bundle in Resources */,
-				4DD6CFD91D68099C009A686A /* iconfont.ttf in Resources */,
+				4D6784001D72B519008513D1 /* iconfont.ttf in Resources */,
 				4DD6CFCA1D66B902009A686A /* FontAwesome.ttf in Resources */,
+				4D6783F81D711B5D008513D1 /* SRMSelectCalendarCell.xib in Resources */,
 				4D3513D81D4EDD8900D2B128 /* SRMListHeader.xib in Resources */,
 				4DD6CFA51D5EB732009A686A /* SRMBoardStampCell.xib in Resources */,
 				4D6783EE1D70682C008513D1 /* SRMAlertView.xib in Resources */,
@@ -654,11 +673,13 @@
 				4D95A9BC1D5C1C2900526D78 /* SRMStampStore.m in Sources */,
 				4DB2A9D41D5328CB00DE9693 /* StaticDataTableViewController.m in Sources */,
 				4D6783E51D7058C1008513D1 /* SRMIconCell.m in Sources */,
+				4D6783FB1D7275DD008513D1 /* SRMColorStore.m in Sources */,
 				4DD6CF9D1D5C412F009A686A /* SRMStamp.m in Sources */,
 				4DB2A9CE1D52F3C200DE9693 /* SRMTimeDecoration.m in Sources */,
 				4DD6CFB41D65DB7F009A686A /* SRMThemeStore.m in Sources */,
 				4D95A9A51D58AB9100526D78 /* SRMDayBoardView.m in Sources */,
 				4D95A9C21D5C1EF700526D78 /* SRMAppearanceCell.m in Sources */,
+				4D6783FE1D728CBE008513D1 /* SRMSelectCalendarViewController.m in Sources */,
 				4D3513B01D4CD77B00D2B128 /* SRMEventEditViewController.m in Sources */,
 				4DB2A9E81D549FC600DE9693 /* SRMSelectCell.m in Sources */,
 				4D3513A51D4ACB0900D2B128 /* SRMCalendarConstance.m in Sources */,
@@ -677,6 +698,7 @@
 				4D95A9AC1D58BC8400526D78 /* SRMDayScheduleCell.m in Sources */,
 				4D1E5D5F1D46E5990057DC76 /* SRMMonthViewLayout.m in Sources */,
 				4D3513E41D4F091800D2B128 /* SRMTaskStore.m in Sources */,
+				4D6783F71D711B5D008513D1 /* SRMSelectCalendarCell.m in Sources */,
 				4D1E5C951D44EAED0057DC76 /* AppDelegate.m in Sources */,
 				4D1E5D621D46F95A0057DC76 /* SRMCalendarTool.m in Sources */,
 				4D85DEE41D580F96000B9584 /* SRMDayHeader.m in Sources */,

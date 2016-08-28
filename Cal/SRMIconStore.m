@@ -49,7 +49,7 @@
     self = [super init];
     
     if (!_iconNames) {
-        _iconNames = @[@(IFArrowLeft),
+        _iconNames = @[@(IFDefault),
                        @(IFArrowRight),
                        @(IFBell),
                        @(IFCalendar),
@@ -100,6 +100,13 @@
                        ];
     }
     return self;
+}
+
+#pragma mark - Public
+
+- (NSInteger)iconForNum:(NSInteger)num
+{
+    return [self.iconNames[num] integerValue];
 }
 
 @end

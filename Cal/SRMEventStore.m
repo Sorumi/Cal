@@ -7,7 +7,6 @@
 //
 
 #import "SRMEventStore.h"
-//#import "SRMEvent.h"
 #import "SRMCalendarTool.h"
 
 @interface SRMEventStore ()
@@ -20,6 +19,7 @@
 @property (nonatomic, strong) NSArray<EKCalendar *> *calendars;
 
 @property (nonatomic, strong) NSMutableDictionary *iconDictionary;
+@property (nonatomic, strong) NSMutableDictionary *colorDictionary;
 
 @end
 
@@ -33,6 +33,11 @@
         return [event1.startDate compare:event2.startDate];
     }];;
     return sortedArray;
+}
+
+- (NSArray<EKCalendar *> *)allCalendars
+{
+    return self.calendars;
 }
 
 #pragma mark - Initialization
@@ -65,8 +70,11 @@
     if (!_privateDayEvents) {
         _privateDayEvents = [[NSMutableDictionary alloc] init];
     }
-    NSString *path = [self itemArchivePath];
-    _iconDictionary = [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+    NSString *iconPath = [self iconArchivePath];
+    _iconDictionary = [NSKeyedUnarchiver unarchiveObjectWithFile:iconPath];
+    
+    NSString *colorPath = [self colorArchivePath];
+    _colorDictionary = [NSKeyedUnarchiver unarchiveObjectWithFile:colorPath];
     
 //    for (NSString *key in _iconDictionary) {
 //        NSString *value = _iconDictionary[key];
@@ -75,6 +83,9 @@
     
     if (!_iconDictionary) {
         _iconDictionary = [[NSMutableDictionary alloc] init];
+    }
+    if (!_colorDictionary) {
+        _colorDictionary = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
@@ -93,6 +104,7 @@
         case EKAuthorizationStatusAuthorized:
             self.isGranted = YES;
             self.calendars = [self.eventStore calendarsForEntityType:EKEntityTypeEvent];
+            [self setCalendarsColor];
             break;
             
         case EKAuthorizationStatusDenied:
@@ -201,10 +213,10 @@
     return notAllDayEvents;
 }
 
-- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm
+- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon
 {
     EKEvent *event  = [EKEvent eventWithEventStore:self.eventStore];
-    [event setCalendar:[self.eventStore defaultCalendarForNewEvents]];
+    [event setCalendar:self.calendars[calendar]];
     event.title = title;
     event.allDay = allday;
     event.startDate = startDate;
@@ -217,7 +229,14 @@
     if (alarm) {
         [event addAlarm:alarm];
     }
-    return [self.eventStore saveEvent:event span:EKSpanThisEvent commit:YES error:nil];
+
+    if ([self.eventStore saveEvent:event span:EKSpanThisEvent commit:YES error:nil]) {
+        [self setIcon:icon forEventIdentifier:event.eventIdentifier];
+        [self saveChanges];
+        return YES;
+    } else {
+        return NO;
+    }
 }
 
 - (BOOL)deleteEvent:(NSString *)eventIdentifier
@@ -226,6 +245,10 @@
     return [self.eventStore removeEvent:event span:EKSpanFutureEvents commit:YES error:nil];
 }
 
+- (NSInteger)defaultCalendarIndex
+{
+    return [self.calendars indexOfObject:[_eventStore defaultCalendarForNewEvents]];
+}
 
 #pragma mark - Icon
 
@@ -239,9 +262,33 @@
     return [self.iconDictionary[eventIdentifier] integerValue];
 }
 
+#pragma mark - color
+
+- (void)setColor:(NSInteger)colorNum forCalendarIdentifier:(NSString *)calendarIdentifier
+{
+    self.colorDictionary[calendarIdentifier] = [NSNumber numberWithInteger:colorNum];
+}
+
+- (NSInteger)colorForCalendarIdentifier:(NSString *)calendarIdentifier
+{
+    return [self.colorDictionary[calendarIdentifier] integerValue];
+}
+
+- (void)setColor:(NSInteger)colorNum forCalendarIndex:(NSInteger)calendarIndex
+{
+    EKCalendar *calendar = self.calendars[calendarIndex];
+     self.colorDictionary[calendar.calendarIdentifier] = [NSNumber numberWithInteger:colorNum];
+}
+
+- (NSInteger)colorForCalendarIndex:(NSInteger)calendarIndex
+{
+    EKCalendar *calendar = self.calendars[calendarIndex];
+    return [self.colorDictionary[calendar.calendarIdentifier] integerValue];
+}
+
 #pragma mark - File
 
-- (NSString *)itemArchivePath
+- (NSString *)iconArchivePath
 {
     NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [documentDirectories firstObject];
@@ -249,14 +296,36 @@
     return [documentDirectory stringByAppendingString:@"eventIcon.archive"];
 }
 
+- (NSString *)colorArchivePath
+{
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [documentDirectories firstObject];
+    
+    return [documentDirectory stringByAppendingString:@"calendarColor.archive"];
+}
+
 - (BOOL)saveChanges
 {
-    NSString *path = [self itemArchivePath];
+    NSString *iconPath = [self iconArchivePath];
+    NSString *colorPath = [self colorArchivePath];
     
-    return [NSKeyedArchiver archiveRootObject:self.iconDictionary toFile:path];
+    return [NSKeyedArchiver archiveRootObject:self.iconDictionary toFile:iconPath] && [NSKeyedArchiver archiveRootObject:self.colorDictionary toFile:colorPath];
 }
 
 #pragma mark - Private
+
+- (void)setCalendarsColor
+{
+    if (self.calendars) {
+        for (EKCalendar* calendar in self.calendars) {
+            if (![self colorForCalendarIdentifier:calendar.calendarIdentifier]) {
+                NSInteger index = [self.calendars indexOfObject:calendar];
+                [self setColor:index forCalendarIdentifier:calendar.calendarIdentifier];
+            }
+        }
+        [self saveChanges];
+    }
+}
 
 - (void)requestAccessToCalendar
 {
@@ -265,6 +334,7 @@
                                         if (granted) {
                                             self.isGranted = YES;
                                             self.calendars = [self.eventStore calendarsForEntityType:EKEntityTypeEvent];
+                                            [self setCalendarsColor];
                                         } else {
                                             self.isGranted = NO;
                                             NSLog(@"Access not granted: %@", error);

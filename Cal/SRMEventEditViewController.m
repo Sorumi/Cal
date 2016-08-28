@@ -8,12 +8,14 @@
 
 #import "SRMEventEditViewController.h"
 #import "SRMSelectViewController.h"
+#import "SRMSelectCalendarViewController.h"
 #import "SRMRepeatEndViewController.h"
 #import "SRMCalendarTool.h"
 #import "SRMSwitch.h"
 #import "SRMEventStore.h"
 #import "SRMIconCell.h"
 #import "SRMIconStore.h"
+#import "SRMColorStore.h"
 
 #import "NSString+IconFont.h"
 #import "UIFont+IconFont.h"
@@ -28,6 +30,9 @@
 @property (nonatomic) SRMEventRepeatMode repeatMode;
 @property (nonatomic) SRMEventReminderMode reminderMode;
 
+@property (nonatomic) NSInteger iconNum;
+@property (nonatomic) NSInteger calendarNum;
+
 @property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *endDate;
 @property (nonatomic, strong) NSDate *repeatEndDate;
@@ -37,6 +42,8 @@
 @property (nonatomic) IBOutletCollection(UIView) NSArray *blockView;
 
 @property (weak, nonatomic) IBOutlet UITextField *titleText;
+
+@property (weak, nonatomic) IBOutlet UILabel *calendarValueLabel;
 
 @property (weak, nonatomic) IBOutlet UITextField *locationText;
 
@@ -125,7 +132,6 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     // icon
     _iconButton.titleLabel.font = [UIFont iconfontOfSize:20];
     [_iconButton setTitle:[NSString iconfontIconStringForEnum:IFSquareSelect] forState:UIControlStateNormal];
-//    [_iconButton setTitleColor:self.tintColor forState:UIControlStateNormal];
     [_iconButton addTarget:self action:@selector(showIconKeyboard) forControlEvents:UIControlEventTouchUpInside];
     
     // icon select
@@ -146,16 +152,11 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     _iconSelectView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
     _iconSelectView.backgroundColor = [UIColor whiteColor];
     _iconSelectView.bounces = NO;
+    _iconSelectView.showsHorizontalScrollIndicator = NO;
+    _iconSelectView.showsVerticalScrollIndicator = NO;
     _iconSelectView.dataSource = self;
     _iconSelectView.delegate = self;
     [_iconSelectView registerNib:[UINib nibWithNibName:@"SRMIconCell" bundle:nil] forCellWithReuseIdentifier:reuseIconCellIdentifier];
-//    _iconSelectView.backgroundView = [[UIView alloc] initWithFrame:_iconSelectView.frame];
-//    CALayer *layer = _iconSelectView.backgroundView.layer;
-//    layer.shadowOffset = CGSizeMake(0, 0);
-//    layer.shadowRadius = 0.5;
-//    layer.shadowColor = [UIColor darkGrayColor].CGColor;
-//    layer.shadowOpacity = 0.5;
-//    [self.navigationController.view addSubview:_iconSelectView];
     [self.navigationController.view insertSubview:_iconSelectView belowSubview:self.navigationController.navigationBar];
     
     // init - add
@@ -165,6 +166,10 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     self.timeSelectMode = SRMTimeSelectNone;
     self.repeatMode = SRMEventRepeatNever;
     self.reminderMode = SRMEventReminderNone;
+    self.iconNum = 0;
+    self.calendarNum = [[SRMEventStore sharedStore] defaultCalendarIndex];
+    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIndex:self.calendarNum];
+    self.navigationController.navigationBar.barTintColor = [[SRMColorStore sharedStore] colorForNum:num];
 }
 
 #pragma mark - Properties
@@ -231,6 +236,15 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     self.reminderValueLabel.text = self.allDaySwitch.value ? self.reminderAllDayType[reminderMode] : self.reminderNotAllDayType[reminderMode];
 }
 
+- (void)setCalendarNum:(NSInteger)calendarNum
+{
+    _calendarNum = calendarNum;
+    EKCalendar *calendar = [[SRMEventStore sharedStore] allCalendars][calendarNum];
+    self.calendarValueLabel.text = calendar.title;
+    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier:calendar.calendarIdentifier];
+    self.tableView.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
+}
+
 - (void)setStartDate:(NSDate *)date
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
@@ -268,7 +282,23 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqual: @"RepeatType"]) {
+    if ([segue.identifier isEqual: @"CalendarType"]) {
+        SRMSelectCalendarViewController *vc = segue.destinationViewController;
+        vc.selectMode = SRMEventSelectCalendar;
+        vc.title = @"Calendar";
+        vc.delegate = self;
+        NSMutableArray *titleArray = [[NSMutableArray alloc] init];
+//        NSMutableArray *colorArray = [[NSMutableArray alloc] init];
+        for (EKCalendar *calendar in [[SRMEventStore sharedStore] allCalendars]) {
+            [titleArray addObject:calendar.title];
+//            NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier: calendar.calendarIdentifier];
+//            [colorArray addObject:[[SRMColorStore sharedStore] allColors][num]];
+        }
+        vc.titleArray = titleArray;
+//        vc.colorArray = colorArray;
+        vc.selectedRow = self.calendarNum;
+        
+    } else if ([segue.identifier isEqual: @"RepeatType"]) {
         SRMSelectViewController *vc = segue.destinationViewController;
         vc.selectMode = SRMEventSelectRepeat;
         vc.title = @"Repeat";
@@ -428,14 +458,16 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
         }
     
         BOOL isSuccess = [[SRMEventStore sharedStore] addEvent:self.titleText.text
-                                                      calendar:0
+                                                      calendar:self.calendarNum
                                                         allDay:self.allDaySwitch.value
                                                      startDate:self.startDate
                                                        endDate:self.endDate
                                                       location:self.locationText.text
                                                           note:self.noteText.text
                                                 recurrenceRule:rule
-                                                         alarm:alarm];
+                                                         alarm:alarm
+                                                          icon:self.iconNum];
+;
         
         NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
         if (self.didDismiss) {
@@ -498,8 +530,12 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 - (void)selectView:(SRMEventSelectMode)selectMode didBackWithSelectRow:(NSInteger)selectRow
 {
-    if (selectMode == SRMEventSelectRepeat) {
+    if (selectMode == SRMEventSelectCalendar) {
+        self.calendarNum = selectRow;
+        
+    } else if (selectMode == SRMEventSelectRepeat) {
         self.repeatMode = selectRow;
+        
     } else if (selectMode == SRMEventSelectReminder) {
         self.reminderMode = selectRow;
     }
@@ -681,6 +717,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger num = [((NSNumber *)[[SRMIconStore sharedStore] allIcons][indexPath.row]) integerValue];
+    self.iconNum = num;
     [_iconButton setTitle:[NSString iconfontIconStringForEnum:num] forState:UIControlStateNormal];
     [self hideIconKeyboard];
 }

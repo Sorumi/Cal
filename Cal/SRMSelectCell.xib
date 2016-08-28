@@ -23,19 +23,23 @@
                                 <color key="textColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="task_icon_unfinished" translatesAutoresizingMaskIntoConstraints="NO" id="fbN-zf-4Vb">
-                                <rect key="frame" x="250" y="12" width="40" height="20"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SMU-dM-vB7">
+                                <rect key="frame" x="260" y="2.5" width="40" height="40"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="40" id="2id-xE-zJ3"/>
-                                    <constraint firstAttribute="width" constant="40" id="FOo-X3-vKJ"/>
+                                    <constraint firstAttribute="width" constant="40" id="DPa-T9-FGw"/>
+                                    <constraint firstAttribute="height" constant="40" id="x7p-TF-EOc"/>
                                 </constraints>
-                            </imageView>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.7019608021" green="0.7019608021" blue="0.7019608021" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="fbN-zf-4Vb" firstAttribute="centerY" secondItem="pc2-FC-UuS" secondAttribute="centerY" id="5xX-1h-fEI"/>
                             <constraint firstItem="ZKY-K6-6gv" firstAttribute="centerY" secondItem="pc2-FC-UuS" secondAttribute="centerY" id="8nd-zW-fbi"/>
-                            <constraint firstAttribute="trailing" secondItem="fbN-zf-4Vb" secondAttribute="trailing" constant="10" id="Uyb-1M-aY7"/>
+                            <constraint firstItem="SMU-dM-vB7" firstAttribute="centerY" secondItem="pc2-FC-UuS" secondAttribute="centerY" id="c4W-6v-TJo"/>
+                            <constraint firstItem="SMU-dM-vB7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ZKY-K6-6gv" secondAttribute="trailing" constant="10" id="cBj-b8-ZhY"/>
+                            <constraint firstAttribute="trailing" secondItem="SMU-dM-vB7" secondAttribute="trailing" id="g1u-TW-puu"/>
                             <constraint firstItem="ZKY-K6-6gv" firstAttribute="leading" secondItem="pc2-FC-UuS" secondAttribute="leading" constant="20" id="imE-NQ-GdQ"/>
                         </constraints>
                     </view>
@@ -51,12 +55,9 @@
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <connections>
                 <outlet property="blockView" destination="pc2-FC-UuS" id="47C-o7-l8f"/>
-                <outlet property="checkImage" destination="fbN-zf-4Vb" id="kZS-f8-mQH"/>
+                <outlet property="checkLabel" destination="SMU-dM-vB7" id="lG3-3h-H8g"/>
                 <outlet property="titleLabel" destination="ZKY-K6-6gv" id="gtY-zn-Ml4"/>
             </connections>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="task_icon_unfinished" width="20" height="20"/>
-    </resources>
 </document>

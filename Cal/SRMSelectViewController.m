@@ -10,20 +10,14 @@
 #import "SRMEventEditViewController.h"
 #import "SRMSelectCell.h"
 
-@interface SRMSelectViewController ()
-
-@end
-
 @implementation SRMSelectViewController
 
 static NSString * const reuseCellIdentifier = @"SelectCell";
-static NSString * const reuseDatePickerCellIdentifier = @"DatePickerCell";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     [self.tableView registerNib:[UINib nibWithNibName:@"SRMSelectCell" bundle:nil] forCellReuseIdentifier:reuseCellIdentifier];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -42,7 +36,6 @@ static NSString * const reuseDatePickerCellIdentifier = @"DatePickerCell";
         [_delegate selectView:self.selectMode didBackWithSelectRow:self.selectedRow];
     }
 }
-
 #pragma mark - <UITableViewDataSource>
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -85,6 +78,8 @@ static NSString * const reuseDatePickerCellIdentifier = @"DatePickerCell";
 {
     return 10;
 }
+
+
 
 #pragma mark - Others
 

@@ -14,4 +14,6 @@
 
 + (instancetype)sharedStore;
 
+- (NSInteger)iconForNum:(NSInteger)num;
+
 @end

@@ -26,7 +26,9 @@ typedef NS_ENUM(NSInteger, IFIcon) {
     IFTick,
     IFTrashCan,
     IFAdd,
-    IFSquareSelect
+    IFDefault,
+    IFSquareSelect,
+    IFTriangleSmall
 };
 
 @interface NSString (IconFont)

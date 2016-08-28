@@ -25,9 +25,15 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SWb-eh-aOO">
-                                <rect key="frame" x="20" y="9" width="20" height="22"/>
+                                <rect key="frame" x="20" y="10" width="20" height="20"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <state key="normal" image="task_icon_unfinished"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="OYJ-9u-CLz"/>
+                                    <constraint firstAttribute="height" constant="20" id="gFM-Nk-LiS"/>
+                                </constraints>
+                                <state key="normal" title="check">
+                                    <color key="titleColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="juf-1V-BPE">
                                 <rect key="frame" x="50" y="9" width="29.5" height="20.5"/>
@@ -70,14 +76,11 @@
             <connections>
                 <outlet property="blockView" destination="K7L-Ua-6G0" id="dtb-i0-lPO"/>
                 <outlet property="categoryColorView" destination="3qa-jM-29l" id="uty-n1-K5M"/>
+                <outlet property="checkButton" destination="SWb-eh-aOO" id="aVa-X5-P0c"/>
                 <outlet property="dateLabel" destination="ryf-vo-22u" id="iBC-dt-aQT"/>
-                <outlet property="iconImage" destination="SWb-eh-aOO" id="FAt-tw-xYA"/>
                 <outlet property="titleLable" destination="juf-1V-BPE" id="Bfg-8e-BcO"/>
             </connections>
             <point key="canvasLocation" x="68" y="517"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="task_icon_unfinished" width="20" height="20"/>
-    </resources>
 </document>
