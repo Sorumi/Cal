@@ -170,6 +170,8 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     self.calendarNum = [[SRMEventStore sharedStore] defaultCalendarIndex];
     NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIndex:self.calendarNum];
     self.navigationController.navigationBar.barTintColor = [[SRMColorStore sharedStore] colorForNum:num];
+    self.view.tintColor = self.navigationController.navigationBar.barTintColor;
+    [self tintColorDidChange];
 }
 
 #pragma mark - Properties
@@ -502,6 +504,13 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     }
 }
 
+- (void)tintColorDidChange
+{
+    _allDaySwitch.tintColor = self.view.tintColor;
+    _startLabel.highlightedTextColor = self.view.tintColor;
+    _endLabel.highlightedTextColor = self.view.tintColor;
+}
+
 #pragma mark - DatePicker
 
 - (void)setDatePickerHidden:(BOOL)hidden
@@ -528,6 +537,8 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     if (selectMode == SRMEventSelectCalendar) {
         self.calendarNum = selectRow;
+        self.view.tintColor = self.navigationController.navigationBar.barTintColor;
+        [self tintColorDidChange];
         
     } else if (selectMode == SRMEventSelectRepeat) {
         self.repeatMode = selectRow;

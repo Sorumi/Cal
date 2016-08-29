@@ -239,10 +239,17 @@
     }
 }
 
-- (BOOL)deleteEvent:(NSString *)eventIdentifier
+- (BOOL)deleteThisEvent:(NSString *)eventIdentifier
+{
+    EKEvent* event = [self.eventStore eventWithIdentifier:eventIdentifier];
+    return [self.eventStore removeEvent:event span:EKSpanThisEvent commit:YES error:nil];
+}
+
+- (BOOL)deleteFutureEvent:(NSString *)eventIdentifier
 {
     EKEvent* event = [self.eventStore eventWithIdentifier:eventIdentifier];
     return [self.eventStore removeEvent:event span:EKSpanFutureEvents commit:YES error:nil];
+
 }
 
 - (NSInteger)defaultCalendarIndex

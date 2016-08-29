@@ -9,8 +9,9 @@
 #import "SRMEventDetailViewController.h"
 #import "SRMCalendarTool.h"
 #import "SRMEventStore.h"
+#import "SRMSlideAlertView.h"
 
-@interface SRMEventDetailViewController ()
+@interface SRMEventDetailViewController () <SRMSlideAlertDelegate>
 
 @property (nonatomic, strong) NSArray *repeatType;
 
@@ -39,6 +40,9 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *repeatCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *endRepeatCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *reminderCell;
+
+@property (nonatomic, strong) SRMSlideAlertView *deleteAlertView;
+@property (nonatomic, strong) UIView *overlay;
 
 @end
 
@@ -156,6 +160,24 @@
     
     [self reloadDataAnimated:NO];
     
+    // delete alert
+    CGRect newframe = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    _overlay = [[UIView alloc] initWithFrame:newframe];
+    _overlay.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    _overlay.hidden = YES;
+    [self.navigationController.view insertSubview:_overlay belowSubview:self.navigationController.navigationBar];
+    UITapGestureRecognizer *tapOverlay = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDeleteAlert)];
+    [_overlay addGestureRecognizer:tapOverlay];
+    
+    if (_event.recurrenceRules.count > 0) {
+        _deleteAlertView = [[SRMSlideAlertView alloc] initWithTitle:@"This is a repeating event." normalButton:@[@"Delete this event only", @"Delete all future events"] warnButton:@[@"Cancel"]];
+    } else {
+        _deleteAlertView = [[SRMSlideAlertView alloc] initWithTitle:nil normalButton:@[@"Delete"] warnButton:@[@"Cancel"]];
+    }
+
+    _deleteAlertView.delegate = self;
+    [self.navigationController.view addSubview:_deleteAlertView];
+    
 }
 
 - (UIBarButtonItem*)barButtonSystemItem:(UIBarButtonSystemItem)systemItem
@@ -164,8 +186,47 @@
     return button;
 }
 
-
 #pragma mark - Action
+
+- (void)showDeleteAlert
+{
+    CGRect frame = _deleteAlertView.frame;
+    CGFloat toolBarHeight = self.navigationController.toolbar.frame.size.height;
+    if (frame.origin.y == self.view.frame.size.height + toolBarHeight) {
+        frame.origin.y -= frame.size.height;
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             _deleteAlertView.frame = frame;
+                         }];
+        [UIView transitionWithView:_overlay
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            _overlay.hidden = NO;
+                        }
+                        completion:nil];
+    }
+}
+
+- (void)hideDeleteAlert
+{
+    CGRect frame = _deleteAlertView.frame;
+        CGFloat toolBarHeight = self.navigationController.toolbar.frame.size.height;
+    if (frame.origin.y == self.view.frame.size.height + toolBarHeight - frame.size.height) {
+        frame.origin.y += frame.size.height;
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             _deleteAlertView.frame = frame;
+                         }];
+        [UIView transitionWithView:_overlay
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            _overlay.hidden = YES;
+                        }
+                        completion:nil];
+    }
+}
 
 - (IBAction)cancel:(id)sender
 {
@@ -175,17 +236,43 @@
 
 - (void)deleteEvent:(id)sender
 {
-    BOOL isSuccess = [[SRMEventStore sharedStore] deleteEvent:self.event.eventIdentifier];
-    if (isSuccess) {
-        [self.presentingViewController dismissViewControllerAnimated:YES
-                                                          completion:nil];
-    }
+    [self showDeleteAlert];
 }
 
 - (CGFloat)heightForLabel:(UILabel *)label
 {
     CGSize neededSize = [label sizeThatFits:CGSizeMake(self.view.frame.size.width - 80, FLT_MAX)];
     return neededSize.height;
+}
+
+#pragma mark - <SRMSlideAlertDelegate>
+
+- (void)didClickOnButton:(NSInteger)buttonNum
+{
+    BOOL isSuccess = NO;
+    if (_event.recurrenceRules.count > 0) {
+        if (buttonNum == 0) {
+            isSuccess = [[SRMEventStore sharedStore] deleteThisEvent:self.event.eventIdentifier];
+            
+        } else if (buttonNum == 1) {
+            isSuccess = [[SRMEventStore sharedStore] deleteFutureEvent:self.event.eventIdentifier];
+        } else {
+            [self hideDeleteAlert];
+        }
+    } else {
+        if (buttonNum == 0) {
+            isSuccess = [[SRMEventStore sharedStore] deleteThisEvent:self.event.eventIdentifier];
+            
+        } else {
+            [self hideDeleteAlert];
+        }
+    }
+    
+    if (isSuccess) {
+        [self.presentingViewController dismissViewControllerAnimated:YES
+                                                          completion:nil];
+    }
+
 }
 
 #pragma mark - <UITableViewDelegate>

@@ -56,6 +56,13 @@
     
 }
 
+- (void)tintColorDidChange
+{
+    if (_value) {
+        self.bgview.backgroundColor = self.tintColor;
+    }
+}
+
 - (void)toggle:(UITapGestureRecognizer *)recognizer
 {
     BOOL shouldToggle = YES;
