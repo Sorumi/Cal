@@ -39,7 +39,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ipO-NH-Boh">
-                                <rect key="frame" x="262" y="2.5" width="40" height="40"/>
+                                <rect key="frame" x="252" y="2.5" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="MYO-pb-rQ5"/>
                                     <constraint firstAttribute="height" constant="40" id="bmo-wt-3hw"/>
@@ -66,7 +66,7 @@
                     <constraint firstItem="nVh-zi-HEL" firstAttribute="centerX" secondItem="H2p-sc-9uM" secondAttribute="centerX" id="FIt-I2-TKN"/>
                     <constraint firstItem="nVh-zi-HEL" firstAttribute="width" secondItem="H2p-sc-9uM" secondAttribute="width" constant="-20" id="TFz-be-0sa"/>
                     <constraint firstItem="nVh-zi-HEL" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="mzf-B1-SCN"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="ipO-NH-Boh" secondAttribute="trailing" id="wyx-oX-FXN"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ipO-NH-Boh" secondAttribute="trailing" constant="10" id="wyx-oX-FXN"/>
                 </constraints>
             </tableViewCellContentView>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>

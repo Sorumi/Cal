@@ -24,7 +24,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SMU-dM-vB7">
-                                <rect key="frame" x="260" y="2.5" width="40" height="40"/>
+                                <rect key="frame" x="250" y="2.5" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="40" id="DPa-T9-FGw"/>
                                     <constraint firstAttribute="height" constant="40" id="x7p-TF-EOc"/>
@@ -39,7 +39,7 @@
                             <constraint firstItem="ZKY-K6-6gv" firstAttribute="centerY" secondItem="pc2-FC-UuS" secondAttribute="centerY" id="8nd-zW-fbi"/>
                             <constraint firstItem="SMU-dM-vB7" firstAttribute="centerY" secondItem="pc2-FC-UuS" secondAttribute="centerY" id="c4W-6v-TJo"/>
                             <constraint firstItem="SMU-dM-vB7" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="ZKY-K6-6gv" secondAttribute="trailing" constant="10" id="cBj-b8-ZhY"/>
-                            <constraint firstAttribute="trailing" secondItem="SMU-dM-vB7" secondAttribute="trailing" id="g1u-TW-puu"/>
+                            <constraint firstAttribute="trailing" secondItem="SMU-dM-vB7" secondAttribute="trailing" constant="10" id="g1u-TW-puu"/>
                             <constraint firstItem="ZKY-K6-6gv" firstAttribute="leading" secondItem="pc2-FC-UuS" secondAttribute="leading" constant="20" id="imE-NQ-GdQ"/>
                         </constraints>
                     </view>

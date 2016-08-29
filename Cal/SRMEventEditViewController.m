@@ -70,6 +70,13 @@
 #pragma mark - IBOutlet Icon
 
 @property (weak, nonatomic) IBOutlet UIButton *iconButton;
+@property (weak, nonatomic) IBOutlet UILabel *calendarIcon;
+@property (weak, nonatomic) IBOutlet UILabel *locationIcon;
+@property (weak, nonatomic) IBOutlet UILabel *noteIcon;
+@property (weak, nonatomic) IBOutlet UILabel *dateIcon;
+@property (weak, nonatomic) IBOutlet UILabel *repeatIcon;
+@property (weak, nonatomic) IBOutlet UILabel *reminderIcon;
+
 
 #pragma mark - IBOutlet Cell
 
@@ -133,6 +140,26 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     _iconButton.titleLabel.font = [UIFont iconfontOfSize:20];
     [_iconButton setTitle:[NSString iconfontIconStringForEnum:IFSquareSelect] forState:UIControlStateNormal];
     [_iconButton addTarget:self action:@selector(showIconKeyboard) forControlEvents:UIControlEventTouchUpInside];
+    
+    _calendarIcon.font = [UIFont iconfontOfSize:20];
+    _calendarIcon.text = [NSString iconfontIconStringForEnum:IFCalendar];
+    _calendarIcon.highlighted = YES;
+    
+    _locationIcon.font = [UIFont iconfontOfSize:20];
+    _locationIcon.text = [NSString iconfontIconStringForEnum:IFLocation];
+    
+    _noteIcon.font = [UIFont iconfontOfSize:20];
+    _noteIcon.text = [NSString iconfontIconStringForEnum:IFNote];
+    
+    _dateIcon.font = [UIFont iconfontOfSize:20];
+    _dateIcon.text = [NSString iconfontIconStringForEnum:IFClock];
+    _dateIcon.highlighted = YES;
+    
+    _repeatIcon.font = [UIFont iconfontOfSize:20];
+    _repeatIcon.text = [NSString iconfontIconStringForEnum:IFRepeat];
+    
+    _reminderIcon.font = [UIFont iconfontOfSize:20];
+    _reminderIcon.text = [NSString iconfontIconStringForEnum:IFBell];
     
     // icon select
     CGRect newframe = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
@@ -224,9 +251,11 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     _repeatMode = repeatMode;
     self.repeatValueLabel.text = self.repeatType[repeatMode];
     if (_repeatMode != SRMTimeSelectNone) {
+        _repeatIcon.highlighted = YES;
         [self cell:self.repeatEndCell setHidden:NO];
         [self reloadDataAnimated:YES];
     } else {
+        _repeatIcon.highlighted = NO;
         [self cell:self.repeatEndCell setHidden:YES];
         [self reloadDataAnimated:YES];
     }
@@ -236,6 +265,11 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     _reminderMode = reminderMode;
     self.reminderValueLabel.text = self.allDaySwitch.value ? self.reminderAllDayType[reminderMode] : self.reminderNotAllDayType[reminderMode];
+    if (_reminderMode != SRMEventReminderNone) {
+        _reminderIcon.highlighted = YES;
+    } else {
+        _reminderIcon.highlighted = NO;
+    }
 }
 
 - (void)setCalendarNum:(NSInteger)calendarNum
@@ -506,9 +540,16 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 - (void)tintColorDidChange
 {
-    _allDaySwitch.tintColor = self.view.tintColor;
-    _startLabel.highlightedTextColor = self.view.tintColor;
-    _endLabel.highlightedTextColor = self.view.tintColor;
+    UIColor *color = self.view.tintColor;
+    _allDaySwitch.tintColor = color;
+    _calendarIcon.highlightedTextColor = color;
+    _locationIcon.highlightedTextColor = color;
+    _noteIcon.highlightedTextColor = color;
+    _dateIcon.highlightedTextColor = color;
+    _repeatIcon.highlightedTextColor = color;
+    _reminderIcon.highlightedTextColor = color;
+    _startLabel.highlightedTextColor = color;
+    _endLabel.highlightedTextColor = color;
 }
 
 #pragma mark - DatePicker
@@ -590,6 +631,20 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 #pragma mark - <UITextFieldDelegate>
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField == _locationText) {
+        _locationIcon.highlighted = YES;
+    }
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    if (textField == _locationText && [textField.text isEqual: @""]) {
+        _locationIcon.highlighted = NO;
+    }
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [textField resignFirstResponder];
@@ -609,6 +664,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)textViewDidBeginEditing:(UITextView *)textView
 {
     self.noteLabel.hidden = YES;
+    _noteIcon.highlighted = YES;
     [self scrollToCursorForTextView:textView];
 }
 
@@ -616,6 +672,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     if ([textView.text isEqual: @""]) {
         self.noteLabel.hidden = NO;
+        _noteIcon.highlighted = NO;
     }
 }
 
