@@ -7,9 +7,15 @@
 //
 
 #import "SRMEventDetailViewController.h"
+#import "SRMEventEditViewController.h"
 #import "SRMCalendarTool.h"
 #import "SRMEventStore.h"
+#import "SRMIconStore.h"
+#import "SRMColorStore.h"
 #import "SRMSlideAlertView.h"
+
+#import "UIFont+IconFont.h"
+#import "NSString+IconFont.h"
 
 @interface SRMEventDetailViewController () <SRMSlideAlertDelegate>
 
@@ -18,7 +24,7 @@
 #pragma mark - IBOutlet
 
 @property (nonatomic) IBOutletCollection(UIView) NSArray *blockView;
-@property (nonatomic) IBOutletCollection(UIImageView) NSArray *iconImage;
+@property (nonatomic) IBOutletCollection(UILabel) NSArray *icons;
 
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 @property (weak, nonatomic) IBOutlet UILabel *calendarLabel;
@@ -32,6 +38,16 @@
 @property (weak, nonatomic) IBOutlet UILabel *startTimeLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
+
+#pragma mark - IBOutlet Icon
+
+@property (weak, nonatomic) IBOutlet UILabel *eventIcon;
+@property (weak, nonatomic) IBOutlet UILabel *calendarIcon;
+@property (weak, nonatomic) IBOutlet UILabel *locationIcon;
+@property (weak, nonatomic) IBOutlet UILabel *noteIcon;
+@property (weak, nonatomic) IBOutlet UILabel *dateIcon;
+@property (weak, nonatomic) IBOutlet UILabel *repeatIcon;
+@property (weak, nonatomic) IBOutlet UILabel *reminderIcon;
 
 #pragma mark - Cell
 
@@ -55,9 +71,9 @@
     self.repeatType = @[@"Never", @"Every Day", @"Every Week", @"Every 2 Weeks", @"Every Month", @"Every Year"];
     
     // tool bar
-    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"system_icon_delete"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteEvent:)];
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"system_icon_delete"] style:UIBarButtonItemStylePlain target:self action:@selector(editEvent)];
     
-    UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"system_icon_delete"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteEvent:)];
+    UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"system_icon_delete"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteEvent)];
     
     self.toolbarItems = [NSArray arrayWithObjects:editButton,
                          [self barButtonSystemItem:UIBarButtonSystemItemFlexibleSpace],
@@ -72,9 +88,28 @@
         layer.shadowOpacity = 0.3;
     }
     
-    for (UIImageView *view in self.iconImage) {
-        view.image = [view.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    // icon
+    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier:_event.calendar.calendarIdentifier];
+    self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:num];;
+    UIColor *color = self.view.tintColor;
+    
+    self.navigationController.navigationBar.barTintColor = color;
+    self.navigationController.toolbar.barTintColor = color;
+    
+    for (UILabel *icon in _icons) {
+        icon.font = [UIFont iconfontOfSize:20];
+        icon.highlightedTextColor = color;
+        icon.highlighted = YES;
     }
+
+    NSInteger iconNum = [[SRMEventStore sharedStore] iconForEventIdentifier:_event.eventIdentifier];
+    _eventIcon.text = [NSString iconfontIconStringForEnum:[[SRMIconStore sharedStore] iconForNum:iconNum]];
+    _calendarIcon.text = [NSString iconfontIconStringForEnum:IFCalendar];
+    _locationIcon.text = [NSString iconfontIconStringForEnum:IFLocation];
+    _noteIcon.text = [NSString iconfontIconStringForEnum:IFNote];
+    _dateIcon.text = [NSString iconfontIconStringForEnum:IFClock];
+    _repeatIcon.text = [NSString iconfontIconStringForEnum:IFRepeat];
+    _reminderIcon.text = [NSString iconfontIconStringForEnum:IFBell];
     
     // information
     SRMCalendarTool *tool = [SRMCalendarTool tool];
@@ -234,7 +269,21 @@
                                                       completion:nil];
 }
 
-- (void)deleteEvent:(id)sender
+- (void)editEvent
+{
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"EditNavigation"];
+    SRMEventEditViewController *vc = nvc.viewControllers[0];
+    vc.event = _event;
+    __weak SRMEventDetailViewController *weakSelf = self;
+    vc.didDismiss = ^{
+        [weakSelf cancel:nil];
+    };
+    
+    [self presentViewController:nvc animated:YES completion:nil];
+}
+
+- (void)deleteEvent
 {
     [self showDeleteAlert];
 }
@@ -288,10 +337,11 @@
     } else if (indexPath.section == 1 && indexPath.row == 0) {
         return ![_event.location isEqual:@""] ?
         MAX([self heightForLabel:_locationLabel] + 24, 44) :
-        MAX([self heightForLabel:_noteLabel] + 24, 44);
+        (![_event.notes isEqual:@""] ?
+         MAX([self heightForLabel:_noteLabel] + 24, 44) : 0);
         
     } else if (indexPath.section == 1 && indexPath.row == 1) {
-        return MAX([self heightForLabel:_noteLabel] + 24, 44);
+        return ![_event.notes isEqual:@""] ? MAX([self heightForLabel:_noteLabel] + 24, 44) : 0;
         
     } else if (indexPath.section == 2 && indexPath.row == 0) {
         return 70;

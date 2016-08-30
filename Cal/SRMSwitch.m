@@ -45,10 +45,15 @@
 
     self.bgview = [[UIView alloc] initWithFrame:self.bounds];
     self.bgview.layer.cornerRadius = height/2;
-    self.bgview.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
     [self addSubview:self.bgview];
     
-    self.circle = [[UIView alloc] initWithFrame:CGRectMake(height/8,height/8,height*3/4,height*3/4)];
+    if (_value) {
+        self.circle = [[UIView alloc] initWithFrame:CGRectMake(self.frame.size.width - height/8 - height*3/4, height/8, height*3/4, height*3/4)];
+        self.bgview.backgroundColor = self.tintColor;
+    } else {
+        self.circle = [[UIView alloc] initWithFrame:CGRectMake(height/8, height/8, height*3/4, height*3/4)];
+        self.bgview.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
+    }
     self.circle.layer.cornerRadius = height*3/8;
     self.circle.backgroundColor = [UIColor whiteColor];
     
@@ -71,12 +76,12 @@
     }
     
     if (shouldToggle) {
-        if (self.value) {
+        if (_value) {
             [self setOff];
         } else {
             [self setOn];
         }
-        self.value = !self.value;
+        _value = !_value;
         if ([_delegate respondsToSelector:@selector(switchView:didEndToggleWithValue:)]) {
             [_delegate switchView:self didEndToggleWithValue:self.value];
         }

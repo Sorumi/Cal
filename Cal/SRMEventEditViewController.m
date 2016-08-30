@@ -6,6 +6,7 @@
 //  Copyright © 2016年 Sorumi. All rights reserved.
 //
 
+#import <EventKit/EventKit.h>
 #import "SRMEventEditViewController.h"
 #import "SRMSelectViewController.h"
 #import "SRMSelectCalendarViewController.h"
@@ -21,6 +22,8 @@
 #import "UIFont+IconFont.h"
 
 @interface SRMEventEditViewController () <UITextFieldDelegate, UITextViewDelegate, UICollectionViewDataSource, UICollectionViewDelegate, SRMSwitchDelegate, SRMSelectViewDelegate, SRMRepeatEndDelegate>
+
+@property (nonatomic) BOOL firstEditToggle;
 
 @property (nonatomic, strong) NSArray *repeatType;
 @property (nonatomic, strong) NSArray *reminderNotAllDayType;
@@ -101,8 +104,6 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     self.repeatType = @[@"Never", @"Every Day", @"Every Week", @"Every 2 Weeks", @"Every Month", @"Every Year"];
     self.reminderNotAllDayType = @[@"None", @"On time of event", @"5 minutes before", @"15 minutes before", @"30 minutes before", @"1 hour before", @"1 day before"];
     self.reminderAllDayType = @[@"None", @"On the day of event", @"1 day before", @"2 days before", @"1 week before"];
-    
-    self.title = @"Add Event";
     
     for (UIView *view in self.blockView) {
         // shadow
@@ -186,7 +187,18 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     [_iconSelectView registerNib:[UINib nibWithNibName:@"SRMIconCell" bundle:nil] forCellWithReuseIdentifier:reuseIconCellIdentifier];
     [self.navigationController.view insertSubview:_iconSelectView belowSubview:self.navigationController.navigationBar];
     
-    // init - add
+    // init
+    if (_event) {
+        [self initWithEdit];
+    } else {
+        [self initWithNew];
+    }
+}
+
+- (void)initWithNew
+{
+    self.title = @"New Event";
+    
     self.startDate = [[SRMCalendarTool tool] dateOnHour:[NSDate date]];
     self.endDate = [[SRMCalendarTool tool] dateOnHour:[[SRMCalendarTool tool] dateByAddingHours:1 toDate:[NSDate date]]];
     
@@ -196,9 +208,76 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     self.iconNum = 0;
     self.calendarNum = [[SRMEventStore sharedStore] defaultCalendarIndex];
     NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIndex:self.calendarNum];
-    self.navigationController.navigationBar.barTintColor = [[SRMColorStore sharedStore] colorForNum:num];
-    self.view.tintColor = self.navigationController.navigationBar.barTintColor;
+    self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
     [self tintColorDidChange];
+}
+
+- (void)initWithEdit
+{
+    self.title = @"Edit Event";
+
+    _allDaySwitch.value = _event.allDay;
+    self.startDate = _event.startDate;
+    self.endDate = _event.endDate;
+    _titleText.text = _event.title;
+    _locationText.text = _event.location;
+    _noteText.text = _event.notes;
+    self.calendarNum = [[[SRMEventStore sharedStore] allCalendars] indexOfObject:_event.calendar];
+    self.iconNum = [[[SRMIconStore sharedStore] allIcons][[[SRMEventStore sharedStore] iconForEventIdentifier:_event.eventIdentifier]] integerValue];
+    
+    if (_event.recurrenceRules.count > 0) {
+        EKRecurrenceRule *rule = _event.recurrenceRules[0];
+        switch (rule.frequency) {
+            case EKRecurrenceFrequencyDaily:
+                self.repeatMode = SRMEventRepeatEveryDay;
+                break;
+            case EKRecurrenceFrequencyWeekly:
+                if (rule.interval == 1) {
+                    self.repeatMode = SRMEventRepeatEveryWeek;
+                } else if (rule.interval == 2) {
+                   self.repeatMode = SRMEventRepeatEveryTwoWeek;
+                }
+                break;
+            case EKRecurrenceFrequencyMonthly:
+                self.repeatMode = SRMEventRepeatEveryMonth;
+                break;
+            case EKRecurrenceFrequencyYearly:
+                self.repeatMode = SRMEventRepeatEveryYear;
+                break;
+            default:
+                break;
+        }
+        
+        if (rule.recurrenceEnd) {
+            EKRecurrenceEnd *end = rule.recurrenceEnd;
+            self.repeatEndDate = end.endDate;
+        }
+    }
+    
+//    if (_event.alarms.count > 0) {
+//        EKAlarm *alarm = _event.alarms[0];
+//        NSDate *date;
+//        if (alarm.absoluteDate) {
+//            date = alarm.absoluteDate;
+//        } else {
+//            NSInteger minute = alarm.relativeOffset / 60;
+//            date = [tool dateByAddingMinutes:minute toDate:_event.startDate];
+//        }
+//        NSString *text = [tool dateFormat:date];
+//        text = [text stringByAppendingString:@" "];
+//        text = [text stringByAppendingString:[tool timeFormat:date]];
+//        _reminderLabel.text = text;
+//        
+//    } else {
+//        [self cell:_reminderCell setHidden:YES];
+//    }
+
+    
+    
+    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIndex:self.calendarNum];
+    self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
+    [self tintColorDidChange];
+    
 }
 
 #pragma mark - Properties
@@ -243,7 +322,21 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
                              weakSelf.datePicker.date = date;
                          }];
     }
+}
 
+- (void)setIconNum:(NSInteger)iconNum
+{
+    _iconNum = iconNum;
+    [_iconButton setTitle:[NSString iconfontIconStringForEnum:iconNum] forState:UIControlStateNormal];
+}
+
+- (void)setCalendarNum:(NSInteger)calendarNum
+{
+    _calendarNum = calendarNum;
+    EKCalendar *calendar = [[SRMEventStore sharedStore] allCalendars][calendarNum];
+    self.calendarValueLabel.text = calendar.title;
+    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier:calendar.calendarIdentifier];
+    self.tableView.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
 }
 
 - (void)setRepeatMode:(SRMEventRepeatMode)repeatMode
@@ -261,6 +354,16 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     }
 }
 
+- (void)setRepeatEndDate:(NSDate *)repeatEndDate
+{
+    if (repeatEndDate) {
+        _repeatEndDateLabel.text = [[SRMCalendarTool tool] dateFormat:repeatEndDate];
+    } else {
+        _repeatEndDateLabel.text = @"Never";
+        _repeatEndDate = repeatEndDate;
+    }
+}
+
 - (void)setReminderMode:(SRMEventReminderMode)reminderMode
 {
     _reminderMode = reminderMode;
@@ -270,15 +373,6 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     } else {
         _reminderIcon.highlighted = NO;
     }
-}
-
-- (void)setCalendarNum:(NSInteger)calendarNum
-{
-    _calendarNum = calendarNum;
-    EKCalendar *calendar = [[SRMEventStore sharedStore] allCalendars][calendarNum];
-    self.calendarValueLabel.text = calendar.title;
-    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier:calendar.calendarIdentifier];
-    self.tableView.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
 }
 
 - (void)setStartDate:(NSDate *)date
@@ -488,20 +582,21 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
                 }
             }
         }
-    
-        BOOL isSuccess = [[SRMEventStore sharedStore] addEvent:self.titleText.text
-                                                      calendar:self.calendarNum
-                                                        allDay:self.allDaySwitch.value
-                                                     startDate:self.startDate
-                                                       endDate:self.endDate
-                                                      location:self.locationText.text
-                                                          note:self.noteText.text
-                                                recurrenceRule:rule
-                                                         alarm:alarm
-                                                          icon:self.iconNum];
-;
         
-        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
+        BOOL isSuccess;
+        isSuccess = [[SRMEventStore sharedStore] editEvent:_event
+                                                         title:_titleText.text
+                                                     calendar:_calendarNum
+                                                       allDay:_allDaySwitch.value
+                                                    startDate:_startDate
+                                                      endDate:_endDate
+                                                     location:_locationText.text
+                                                         note:_noteText.text
+                                               recurrenceRule:rule
+                                                        alarm:alarm
+                                                         icon:_iconNum];
+        
+//        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
         if (self.didDismiss) {
             self.didDismiss();
         }
@@ -541,6 +636,8 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)tintColorDidChange
 {
     UIColor *color = self.view.tintColor;
+    self.navigationController.navigationBar.barTintColor = color;
+    
     _allDaySwitch.tintColor = color;
     _calendarIcon.highlightedTextColor = color;
     _locationIcon.highlightedTextColor = color;
@@ -594,11 +691,6 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)repeatEndViewDidBackWithDate:(NSDate *)endDate
 {
     self.repeatEndDate = endDate;
-    if (endDate) {
-        self.repeatEndDateLabel.text = [[SRMCalendarTool tool] dateFormat:endDate];
-    } else {
-        self.repeatEndDateLabel.text = @"Never";
-    }
 }
 
 #pragma mark - <SRMSwitchDelegate>
@@ -622,10 +714,17 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
         
     }
     
-    self.startDate = self.startDate;
-    self.endDate = self.endDate;
-    
+    if (_event && !_firstEditToggle) {
+        self.startDate = [[SRMCalendarTool tool] dateOnHour:[NSDate date]];
+        self.endDate = [[SRMCalendarTool tool] dateOnHour:[[SRMCalendarTool tool] dateByAddingHours:1 toDate:[NSDate date]]];
+        _firstEditToggle = YES;
+    } else {
+        self.startDate = self.startDate;
+        self.endDate = self.endDate;
+    }
+
     self.reminderMode = SRMEventReminderNone;
+    
     
 }
 
@@ -782,7 +881,6 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     NSInteger num = [((NSNumber *)[[SRMIconStore sharedStore] allIcons][indexPath.row]) integerValue];
     self.iconNum = num;
-    [_iconButton setTitle:[NSString iconfontIconStringForEnum:num] forState:UIControlStateNormal];
     [self hideIconKeyboard];
 }
 

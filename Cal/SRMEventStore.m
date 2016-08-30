@@ -213,9 +213,17 @@
     return notAllDayEvents;
 }
 
-- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon
+- (BOOL)editEvent:(EKEvent *)event title:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon
 {
-    EKEvent *event  = [EKEvent eventWithEventStore:self.eventStore];
+    
+//    EKEvent *event = [store eventWithIdentifier:savedEventId];
+    // Uncomment below if you want to create a new event if savedEventId no longer exists
+    // if (event == nil)
+    //   event = [EKEvent eventWithEventStore:store];
+    if (!event) {
+        event  = [EKEvent eventWithEventStore:self.eventStore];
+    }
+
     [event setCalendar:self.calendars[calendar]];
     event.title = title;
     event.allDay = allday;
@@ -230,7 +238,7 @@
         [event addAlarm:alarm];
     }
 
-    if ([self.eventStore saveEvent:event span:EKSpanThisEvent commit:YES error:nil]) {
+    if ([self.eventStore saveEvent:event span:EKSpanFutureEvents commit:YES error:nil]) {
         [self setIcon:icon forEventIdentifier:event.eventIdentifier];
         [self saveChanges];
         return YES;
@@ -249,7 +257,6 @@
 {
     EKEvent* event = [self.eventStore eventWithIdentifier:eventIdentifier];
     return [self.eventStore removeEvent:event span:EKSpanFutureEvents commit:YES error:nil];
-
 }
 
 - (NSInteger)defaultCalendarIndex

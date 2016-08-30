@@ -10,8 +10,11 @@
 #import "StaticDataTableViewController.h"
 #import "SRMCalendarConstance.h"
 
+@class EKEvent;
+
 @interface SRMEventEditViewController : StaticDataTableViewController
 
+@property (nonatomic, strong) EKEvent *event;
 @property (nonatomic, copy) void (^didDismiss)();
 
 @end

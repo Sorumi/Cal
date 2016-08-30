@@ -34,7 +34,7 @@
 - (NSArray *)dayEventsAllDay:(NSDate *)date;
 - (NSArray *)dayEventsNotAllDay:(NSDate *)date;
 
-- (BOOL)addEvent:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon;
+- (BOOL)editEvent:(EKEvent *)event title:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon;
 - (BOOL)deleteThisEvent:(NSString *)eventIdentifier;
 - (BOOL)deleteFutureEvent:(NSString *)eventIdentifier;
 
