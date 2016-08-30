@@ -7,7 +7,6 @@
 //
 
 #import "SRMWeekDayCell.h"
-#import "SRMCalendarAppearance.h"
 
 @implementation SRMWeekDayCell
 

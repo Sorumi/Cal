@@ -8,7 +8,6 @@
 
 #import "SRMDayHeader.h"
 #import "SRMCalendarConstance.h"
-#import "SRMCalendarAppearance.h"
 
 @interface SRMDayHeader ()
 
@@ -37,7 +36,6 @@
         UIButton *button = [[UIButton alloc] initWithFrame:frame];
         button.backgroundColor = [UIColor clearColor];
         [button setTitle:title forState:UIControlStateNormal];
-        [button setTitleColor:[[SRMCalendarAppearance appearanceDictionary] colorForKey:@"CalendarHeaderColor"] forState:UIControlStateNormal];
         button.titleLabel.font = [UIFont fontWithName:@"Avenir-Medium" size:14];
         button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
         [self addSubview:button];
@@ -50,10 +48,9 @@
     }
     
     // border view
-    self.borderView = [[UIView alloc] initWithFrame:CGRectMake(0, SRMDayHeaderHeight/2-14, width, 28)];
-    self.borderView.layer.borderColor = [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"CalendarHeaderColor"].CGColor;
-    self.borderView.layer.borderWidth = 1.2;
-    self.borderView.layer.cornerRadius = 14;
+    _borderView = [[UIView alloc] initWithFrame:CGRectMake(0, SRMDayHeaderHeight/2-14, width, 28)];
+    _borderView.layer.borderWidth = 1.2;
+    _borderView.layer.cornerRadius = 14;
     [self addSubview:self.borderView];
 
     // shadow
@@ -65,6 +62,21 @@
     
     // init
     [self setBorderViewPos:0 animated:NO];
+}
+
+- (void)tintColorDidChange
+{
+    self.borderView.layer.borderColor = self.tintColor.CGColor;
+    for (UIButton *button in _buttonArray) {
+        [button setTitleColor:self.tintColor forState:UIControlStateNormal];
+    }
+    
+    CATransition *transition = [CATransition animation];
+    transition.type = kCATransitionFade;
+    transition.duration = 0.5;
+    [self.layer addAnimation:transition forKey:nil];
+
+    [self setNeedsDisplay];
 }
 
 - (void)click:(id)sender

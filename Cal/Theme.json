@@ -5,7 +5,9 @@
         "HeaderTextColorFull": "D1E6E2",
         "ToolbarTextColor": "FFFFFF",
         "MonthHorizontalBorderColor": "D1E6E2",
-        "MonthVerticalBorderColor": "D1E6E2"
+        "MonthVerticalBorderColor": "D1E6E2",
+        "MonthWeekdayTextColor": "DFEBE9",
+        "WeekCircleColor": "ECF4F2"
     },
     
     "theme_1": {
@@ -14,7 +16,9 @@
         "HeaderTextColorFull": "EDCABF",
         "ToolbarTextColor": "FFFFFF",
         "MonthHorizontalBorderColor": "EDCABF",
-        "MonthVerticalBorderColor": "EDCABF"
+        "MonthVerticalBorderColor": "EDCABF",
+        "MonthWeekdayTextColor": "EDCABF",
+        "WeekCircleColor": "EDCABF",
     },
     
     "theme_2": {
@@ -23,7 +27,9 @@
         "HeaderTextColorFull": "646464",
         "ToolbarTextColor": "FFFFFF",
         "MonthHorizontalBorderColor": "646464",
-        "MonthVerticalBorderColor": "646464"
+        "MonthVerticalBorderColor": "646464",
+        "MonthWeekdayTextColor": "AAAAAA",
+        "WeekCircleColor": "DDDDDD"
 
     }
 }

@@ -12,4 +12,6 @@
 
 - (void)setCirclePos:(NSInteger)weekday animated:(BOOL)animated;
 
+@property (nonatomic, strong) UIColor *circleColor;
+
 @end

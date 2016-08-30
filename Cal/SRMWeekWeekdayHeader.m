@@ -8,7 +8,6 @@
 
 #import "SRMWeekWeekdayHeader.h"
 #import "SRMCalendarConstance.h"
-#import "SRMCalendarAppearance.h"
 
 @interface SRMWeekWeekdayHeader ()
 
@@ -43,7 +42,7 @@
         UILabel *label = [[UILabel alloc] initWithFrame:labelRect];
         label.text = self.weekday[i];
         label.textAlignment = NSTextAlignmentCenter;
-        label.textColor = [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"WeekViewWeekdayFontColor"];
+        label.textColor = [UIColor colorWithWhite:0.9 alpha:1];
         label.font = [UIFont fontWithName:@"Avenir" size:10];
         [self addSubview:label];
         labelRect.origin.x += width;
@@ -55,7 +54,7 @@
                                                               SRMWeekViewDayCircleRadius*2,
                                                               SRMWeekViewDayCircleRadius*2)];
     self.dayCircle.layer.cornerRadius = SRMWeekViewDayCircleRadius;
-    self.dayCircle.backgroundColor = [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"WeekViewDayCircleColor"];
+    self.dayCircle.backgroundColor = _circleColor;
     [self addSubview:self.dayCircle];
 }
 
@@ -76,6 +75,14 @@
     } else {
         self.dayCircle.frame = newFrame;
     }
+}
+
+#pragma mark - Theme Properties
+
+- (void)setCircleColor:(UIColor *)circleColor
+{
+    _circleColor = circleColor;
+    self.dayCircle.backgroundColor = circleColor;
 }
 
 

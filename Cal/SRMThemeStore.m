@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) NSMutableDictionary *monthThemes;
 
+@property (nonatomic, strong) NSDictionary *currentTheme;
+
 @end
 
 @implementation SRMThemeStore
@@ -86,6 +88,13 @@
     return allThemes[theme];
 }
 
+- (NSDictionary *)monthThemesForYear:(NSInteger)year month:(NSInteger)month
+{
+    NSString *themeName = self.monthThemes[[NSString stringWithFormat:@"%lu-%lu", year, month]];
+    NSDictionary *themeDic = [self loadTheme:themeName];
+    return themeDic ? themeDic : [self loadTheme:@"theme_0"];
+}
+
 #pragma mark - Public
 
 - (UIImage *)themeImageForNum:(NSInteger)num
@@ -95,12 +104,11 @@
     return [UIImage imageWithContentsOfFile:imagePath];
 }
 
-- (NSDictionary *)monthThemesForYear:(NSInteger)year month:(NSInteger)month
-{
-    NSString *themeName = self.monthThemes[[NSString stringWithFormat:@"%lu-%lu", year, month]];
-    NSDictionary *themeDic = [self loadTheme:themeName];
-    return themeDic ? themeDic : [self loadTheme:@"theme_0"];
-}
+//- (void)setCurrentThemeYear:(NSInteger)year month:(NSInteger)month
+//{
+//    _currentTheme = [self monthThemesForYear:year month:month];
+//    
+//}
 
 - (void)setTheme:(NSInteger)num forYear:(NSInteger)year month:(NSInteger)month
 {

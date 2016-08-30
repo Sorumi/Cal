@@ -18,6 +18,7 @@
 #import "SRMCalendarToolbar.h"
 #import "SRMMonthDayCell.h"
 #import "SRMWeekDayCell.h"
+#import "SRMMonthWeekdayHeader.h"
 #import "SRMWeekWeekdayHeader.h"
 #import "SRMMonthBoardView.h"
 
@@ -64,6 +65,7 @@
 @property (weak, nonatomic) IBOutlet SRMCalendarToolbar *toolbar;
 
 
+@property (weak, nonatomic) IBOutlet SRMMonthWeekdayHeader *monthWeekdayHeader;
 @property (weak, nonatomic) IBOutlet SRMWeekWeekdayHeader *weekWeekdayHeader;
 @property (weak, nonatomic) IBOutlet UICollectionView *monthCollectionView;
 @property (weak, nonatomic) IBOutlet UICollectionView *weekCollectionView;
@@ -759,28 +761,21 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
                          _toolbar.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
                          _toolbar.toollbarTextColor =  [UIColor colorWithString:theme[@"ToolbarTextColor"]];
                          
+                         _monthWeekdayHeader.weekdayTextColor = [UIColor colorWithString:theme[@"MonthWeekdayTextColor"]];
+                         
                          [_headerFrontView updateTheme];
-                     }];    
+                     }];
+    
+    _dayHeader.tintColor = [UIColor colorWithString:theme[@"HeaderColor"]];
+    _weekWeekdayHeader.circleColor = [UIColor colorWithString:theme[@"WeekCircleColor"]];
 }
 
 - (void)selectTheme
 {
-    NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:_selectedYear month:_selectedMonth];
     SRMMonthBoardView *board = (SRMMonthBoardView *)[_monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:_monthPage]];
+    [board updateThemeAnimate:YES];
     
-    
-    [UIView animateWithDuration:0.5
-                     animations:^{
-                         _headerBackView.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
-                         _headerFrontView.headerTextColorNormal = [UIColor colorWithString:theme[@"HeaderTextColorNormal"]];
-                         _headerFrontView.headerTextColorFull = [UIColor colorWithString:theme[@"HeaderTextColorFull"]];
-                         
-                         _toolbar.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
-                         _toolbar.toollbarTextColor =  [UIColor colorWithString:theme[@"ToolbarTextColor"]];
-                         
-                         [_headerFrontView updateTheme];
-                         [board updateThemeAnimate:YES];
-                     }];
+    [self updateTheme];
 }
 
 #pragma mark - Color
@@ -1026,12 +1021,21 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+{    
     if (tableView == _monthItemTableView && indexPath.section == 1) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"DetailNavigation"];
         SRMEventDetailViewController *vc = nvc.viewControllers[0];
         NSArray *items = [[SRMEventStore sharedStore] recentEvents];
+        vc.event = items[indexPath.row];
+        
+        [self presentViewController:nvc animated:YES completion:nil];
+        
+    } else if (tableView == _dayItemTableView && indexPath.section == 1) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"DetailNavigation"];
+        SRMEventDetailViewController *vc = nvc.viewControllers[0];
+        NSArray *items = [[SRMEventStore sharedStore] dayEvents:self.date];
         vc.event = items[indexPath.row];
         
         [self presentViewController:nvc animated:YES completion:nil];

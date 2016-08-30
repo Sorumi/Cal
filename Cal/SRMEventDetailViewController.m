@@ -123,7 +123,7 @@
         [self cell:_locationCell setHidden:YES];
     }
     
-    if (_event.notes) {
+    if (_event.hasNotes) {
         _noteLabel.text = _event.notes;
          [self cell:_noteCell setHeight:[self heightForLabel:_noteLabel]];
     } else {
@@ -141,7 +141,7 @@
         _endTimeLabel.text = [tool timeFormat:_event.endDate];
     }
     
-    if (_event.recurrenceRules.count > 0) {
+    if (_event.hasRecurrenceRules) {
         EKRecurrenceRule *rule = _event.recurrenceRules[0];
         switch (rule.frequency) {
             case EKRecurrenceFrequencyDaily:
@@ -175,7 +175,7 @@
         [self cell:_endRepeatCell setHidden:YES];
     }
     
-    if (_event.alarms.count > 0) {
+    if (_event.hasAlarms) {
         EKAlarm *alarm = _event.alarms[0];
         NSDate *date;
         if (alarm.absoluteDate) {
@@ -321,7 +321,6 @@
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
     }
-
 }
 
 #pragma mark - <UITableViewDelegate>

@@ -19,6 +19,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *monthViewMonthLabel;
 @property (nonatomic, weak) IBOutlet UIButton *prevButton;
 @property (nonatomic, weak) IBOutlet UIButton *nextButton;
+@property (nonatomic, weak) IBOutlet UIButton *backButton;
 
 @property (nonatomic, weak) IBOutlet UILabel *weekViewDayLable;
 @property (nonatomic, weak) IBOutlet UILabel *weekViewMonthYearLable;
@@ -35,6 +36,10 @@
     
     _monthArray = @[@"January", @"February", @"March", @"April", @"May", @"June", @"July", @"August", @"September", @"October", @"November", @"December"];
     _weekArray = @[@"Sunday", @"Monday", @"Tuesday", @"Wednesday", @"Thursday", @"Friday", @"Saturday"];
+    
+    _backButton.titleLabel.font = [UIFont iconfontOfSize:20];
+    [_backButton setTitle:[NSString iconfontIconStringForEnum:IFArrowLeft] forState:UIControlStateNormal];
+    [_backButton setTitleColor:self.tintColor forState:UIControlStateNormal];
     
     _prevButton.titleLabel.font = [UIFont iconfontOfSize:20];
     [_prevButton setTitle:[NSString iconfontIconStringForEnum:IFArrowLeft] forState:UIControlStateNormal];
@@ -54,6 +59,7 @@
     _monthViewMonthLabel.textColor = self.tintColor;
     [_prevButton setTitleColor:self.tintColor forState:UIControlStateNormal];
     [_nextButton setTitleColor:self.tintColor forState:UIControlStateNormal];
+    [_backButton setTitleColor:self.tintColor forState:UIControlStateNormal];
 }
 
 - (void)setMonthHeaderYear:(NSInteger)year month:(NSInteger)month

@@ -10,4 +10,6 @@
 
 @interface SRMMonthWeekdayHeader : UIView
 
+@property (nonatomic, strong) UIColor *weekdayTextColor;
+
 @end

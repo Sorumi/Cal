@@ -7,7 +7,6 @@
 //
 
 #import "SRMMonthDayCell.h"
-#import "SRMCalendarAppearance.h"
 
 @interface SRMMonthDayCell ()
 

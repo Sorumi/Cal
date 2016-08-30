@@ -9,13 +9,16 @@
 #import "SRMRepeatEndViewController.h"
 #import "SRMCalendarTool.h"
 
+#import "UIFont+IconFont.h"
+#import "NSString+IconFont.h"
+
 @interface SRMRepeatEndViewController ()
 
 #pragma mark - IBOutlet
 
 @property (nonatomic) IBOutletCollection(UIView) NSArray *blockView;
-@property (weak, nonatomic) IBOutlet UIImageView *neverImage;
-@property (weak, nonatomic) IBOutlet UIImageView *dateImage;
+@property (weak, nonatomic) IBOutlet UILabel *neverCheckLabel;
+@property (weak, nonatomic) IBOutlet UILabel *dateCheckLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 @property (weak, nonatomic) IBOutlet UIDatePicker *datePicker;
 
@@ -41,10 +44,10 @@
         layer.shadowOpacity = 0.3;
     }
     
-    self.datePicker.datePickerMode = UIDatePickerModeDate;
-    self.datePicker.subviews[0].subviews[1].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
-    self.datePicker.subviews[0].subviews[2].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
-    [self.datePicker addTarget:self action:@selector(datePickerChange:) forControlEvents:UIControlEventValueChanged];
+    _datePicker.datePickerMode = UIDatePickerModeDate;
+    _datePicker.subviews[0].subviews[1].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
+    _datePicker.subviews[0].subviews[2].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
+    [_datePicker addTarget:self action:@selector(datePickerChange:) forControlEvents:UIControlEventValueChanged];
     
     // static table
     self.hideSectionsWithHiddenRows = YES;
@@ -65,13 +68,17 @@
 
 - (void)initilization
 {
+    _neverCheckLabel.font = [UIFont iconfontOfSize:20];
+    _dateCheckLabel.font = [UIFont iconfontOfSize:20];
     if (_date) {
-        self.neverImage.image = [UIImage imageNamed:@"task_icon_unfinished"];
-        self.dateImage.image = [UIImage imageNamed:@"task_icon_finished"];
+        _neverCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareBlank];
+        _dateCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareCheck];
         self.dateLabel.text = [[SRMCalendarTool tool] dateFormat:self.date];
         self.datePicker.date = self.date;
         
     } else {
+        _neverCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareCheck];
+        _dateCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareBlank];
         [self cell:self.datePickerCell setHidden:YES];
         [self reloadDataAnimated:NO];
     }
@@ -81,15 +88,15 @@
 - (void)setEndDate:(BOOL)isEndDate
 {
     if (isEndDate) {
-        self.neverImage.image = [UIImage imageNamed:@"task_icon_unfinished"];
-        self.dateImage.image = [UIImage imageNamed:@"task_icon_finished"];
+        _neverCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareBlank];
+        _dateCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareCheck];
         self.date = self.datePicker.date;
         self.dateLabel.text = [[SRMCalendarTool tool] dateFormat:self.date];
         [self setDatePickerHidden:NO];
         
     } else {
-        self.neverImage.image = [UIImage imageNamed:@"task_icon_finished"];
-        self.dateImage.image = [UIImage imageNamed:@"task_icon_unfinished"];
+        _neverCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareCheck];
+        _dateCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareBlank];
         self.date = nil;
         self.dateLabel.text = @"On date";
         [self setDatePickerHidden:YES];

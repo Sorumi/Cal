@@ -135,6 +135,8 @@
                 if (![self iconForEventIdentifier:event.eventIdentifier]) {
                     [self setIcon:0 forEventIdentifier:event.eventIdentifier];
                 }
+                
+//                NSLog(@"%@ %@", event.title, event.eventIdentifier);
             }
             [self saveChanges];
             self.privateRecentEvents = systemEvents;
