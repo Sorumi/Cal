@@ -10,7 +10,7 @@
 
 @interface SRMMonthDayCell ()
 
-//@property (weak, nonatomic) IBOutlet SRMMonthDayTriangleView *triangleView;
+@property (weak, nonatomic) IBOutlet SRMMonthDayTriangleView *triangleView;
 
 @end
 
@@ -35,7 +35,7 @@
 
 - (void)setToday:(BOOL)isToday
 {
-//    self.triangleView.backgroundColor = isToday ? [[SRMCalendarAppearance appearanceDictionary] colorForKey:@"CalendarMonthBorderColor"] : nil;
+    self.triangleView.backgroundColor = isToday ? [UIColor colorWithWhite:0.8 alpha:1] : nil;
 }
 
 

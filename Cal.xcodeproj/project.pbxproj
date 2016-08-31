@@ -19,6 +19,7 @@
 		4D1E5D621D46F95A0057DC76 /* SRMCalendarTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D611D46F95A0057DC76 /* SRMCalendarTool.m */; };
 		4D1E5D651D4705BE0057DC76 /* SRMCalendarHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1E5D641D4705BE0057DC76 /* SRMCalendarHeader.m */; };
 		4D1E5D6D1D48D6B70057DC76 /* SRMMonthDayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */; };
+		4D2E89241D76F96B0003279D /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D2E89231D76F95C0003279D /* iconfont.ttf */; };
 		4D3513A51D4ACB0900D2B128 /* SRMCalendarConstance.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513A41D4ACB0900D2B128 /* SRMCalendarConstance.m */; };
 		4D3513A91D4AED2600D2B128 /* SRMWeekDayCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D3513A71D4AED2600D2B128 /* SRMWeekDayCell.m */; };
 		4D3513AA1D4AED2600D2B128 /* SRMWeekDayCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D3513A81D4AED2600D2B128 /* SRMWeekDayCell.xib */; };
@@ -43,7 +44,6 @@
 		4D6783F81D711B5D008513D1 /* SRMSelectCalendarCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D6783F61D711B5D008513D1 /* SRMSelectCalendarCell.xib */; };
 		4D6783FB1D7275DD008513D1 /* SRMColorStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6783FA1D7275DD008513D1 /* SRMColorStore.m */; };
 		4D6783FE1D728CBE008513D1 /* SRMSelectCalendarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6783FD1D728CBE008513D1 /* SRMSelectCalendarViewController.m */; };
-		4D6784001D72B519008513D1 /* iconfont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D6783FF1D72B501008513D1 /* iconfont.ttf */; };
 		4D85DEE41D580F96000B9584 /* SRMDayHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D85DEE31D580F96000B9584 /* SRMDayHeader.m */; };
 		4D95A9971D5872B700526D78 /* XSRMMonthViewFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D95A9961D5872B700526D78 /* XSRMMonthViewFlowLayout.m */; };
 		4D95A99A1D5873B800526D78 /* SRMMonthBoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D95A9991D5873B800526D78 /* SRMMonthBoardView.m */; };
@@ -124,6 +124,7 @@
 		4D1E5D641D4705BE0057DC76 /* SRMCalendarHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMCalendarHeader.m; sourceTree = "<group>"; };
 		4D1E5D691D4891880057DC76 /* SRMCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMCalendarViewController.h; sourceTree = "<group>"; };
 		4D1E5D6C1D48D6B70057DC76 /* SRMMonthDayCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMMonthDayCell.xib; sourceTree = "<group>"; };
+		4D2E89231D76F95C0003279D /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		4D3513A31D4ACB0900D2B128 /* SRMCalendarConstance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMCalendarConstance.h; sourceTree = "<group>"; };
 		4D3513A41D4ACB0900D2B128 /* SRMCalendarConstance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMCalendarConstance.m; sourceTree = "<group>"; };
 		4D3513A61D4AED2600D2B128 /* SRMWeekDayCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMWeekDayCell.h; sourceTree = "<group>"; };
@@ -166,7 +167,6 @@
 		4D6783FA1D7275DD008513D1 /* SRMColorStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMColorStore.m; sourceTree = "<group>"; };
 		4D6783FC1D728CBE008513D1 /* SRMSelectCalendarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMSelectCalendarViewController.h; sourceTree = "<group>"; };
 		4D6783FD1D728CBE008513D1 /* SRMSelectCalendarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMSelectCalendarViewController.m; sourceTree = "<group>"; };
-		4D6783FF1D72B501008513D1 /* iconfont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = iconfont.ttf; sourceTree = "<group>"; };
 		4D85DEE21D580F96000B9584 /* SRMDayHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMDayHeader.h; sourceTree = "<group>"; };
 		4D85DEE31D580F96000B9584 /* SRMDayHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMDayHeader.m; sourceTree = "<group>"; };
 		4D85DEE51D58632B000B9584 /* SRMMonthViewLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMMonthViewLayout.h; sourceTree = "<group>"; };
@@ -471,7 +471,7 @@
 		4DD6CFC61D66B902009A686A /* Font */ = {
 			isa = PBXGroup;
 			children = (
-				4D6783FF1D72B501008513D1 /* iconfont.ttf */,
+				4D2E89231D76F95C0003279D /* iconfont.ttf */,
 				4DD6CFC81D66B902009A686A /* FontAwesome.ttf */,
 			);
 			name = Font;
@@ -603,13 +603,13 @@
 				4D1E5CA01D44EAED0057DC76 /* LaunchScreen.storyboard in Resources */,
 				4D1E5C9B1D44EAED0057DC76 /* Main.storyboard in Resources */,
 				4D1E5C9D1D44EAED0057DC76 /* Assets.xcassets in Resources */,
-				4D6783E61D7058C1008513D1 /* SRMIconCell.xib in Resources */,
 				4DB2A9D71D536D7F00DE9693 /* Localizable.strings in Resources */,
 				4DD6CFB61D65E159009A686A /* Theme.json in Resources */,
 				4DD6CFBA1D65EFFA009A686A /* Theme.bundle in Resources */,
 				4D95A9BE1D5C1DA300526D78 /* Stamp.bundle in Resources */,
-				4D6784001D72B519008513D1 /* iconfont.ttf in Resources */,
+				4D2E89241D76F96B0003279D /* iconfont.ttf in Resources */,
 				4DD6CFCA1D66B902009A686A /* FontAwesome.ttf in Resources */,
+				4D6783E61D7058C1008513D1 /* SRMIconCell.xib in Resources */,
 				4D6783F81D711B5D008513D1 /* SRMSelectCalendarCell.xib in Resources */,
 				4D3513D81D4EDD8900D2B128 /* SRMListHeader.xib in Resources */,
 				4DD6CFA51D5EB732009A686A /* SRMBoardStampCell.xib in Resources */,

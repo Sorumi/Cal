@@ -30,7 +30,7 @@
     layer.shadowOpacity = 0.5;
     
     IFIcon mainIFIcon[] = {IFPaintRoll, IFAdd};
-    IFIcon appearanceIFIcon[] = {IFArrowLeft, IFSquareSelect, IFCalendar};
+    IFIcon appearanceIFIcon[] = {IFArrowLeft, IFGhost, IFPalette};
     
     for (UIButton *button in _mainButtons) {
         button.titleLabel.font = [UIFont iconfontOfSize:20];

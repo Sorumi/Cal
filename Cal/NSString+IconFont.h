@@ -28,6 +28,9 @@ typedef NS_ENUM(NSInteger, IFIcon) {
     IFAdd,
     IFDefault,
     IFSquareSelect,
+    IFEdit,
+    IFPalette,
+    IFGhost,
     IFTriangleSmall
 };
 

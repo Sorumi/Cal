@@ -290,7 +290,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)eventStoreDidChanged
 {
     [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
-    [[SRMEventStore sharedStore] fetchDayEvents:self.today];
+    [[SRMEventStore sharedStore] fetchDayEvents:self.date];
 }
 - (EKEvent *)dayEventForRow:(NSInteger)row
 {
@@ -318,12 +318,21 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     [_dayItemCollectionView reloadData];
 }
 
+- (void)didFetchDaysEventInMonth
+{
+    [_monthCollectionView reloadData];
+}
+
 #pragma mark - Private
 
 - (void)monthScrollToDate:(NSDate *)date animated:(BOOL)animated
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     if ([tool monthsFromDate:tool.minimumDate toDate:date] > 0 && [tool monthsFromDate:date toDate:tool.maximumDate] > 0 ) {
+        
+        //
+        [[SRMEventStore sharedStore] fetchDaysEventsInMonth:date];
+        
         NSInteger monthCount = [tool monthsFromDate:tool.minimumDate toDate:date];
         CGFloat offsetX = _viewWidth * monthCount;
         [_monthCollectionView setContentOffset:CGPointMake(offsetX, 0) animated:animated];
@@ -1037,6 +1046,10 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         SRMEventDetailViewController *vc = nvc.viewControllers[0];
         NSArray *items = [[SRMEventStore sharedStore] dayEvents:self.date];
         vc.event = items[indexPath.row];
+        vc.didDelete = ^{
+            [[SRMEventStore sharedStore] fetchDayEvents:_date];
+            
+        };
         
         [self presentViewController:nvc animated:YES completion:nil];
     }
@@ -1120,11 +1133,13 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
             [cell setCurrentMonthDate:indexPath.row - blankDayCount + 1];
         }
         
-//        if ([tool date:date isEqualToDate:_today]) {
-//            [cell setToday:YES];
-//        } else {
-//            [cell setToday:NO];
-//        }
+        NSArray *items = [[SRMEventStore sharedStore] dayEvents:date];
+        
+        if ([tool date:date isEqualToDate:_today] || items.count > 0) {
+            [cell setToday:YES];
+        } else {
+            [cell setToday:NO];
+        }
         
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];

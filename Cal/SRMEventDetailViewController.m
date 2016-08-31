@@ -71,13 +71,28 @@
     self.repeatType = @[@"Never", @"Every Day", @"Every Week", @"Every 2 Weeks", @"Every Month", @"Every Year"];
     
     // tool bar
-    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"system_icon_delete"] style:UIBarButtonItemStylePlain target:self action:@selector(editEvent)];
+    UIBarButtonItem *editButton = [[UIBarButtonItem alloc] initWithTitle:[NSString iconfontIconStringForEnum:IFEdit] style:UIBarButtonItemStylePlain target:self action:@selector(editEvent)];
+    [editButton setTitleTextAttributes:@{
+                                         NSFontAttributeName: [UIFont iconfontOfSize:20]
+                                         }
+                              forState:UIControlStateNormal];
     
-    UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"system_icon_delete"] style:UIBarButtonItemStylePlain target:self action:@selector(deleteEvent)];
+    UIBarButtonItem *deleteButton = [[UIBarButtonItem alloc] initWithTitle:[NSString iconfontIconStringForEnum:IFTrashCan] style:UIBarButtonItemStylePlain target:self action:@selector(deleteEvent)];
+    [deleteButton setTitleTextAttributes:@{
+                                         NSFontAttributeName: [UIFont iconfontOfSize:20]
+                                         }
+                              forState:UIControlStateNormal];
     
-    self.toolbarItems = [NSArray arrayWithObjects:editButton,
+    UIBarButtonItem *fixedSpaceItem = [self barButtonSystemItem:UIBarButtonSystemItemFixedSpace];
+    [fixedSpaceItem setWidth:10.0f];
+
+    self.toolbarItems = [NSArray arrayWithObjects:
+                         fixedSpaceItem,
+                         editButton,
                          [self barButtonSystemItem:UIBarButtonSystemItemFlexibleSpace],
-                         deleteButton, nil];
+                         deleteButton,
+                         fixedSpaceItem,
+                         nil];
     // shadow
     for (UIView *view in self.blockView) {
         
@@ -318,6 +333,9 @@
     }
     
     if (isSuccess) {
+        if (self.didDelete) {
+            self.didDelete();
+        }
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
     }

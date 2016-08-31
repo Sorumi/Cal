@@ -14,6 +14,7 @@
 @optional
 - (void)didFetchRecentEvent;
 - (void)didFetchDayEvent;
+- (void)didFetchDaysEventInMonth;
 
 @end
 
@@ -30,6 +31,7 @@
 
 - (void)fetchRecentEvents:(NSDate *)fromDate;
 - (void)fetchDayEvents:(NSDate *)date;
+- (void)fetchDaysEventsInMonth:(NSDate *)date;
 - (NSArray *)dayEvents:(NSDate *)date;
 - (NSArray *)dayEventsAllDay:(NSDate *)date;
 - (NSArray *)dayEventsNotAllDay:(NSDate *)date;

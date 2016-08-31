@@ -223,7 +223,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     _locationText.text = _event.location;
     _noteText.text = _event.notes;
     self.calendarNum = [[[SRMEventStore sharedStore] allCalendars] indexOfObject:_event.calendar];
-    self.iconNum = [[[SRMIconStore sharedStore] allIcons][[[SRMEventStore sharedStore] iconForEventIdentifier:_event.eventIdentifier]] integerValue];
+    self.iconNum = [[SRMEventStore sharedStore] iconForEventIdentifier:_event.eventIdentifier];
     
     if (_event.recurrenceRules.count > 0) {
         EKRecurrenceRule *rule = _event.recurrenceRules[0];
@@ -327,7 +327,8 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)setIconNum:(NSInteger)iconNum
 {
     _iconNum = iconNum;
-    [_iconButton setTitle:[NSString iconfontIconStringForEnum:iconNum] forState:UIControlStateNormal];
+    NSInteger num = [[[SRMIconStore sharedStore] allIcons][iconNum] integerValue];
+    [_iconButton setTitle:[NSString iconfontIconStringForEnum:num] forState:UIControlStateNormal];
 }
 
 - (void)setCalendarNum:(NSInteger)calendarNum

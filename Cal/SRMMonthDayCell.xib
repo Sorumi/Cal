@@ -20,17 +20,34 @@
                         <color key="textColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k8t-Wq-Dei" customClass="SRMMonthDayTriangleView">
+                        <rect key="frame" x="35" y="0.0" width="15" height="15"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="15" id="Pch-QI-v6r"/>
+                            <constraint firstAttribute="height" constant="15" id="qcL-h9-mgG"/>
+                        </constraints>
+                    </view>
                 </subviews>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="k8t-Wq-Dei" firstAttribute="leading" secondItem="HXr-YZ-Jtk" secondAttribute="leading" id="BWt-XY-VdQ"/>
+                <constraint firstItem="k8t-Wq-Dei" firstAttribute="top" secondItem="HXr-YZ-Jtk" secondAttribute="top" id="Pne-0Q-Jfn"/>
+                <constraint firstAttribute="trailing" secondItem="k8t-Wq-Dei" secondAttribute="trailing" id="ZqO-HE-h3D"/>
                 <constraint firstItem="zGM-3c-7Hb" firstAttribute="top" secondItem="HXr-YZ-Jtk" secondAttribute="top" constant="8" id="rZR-gZ-REI"/>
                 <constraint firstItem="zGM-3c-7Hb" firstAttribute="leading" secondItem="HXr-YZ-Jtk" secondAttribute="leading" constant="8" id="ukd-zP-ww7"/>
             </constraints>
             <size key="customSize" width="50.5" height="50"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="BWt-XY-VdQ"/>
+                </mask>
+            </variation>
             <connections>
                 <outlet property="dateLabel" destination="zGM-3c-7Hb" id="joU-Zc-j9a"/>
+                <outlet property="triangleView" destination="k8t-Wq-Dei" id="EBq-4i-4Gm"/>
             </connections>
             <point key="canvasLocation" x="287" y="449"/>
         </collectionViewCell>
