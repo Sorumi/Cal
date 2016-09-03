@@ -333,9 +333,6 @@
     }
     
     if (isSuccess) {
-        if (self.didDelete) {
-            self.didDelete();
-        }
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
     }

@@ -11,6 +11,8 @@
 #import "SRMStampStore.h"
 #import "SRMMonthBoardView.h"
 
+#import "ColorUtils.h"
+
 @interface SRMBoardStampCell ()
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
@@ -50,7 +52,30 @@
     _stamp = stamp;
     self.imageView.image = [[SRMStampStore sharedStore] stampForName:stamp.name];
     self.imageView.alpha = 0.8;
+    
+//    [self setNeedsDisplay];
 }
+
+//- (void)drawRect:(CGRect)rect
+//{
+//    CGFloat width = _imageView.image.size.width;
+//    CGFloat height = _imageView.image.size.height;
+//    
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextSetStrokeColorWithColor(context, [UIColor colorWithString:@"DDDDDD"].CGColor);
+//    CGFloat dash[] = {3, 4};
+//    CGContextSetLineWidth(context, 0.5f);
+//    CGContextSetLineDash(context, 0, dash, 2);
+//    
+//    CGContextMoveToPoint(context, 10, 10);
+//    CGContextAddLineToPoint(context, width+10, 10);
+//    CGContextAddLineToPoint(context, width+10, height+10);
+//    CGContextAddLineToPoint(context, 10, height+10);
+//    CGContextAddLineToPoint(context, 10, 10);
+//    
+//    
+//    CGContextStrokePath(context);
+//}
 
 - (void)moveStamp:(UIPanGestureRecognizer *)gesture
 {

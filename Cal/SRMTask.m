@@ -30,5 +30,7 @@
 }
 
 
+//- (void)setFinish:(NSDate *)finished
+
 
 @end

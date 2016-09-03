@@ -14,6 +14,4 @@
 
 @property (nonatomic, strong) EKEvent *event;
 
-@property (nonatomic, copy) void (^didDelete)();
-
 @end

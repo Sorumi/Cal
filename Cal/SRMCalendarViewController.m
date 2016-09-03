@@ -8,7 +8,6 @@
 
 
 #import <EventKit/EventKit.h>
-#import "ColorUtils.h"
 
 #import "SRMCalendarViewController.h"
 #import "SRMCalendarConstance.h"
@@ -142,6 +141,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         [_weekWeekdayHeader setCirclePos:[[SRMCalendarTool tool] weekdayOfDate:_date] animated:YES];
     }
     [[SRMEventStore sharedStore] fetchDayEvents:date];
+    [[SRMThemeStore sharedStore] setCurrentThemeYear:_selectedYear month:_selectedMonth];
     [self updateTheme];
 
 }
@@ -256,12 +256,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(eventStoreDidChanged)
                                                  name:EKEventStoreChangedNotification object:nil];
-    
-    // appearance
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(selectTheme)
-                                                 name:@"SRMNotificationThemeSelect"
-                                               object:nil];
 
 }
 
@@ -289,8 +283,13 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)eventStoreDidChanged
 {
+//    NSLog(@"event change!");
     [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
+    [[SRMEventStore sharedStore] fetchDaysEventsInMonth:self.date];
+    
+//    if (self.viewMode == SRMCalendarWeekViewMode) {
     [[SRMEventStore sharedStore] fetchDayEvents:self.date];
+//    }
 }
 - (EKEvent *)dayEventForRow:(NSInteger)row
 {
@@ -759,31 +758,36 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)updateTheme
 {
-    NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:_selectedYear month:_selectedMonth];
+    SRMThemeStore *themeStore = [SRMThemeStore sharedStore];
     
     [UIView animateWithDuration:0.5
                      animations:^{
-                         _headerBackView.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
-                         _headerFrontView.headerTextColorNormal = [UIColor colorWithString:theme[@"HeaderTextColorNormal"]];
-                         _headerFrontView.headerTextColorFull = [UIColor colorWithString:theme[@"HeaderTextColorFull"]];
                          
-                         _toolbar.backgroundColor = [UIColor colorWithString:theme[@"HeaderColor"]];
-                         _toolbar.toollbarTextColor =  [UIColor colorWithString:theme[@"ToolbarTextColor"]];
+                         _headerBackView.backgroundColor = [themeStore colorForName:@"HeaderColor"];
+                         _headerFrontView.headerTextColorNormal = [themeStore colorForName:@"HeaderTextColorNormal"];
+                         _headerFrontView.headerTextColorFull = [themeStore colorForName:@"HeaderTextColorFull"];
                          
-                         _monthWeekdayHeader.weekdayTextColor = [UIColor colorWithString:theme[@"MonthWeekdayTextColor"]];
+                         _toolbar.backgroundColor = [themeStore colorForName:@"HeaderColor"];
+                         _toolbar.toollbarTextColor = [themeStore colorForName:@"ToolbarTextColor"];
+                         
+                         _monthWeekdayHeader.weekdayTextColor = [themeStore colorForName:@"MonthWeekdayTextColor"];
+
+                         
                          
                          [_headerFrontView updateTheme];
                      }];
     
-    _dayHeader.tintColor = [UIColor colorWithString:theme[@"HeaderColor"]];
-    _weekWeekdayHeader.circleColor = [UIColor colorWithString:theme[@"WeekCircleColor"]];
+    _dayHeader.tintColor = [themeStore colorForName:@"HeaderColor"];
+    _weekWeekdayHeader.circleColor = [themeStore colorForName:@"WeekCircleColor"];
+
 }
 
 - (void)selectTheme
 {
     SRMMonthBoardView *board = (SRMMonthBoardView *)[_monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:_monthPage]];
     [board updateThemeAnimate:YES];
-    
+
+    [_monthCollectionView reloadData];
     [self updateTheme];
 }
 
@@ -872,6 +876,18 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     }
 }
 
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    if (scrollView == _monthCollectionView) {
+        
+        NSDate *prevMonth = [[SRMCalendarTool tool] dateByAddingMonths:-1 toDate:_date];
+        NSDate *nextMonth = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:_date];
+        [[SRMEventStore sharedStore] fetchDaysEventsInMonth:prevMonth];
+        [[SRMEventStore sharedStore] fetchDaysEventsInMonth:nextMonth];
+        
+    }
+}
+
 // use finger ti scroll
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
@@ -885,6 +901,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
         if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
             self.date = currentBeginningDate;
+            //
+            
         }
         self.monthPage = page;
         
@@ -1046,10 +1064,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         SRMEventDetailViewController *vc = nvc.viewControllers[0];
         NSArray *items = [[SRMEventStore sharedStore] dayEvents:self.date];
         vc.event = items[indexPath.row];
-        vc.didDelete = ^{
-            [[SRMEventStore sharedStore] fetchDayEvents:_date];
-            
-        };
         
         [self presentViewController:nvc animated:YES completion:nil];
     }
@@ -1125,22 +1139,28 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         
         if (indexPath.row < blankDayCount) {
             [cell setOtherMonthDate:previousMonthDayCount - blankDayCount + indexPath.row + 1];
+            [cell setClear];
             
         } else if (indexPath.row > blankDayCount + currentMonthDayCount - 1) {
             [cell setOtherMonthDate:indexPath.row - blankDayCount - currentMonthDayCount + 1];
+            [cell setClear];
             
         } else {
             [cell setCurrentMonthDate:indexPath.row - blankDayCount + 1];
+            
+            if ([tool date:date isEqualToDate:_today]) {
+                [cell setToday];
+                
+            } else if ([[SRMEventStore sharedStore] dayEvents:date].count > 0) {
+                [cell setEvent];
+                
+            } else {
+                [cell setClear];
+            }
+        
+            
         }
-        
-        NSArray *items = [[SRMEventStore sharedStore] dayEvents:date];
-        
-        if ([tool date:date isEqualToDate:_today] || items.count > 0) {
-            [cell setToday:YES];
-        } else {
-            [cell setToday:NO];
-        }
-        
+    
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:NO scrollPosition:UICollectionViewScrollPositionNone];
         
@@ -1250,6 +1270,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         
     } else if (collectionView == _appearanceCollectionView && self.appearanceMode == SRMAppearanceEditThemeMode) {
         [[SRMThemeStore sharedStore] setTheme:indexPath.row forYear:_selectedYear month:_selectedMonth];
+        [self selectTheme];
     }
 }
 

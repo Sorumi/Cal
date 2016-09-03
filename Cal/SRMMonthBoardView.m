@@ -6,13 +6,11 @@
 //  Copyright © 2016年 Sorumi. All rights reserved.
 //
 
-#import "ColorUtils.h"
 #import "SRMMonthBoardView.h"
 #import "SRMMonthBoardViewLayout.h"
 #import "SRMBoardStampCell.h"
 #import "SRMStamp.h"
 #import "SRMStampStore.h"
-
 #import "SRMThemeStore.h"
 
 @interface SRMMonthBoardView () <UICollectionViewDataSource, UICollectionViewDelegate, SRMMonthBoardViewLayoutDelegate>
@@ -70,20 +68,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     CGContextStrokePath(context);
 }
 
-#pragma mark - Theme Properties
-
-//-(void)setHorizontalBorderColor:(UIColor *)horizontalBorderColor
-//{
-//    _horizontalBorderColor = horizontalBorderColor;
-//    [self setNeedsDisplay];
-//}
-//
-//-(void)setVerticalBorderColor:(UIColor *)verticalBorderColor
-//{
-//    _verticalBorderColor = verticalBorderColor;
-//    [self setNeedsDisplay];
-//}
-
 #pragma mark - Public
 
 - (void)setEditMode:(BOOL)isEditMode
@@ -107,8 +91,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)updateThemeAnimate:(BOOL)isAnimate
 {
     NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:_year month:_month];
-    _horizontalBorderColor = [UIColor colorWithString:theme[@"MonthHorizontalBorderColor"]];
-    _verticalBorderColor = [UIColor colorWithString:theme[@"MonthVerticalBorderColor"]];
+    _horizontalBorderColor = [[SRMThemeStore sharedStore] colorOfTheme:theme forName:@"MonthHorizontalBorderColor"];
+    _verticalBorderColor = [[SRMThemeStore sharedStore] colorOfTheme:theme forName:@"MonthVerticalBorderColor"];
 
     [self setNeedsDisplay];
     if (isAnimate) {

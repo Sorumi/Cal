@@ -6,6 +6,8 @@
         "ToolbarTextColor": "FFFFFF",
         "MonthHorizontalBorderColor": "D1E6E2",
         "MonthVerticalBorderColor": "D1E6E2",
+        "MonthEventTriangleColor": "DDDDDD",
+        "MonthTodayTriangleColor": "D1E6E2",
         "MonthWeekdayTextColor": "DFEBE9",
         "WeekCircleColor": "ECF4F2"
     },
@@ -17,6 +19,8 @@
         "ToolbarTextColor": "FFFFFF",
         "MonthHorizontalBorderColor": "EDCABF",
         "MonthVerticalBorderColor": "EDCABF",
+        "MonthEventTriangleColor": "DDDDDD",
+        "MonthTodayTriangleColor": "EDCABF",
         "MonthWeekdayTextColor": "EDCABF",
         "WeekCircleColor": "EDCABF",
     },
@@ -28,6 +32,8 @@
         "ToolbarTextColor": "FFFFFF",
         "MonthHorizontalBorderColor": "646464",
         "MonthVerticalBorderColor": "646464",
+        "MonthEventTriangleColor": "DDDDDD",
+        "MonthTodayTriangleColor": "646464",
         "MonthWeekdayTextColor": "AAAAAA",
         "WeekCircleColor": "DDDDDD"
 

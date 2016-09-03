@@ -18,5 +18,9 @@
 
 - (NSDictionary *)monthThemesForYear:(NSInteger)year month:(NSInteger)month;
 - (void)setTheme:(NSInteger)num forYear:(NSInteger)year month:(NSInteger)month;
+- (void)setCurrentThemeYear:(NSInteger)year month:(NSInteger)month;
+
+- (UIColor *)colorForName:(NSString *)name;
+- (UIColor *)colorOfTheme:(NSDictionary *)theme forName:(NSString *)name;
 
 @end

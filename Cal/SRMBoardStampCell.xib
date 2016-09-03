@@ -26,7 +26,7 @@
                         <state key="normal" image="stamp_icon_scale"/>
                     </button>
                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MkE-U6-kCS">
-                        <rect key="frame" x="91" y="0.0" width="20" height="20"/>
+                        <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
                         <color key="backgroundColor" white="0.29999999999999999" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="20" id="1bV-mQ-5hW"/>
@@ -47,6 +47,7 @@
                 <constraint firstItem="MXm-7N-bxl" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="3sg-C8-MFo"/>
                 <constraint firstAttribute="bottom" secondItem="MXm-7N-bxl" secondAttribute="bottom" id="M91-iV-FJr"/>
                 <constraint firstItem="GLv-Kf-WHD" firstAttribute="width" secondItem="gTV-IL-0wX" secondAttribute="width" constant="-20" id="QT4-Ge-HZ8"/>
+                <constraint firstItem="MkE-U6-kCS" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="aPW-ze-BAM"/>
                 <constraint firstAttribute="trailing" secondItem="MkE-U6-kCS" secondAttribute="trailing" id="hQk-nx-aLd"/>
                 <constraint firstItem="MkE-U6-kCS" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="r1b-Ya-ZHg"/>
                 <constraint firstItem="GLv-Kf-WHD" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="tio-lD-cKf"/>
@@ -55,6 +56,7 @@
             <size key="customSize" width="111" height="83"/>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="hQk-nx-aLd"/>
                     <exclude reference="3sg-C8-MFo"/>
                 </mask>
             </variation>

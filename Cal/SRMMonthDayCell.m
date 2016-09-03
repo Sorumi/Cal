@@ -7,6 +7,8 @@
 //
 
 #import "SRMMonthDayCell.h"
+#import "SRMThemeStore.h"
+#import "SRMCalendarTool.h"
 
 @interface SRMMonthDayCell ()
 
@@ -23,21 +25,37 @@
 
 - (void)setCurrentMonthDate:(NSInteger)day
 {
-    self.dateLabel.text = [NSString stringWithFormat:@"%lu", day];
-    self.dateLabel.textColor = [UIColor colorWithRed:51/255 green:51/255 blue:51/255 alpha:1];
+    _dateLabel.text = [NSString stringWithFormat:@"%lu", day];
+    _dateLabel.textColor = [UIColor colorWithRed:51/255 green:51/255 blue:51/255 alpha:1];
 }
 
 - (void)setOtherMonthDate:(NSInteger)day
 {
-    self.dateLabel.text = [NSString stringWithFormat:@"%lu", day];
-    self.dateLabel.textColor = [UIColor lightGrayColor];
+    _dateLabel.text = [NSString stringWithFormat:@"%lu", day];
+    _dateLabel.textColor = [UIColor lightGrayColor];
 }
 
-- (void)setToday:(BOOL)isToday
+- (void)setToday
 {
-    self.triangleView.backgroundColor = isToday ? [UIColor colorWithWhite:0.8 alpha:1] : nil;
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
+    NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:[tool yearOfDate:_date] month:[tool monthOfDate:_date]];
+    
+    _triangleView.backgroundColor = [[SRMThemeStore sharedStore] colorOfTheme:theme forName:@"MonthTodayTriangleColor"];
 }
 
+- (void)setEvent
+{
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
+    NSDictionary *theme = [[SRMThemeStore sharedStore] monthThemesForYear:[tool yearOfDate:_date] month:[tool monthOfDate:_date]];
+    
+    _triangleView.backgroundColor = [[SRMThemeStore sharedStore] colorOfTheme:theme forName:@"MonthEventTriangleColor"];
+    
+}
+
+- (void)setClear
+{
+    _triangleView.backgroundColor = nil;
+}
 
 @end
 
@@ -45,8 +63,6 @@
 
 - (void)awakeFromNib
 {
-//    self.backgroundColor = [UIColor redColor];
-    
     UIBezierPath *path = [UIBezierPath bezierPath];
     [path moveToPoint:CGPointMake(0, 0)];
     [path addLineToPoint:CGPointMake(self.frame.size.width, 0)];

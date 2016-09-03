@@ -15,6 +15,8 @@
 
 @interface SRMTaskCell ()
 
+@property (nonatomic, strong) SRMTask *task;
+
 @property (nonatomic) IBOutlet UIView *blockView;
 @property (nonatomic) IBOutlet UIView *categoryColorView;
 @property (nonatomic) IBOutlet UIButton *checkButton;
@@ -45,9 +47,16 @@
     // Configure the view for the selected state
 }
 
+- (IBAction)setFinished:(id)sender {
+    
+    
+    _task.finishDate = _task.finishDate ? nil : [NSDate date];
+    
+}
+
 - (void)setTask:(SRMTask *)task
 {
-    
+    _task = task;
     _titleLable.text = task.title;
     _dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateFormat:task.dueDate];
     

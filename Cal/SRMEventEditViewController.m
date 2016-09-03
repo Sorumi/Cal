@@ -254,11 +254,61 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
         }
     }
     
-//    if (_event.alarms.count > 0) {
-//        EKAlarm *alarm = _event.alarms[0];
-//        NSDate *date;
-//        if (alarm.absoluteDate) {
-//            date = alarm.absoluteDate;
+    if (_event.hasAlarms) {
+        EKAlarm *alarm = _event.alarms[0];
+        
+        if (alarm.absoluteDate && _allDaySwitch.value) {
+            NSDate *date = alarm.absoluteDate;
+            
+            NSInteger days =[[SRMCalendarTool tool] daysFromDate:date toDate:_event.startDate];
+            
+            switch (days) {
+                case 0:
+                    self.reminderMode = SRMEventReminderADOnDay;
+                    break;
+                case 1:
+                    self.reminderMode = SRMEventReminderADOneDay;
+                    break;
+                case 2:
+                    self.reminderMode = SRMEventReminderADTwoDay;
+                    break;
+                case 7:
+                    self.reminderMode = SRMEventReminderADOneWeek;
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+        } else if (alarm.relativeOffset && !_allDaySwitch.value) {
+            NSInteger minutes = alarm.relativeOffset / 60;
+            
+            switch (minutes) {
+                case 0:
+                    self.reminderMode = SRMEventReminderNADOnTime;
+                    break;
+                case -5:
+                    self.reminderMode = SRMEventReminderNADFiveMin;
+                    break;
+                case -15:
+                    self.reminderMode = SRMEventReminderNADFifteenMin;
+                    break;
+                case -30:
+                    self.reminderMode = SRMEventReminderNADThirtyMin;
+                    break;
+                case -60:
+                    self.reminderMode = SRMEventReminderNADOneHour;
+                    break;
+                case -60*24:
+                    self.reminderMode = SRMEventReminderNADOneDay;
+                    break;
+    
+                default:
+                    break;
+            }
+        } else {
+            self.reminderMode = SRMEventReminderNone;
+        }
 //        } else {
 //            NSInteger minute = alarm.relativeOffset / 60;
 //            date = [tool dateByAddingMinutes:minute toDate:_event.startDate];
@@ -270,7 +320,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 //        
 //    } else {
 //        [self cell:_reminderCell setHidden:YES];
-//    }
+    }
 
     
     

@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "SRMThemeStore.h"
 
+#import "ColorUtils.h"
+
 @interface SRMThemeStore ()
 
 @property (nonatomic, strong) NSMutableArray<NSString *> *themePath;
@@ -104,21 +106,30 @@
     return [UIImage imageWithContentsOfFile:imagePath];
 }
 
-//- (void)setCurrentThemeYear:(NSInteger)year month:(NSInteger)month
-//{
-//    _currentTheme = [self monthThemesForYear:year month:month];
-//    
-//}
+- (void)setCurrentThemeYear:(NSInteger)year month:(NSInteger)month
+{
+    _currentTheme = [self monthThemesForYear:year month:month];
+    
+}
 
 - (void)setTheme:(NSInteger)num forYear:(NSInteger)year month:(NSInteger)month
 {
     NSString *themeName = [self.allThemePath[num] componentsSeparatedByString:@"@"][0];
-//    NSDictionary *theme = [self loadTheme:themeName];
     self.monthThemes[[NSString stringWithFormat:@"%lu-%lu", year, month]] = themeName;
-    [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:@"SRMNotificationThemeSelect" object:nil]];
+
     [self saveChanges];
+    [self setCurrentThemeYear:year month:month];
 }
 
+- (UIColor *)colorForName:(NSString *)name
+{
+    return [UIColor colorWithString:_currentTheme[name]];
+}
+
+- (UIColor *)colorOfTheme:(NSDictionary *)theme forName:(NSString *)name
+{
+    return [UIColor colorWithString:theme[name]];
+}
 
 #pragma mark - File
 

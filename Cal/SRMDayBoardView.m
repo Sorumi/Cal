@@ -9,6 +9,8 @@
 #import "SRMDayBoardView.h"
 #import "SRMCalendarConstance.h"
 
+#import "ColorUtils.h"
+
 @implementation SRMDayBoardView
 #define UIColorFromRGB(rgbValue) \
 [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
@@ -22,7 +24,7 @@ alpha:1.0]
     CGRect newFrame = CGRectMake(0, 0, width, SRMDayBoardCellHeight * 24);
     
     self = [super initWithFrame:newFrame];
-    self.backgroundColor = UIColorFromRGB(0xFCFCFC);
+    self.backgroundColor = [UIColor colorWithString:@"FCFCFC"];
 
     return self;
 }
@@ -39,7 +41,7 @@ alpha:1.0]
     textStyle.alignment = NSTextAlignmentLeft;
     
     NSDictionary* textFontAttributes = @{NSFontAttributeName: [UIFont fontWithName: @"Avenir" size:12],
-                                         NSForegroundColorAttributeName: UIColorFromRGB(0xDDDDDD),
+                                         NSForegroundColorAttributeName: [UIColor colorWithString:@"DDDDDD"],
                                          NSParagraphStyleAttributeName: textStyle};
     
     for (int i=0; i<24; i++) {
@@ -50,7 +52,7 @@ alpha:1.0]
     
     // line
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetStrokeColorWithColor(context, UIColorFromRGB(0xDDDDDD).CGColor);
+    CGContextSetStrokeColorWithColor(context, [UIColor colorWithString:@"DDDDDD"].CGColor);
     
     CGContextSetLineWidth(context, 0.5f);
     for (int i=0; i<24; i++) {
@@ -69,8 +71,7 @@ alpha:1.0]
     CAShapeLayer *shapeLayer = [CAShapeLayer layer];
     [shapeLayer setBounds:self.bounds];
     [shapeLayer setPosition:self.center];
-//    [shapeLayer setFillColor:UIColorFromRGB(0xDDDDDD).CGColor];
-    [shapeLayer setStrokeColor:UIColorFromRGB(0xDDDDDD).CGColor];
+    [shapeLayer setStrokeColor:[UIColor colorWithString:@"DDDDDD"].CGColor];
     [shapeLayer setLineWidth:0.5f];
     [shapeLayer setLineJoin:kCALineJoinRound];
     [shapeLayer setLineDashPattern:@[@(3), @(4)]];
