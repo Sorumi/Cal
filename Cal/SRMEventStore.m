@@ -13,9 +13,9 @@
 
 @property (nonatomic, strong) EKEventStore *eventStore;
 
-@property (nonatomic, strong) NSArray<EKEvent *> *privateRecentEvents;
+//@property (nonatomic, strong) NSArray<EKEvent *> *privateRecentEvents;
 @property (nonatomic, strong) NSMutableDictionary *privateDayEvents;
-
+//@property (nonatomic, strong) NSMutableDictionary *privateMonthEvents;
 
 @property (nonatomic, strong) NSArray<EKCalendar *> *calendars;
 
@@ -28,13 +28,13 @@
 
 #pragma mark - Properties
 
-- (NSArray *)recentEvents
-{
-    NSArray *sortedArray = [self.privateRecentEvents sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
-        return [event1.startDate compare:event2.startDate];
-    }];;
-    return sortedArray;
-}
+//- (NSArray *)recentEvents
+//{
+//    NSArray *sortedArray = [self.privateRecentEvents sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
+//        return [event1.startDate compare:event2.startDate];
+//    }];;
+//    return sortedArray;
+//}
 
 - (NSArray<EKCalendar *> *)allCalendars
 {
@@ -116,39 +116,39 @@
     }
 }
 
-- (void)fetchRecentEvents:(NSDate *)fromDate
-{
-    if (!self.isGranted) {
-        return;
-    }
-    NSDate *endDate = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:fromDate];
-    
-    NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:fromDate
-                                                                               endDate:endDate
-                                                                             calendars:nil];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        
-        NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
-        
-        for (EKEvent* event in systemEvents) {
-            if (![self iconForEventIdentifier:event.eventIdentifier]) {
-                [self setIcon:0 forEventIdentifier:event.eventIdentifier];
-            }
-            
-            //                NSLog(@"%@ %@", event.title, event.eventIdentifier);
-        }
-        [self saveChanges];
-        self.privateRecentEvents = systemEvents;
-        
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-
-            [self.delegate didFetchRecentEvent];
-        });
-    });
-
-}
+//- (void)fetchRecentEvents:(NSDate *)fromDate
+//{
+//    if (!self.isGranted) {
+//        return;
+//    }
+//    NSDate *endDate = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:fromDate];
+//    
+//    NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:fromDate
+//                                                                               endDate:endDate
+//                                                                             calendars:nil];
+//    
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        
+//        NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
+//        
+//        for (EKEvent* event in systemEvents) {
+//            if (![self iconForEventIdentifier:event.eventIdentifier]) {
+//                [self setIcon:0 forEventIdentifier:event.eventIdentifier];
+//            }
+//            
+//            //                NSLog(@"%@ %@", event.title, event.eventIdentifier);
+//        }
+//        [self saveChanges];
+//        self.privateRecentEvents = systemEvents;
+//        
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//
+//            [self.delegate didFetchRecentEvent];
+//        });
+//    });
+//
+//}
 
 - (void)fetchDaysEventsInMonth:(NSDate *)date
 {
@@ -181,41 +181,6 @@
         });
     });
 }
-
-
-//- (void)fetchDaysEventsInThreeMonths:(NSDate *)date
-//{
-//    SRMCalendarTool *tool = [SRMCalendarTool tool];
-//    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        
-//        NSDate *startDate = [tool beginningOfMonthOfDate:date];
-//        NSInteger days = [tool dayCountOfMonthofDate:startDate];
-//        
-//        for (int i=1; i<=days; i++) {
-//            
-//            NSDate *endDate = [tool dateByAddingDays:1 toDate:startDate];
-//            
-//            NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:startDate
-//                                                                                       endDate:endDate
-//                                                                                     calendars:nil];
-//            
-//            
-//            
-//            NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
-//            
-//            self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:startDate]] = systemEvents;
-//            
-//            startDate = [[SRMCalendarTool tool] dateByAddingDays:1 toDate:startDate];
-//        }
-//        
-//        startDate = [tool dateByAddingMonths:-1 toDate:[tool beginningOfMonthOfDate:date]];
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.delegate didFetchDaysEventInMonth];
-//        });
-//    });
-//}
 
 - (void)fetchDayEvents:(NSDate *)date
 {
@@ -280,6 +245,24 @@
         }
     }
     return notAllDayEvents;
+}
+
+- (NSArray *)monthEvents:(NSDate *)date
+{
+    NSMutableArray *monthEvents = [[NSMutableArray alloc] init];
+    
+    SRMCalendarTool *tool = [SRMCalendarTool tool];
+    
+    date = [tool beginningOfMonthOfDate:date];
+    NSInteger days = [tool dayCountOfMonthofDate:date];
+    
+    for (int i=1; i<=days; i++) {
+        [monthEvents addObjectsFromArray:[self dayEvents:date]];
+        date = [tool dateByAddingDays:1 toDate:date];
+    }
+    
+    return monthEvents;
+
 }
 
 - (BOOL)editEvent:(EKEvent *)event title:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon

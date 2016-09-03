@@ -12,7 +12,7 @@
 @protocol SRMEventStoreDelegate <NSObject>
 
 @optional
-- (void)didFetchRecentEvent;
+//- (void)didFetchRecentEvent;
 - (void)didFetchDayEvent;
 - (void)didFetchDaysEventInMonth;
 
@@ -22,19 +22,20 @@
 
 @property (nonatomic, weak) id<SRMEventStoreDelegate> delegate;
 @property (nonatomic) BOOL isGranted;
-@property (nonatomic, readonly) NSArray *recentEvents;
+//@property (nonatomic, readonly) NSArray *recentEvents;
 @property (nonatomic, readonly) NSArray<EKCalendar *> *allCalendars;
 
 + (instancetype)sharedStore;
 
 - (void)checkCalendarAuthorizationStatus;
 
-- (void)fetchRecentEvents:(NSDate *)fromDate;
+//- (void)fetchRecentEvents:(NSDate *)fromDate;
 - (void)fetchDayEvents:(NSDate *)date;
 - (void)fetchDaysEventsInMonth:(NSDate *)date;
 - (NSArray *)dayEvents:(NSDate *)date;
 - (NSArray *)dayEventsAllDay:(NSDate *)date;
 - (NSArray *)dayEventsNotAllDay:(NSDate *)date;
+- (NSArray *)monthEvents:(NSDate *)date;
 
 - (BOOL)editEvent:(EKEvent *)event title:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon;
 - (BOOL)deleteThisEvent:(NSString *)eventIdentifier;
