@@ -74,8 +74,8 @@
     
     if (!event.allDay) {
         _dateLabel.hidden = NO;
-        _dateLabel.text = [tool dateFormat:event.startDate];
-        _timeLabel.text = [tool timeFormat:event.startDate];
+        _dateLabel.text = [tool dateDisplayFormat:event.startDate];
+        _timeLabel.text = [tool timeDisplayFormat:event.startDate];
         
         NSInteger hour = [tool hoursFromDate:event.startDate toDate:event.endDate];
         NSInteger minute = [tool minutesFromDate:event.startDate toDate:event.endDate];
@@ -85,7 +85,7 @@
         
     } else {
         _dateLabel.hidden = YES;
-        _timeLabel.text = [tool dateFormat:event.startDate];
+        _timeLabel.text = [tool dateDisplayFormat:event.startDate];
         NSInteger day = [tool daysFromDate:event.startDate toDate:event.endDate] + 1;
         _durationLabel.text = [NSString stringWithFormat:@"%lud", day];
     }

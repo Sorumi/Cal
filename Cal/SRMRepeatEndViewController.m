@@ -73,7 +73,7 @@
     if (_date) {
         _neverCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareBlank];
         _dateCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareCheck];
-        self.dateLabel.text = [[SRMCalendarTool tool] dateFormat:self.date];
+        self.dateLabel.text = [[SRMCalendarTool tool] dateDisplayFormat:self.date];
         self.datePicker.date = self.date;
         
     } else {
@@ -91,7 +91,7 @@
         _neverCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareBlank];
         _dateCheckLabel.text = [NSString iconfontIconStringForEnum:IFSquareCheck];
         self.date = self.datePicker.date;
-        self.dateLabel.text = [[SRMCalendarTool tool] dateFormat:self.date];
+        self.dateLabel.text = [[SRMCalendarTool tool] dateDisplayFormat:self.date];
         [self setDatePickerHidden:NO];
         
     } else {
@@ -114,7 +114,7 @@
 - (void)datePickerChange:(UIDatePicker *)datePicker
 {
     self.date = datePicker.date;
-    self.dateLabel.text = [[SRMCalendarTool tool] dateFormat:datePicker.date];
+    self.dateLabel.text = [[SRMCalendarTool tool] dateDisplayFormat:datePicker.date];
 }
 
 #pragma mark - <UITableViewDelegate>

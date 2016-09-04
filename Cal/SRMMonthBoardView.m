@@ -86,6 +86,9 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     _year = year;
     _month = month;
+//    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 0)];
+//    [_boardCollectionView deleteSections:indexSet];
+//    [_boardCollectionView deleteSections:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void)updateThemeAnimate:(BOOL)isAnimate
@@ -116,7 +119,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)tapBlank:(UITapGestureRecognizer *)gesture
 {
-//    NSLog(@"%lu", [self.boardCollectionView indexPathsForSelectedItems].count);
     for (NSIndexPath *indexPath in [self.boardCollectionView indexPathsForSelectedItems]) {
         SRMBoardStampCell *cell = (SRMBoardStampCell *)[self.boardCollectionView cellForItemAtIndexPath:indexPath];
         [cell setEditMode:NO];

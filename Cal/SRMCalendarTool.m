@@ -335,7 +335,14 @@
 }
 
 ////
-- (NSString *)dateFormat:(NSDate *)date
+- (NSString *)dateStoreFormat:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM-d"];
+    return [formatter stringFromDate:date];
+}
+
+- (NSString *)dateDisplayFormat:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
 
@@ -349,7 +356,7 @@
     return [formatter stringFromDate:date];
 }
 
-- (NSString *)timeFormat:(NSDate *)date
+- (NSString *)timeDisplayFormat:(NSDate *)date
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     
@@ -358,7 +365,7 @@
     return [formatter stringFromDate:date];
 }
 
-- (NSString *)weekdayFormat:(NSDate *)date
+- (NSString *)weekdayDisplayFormat:(NSDate *)date
 {
 
     if ([NSLocalizedString(@"local", nil) isEqual: @"cs"]) {

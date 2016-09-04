@@ -58,7 +58,7 @@
 {
     _task = task;
     _titleLable.text = task.title;
-    _dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateFormat:task.dueDate];
+    _dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateDisplayFormat:task.dueDate];
     
     [_checkButton setTitle:[NSString iconfontIconStringForEnum:task.finishDate == nil ? IFSquareBlank : IFSquareCheck] forState:UIControlStateNormal];
 }

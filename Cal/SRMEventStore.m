@@ -171,7 +171,12 @@
             
             NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
             
-            self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:startDate]] = systemEvents;
+            if (systemEvents) {
+                self.privateDayEvents[[[SRMCalendarTool tool] dateStoreFormat:startDate]] = systemEvents;
+            } else {
+                [self.privateDayEvents removeObjectForKey:[[SRMCalendarTool tool] dateStoreFormat:startDate]];
+            }
+
             
             startDate = [[SRMCalendarTool tool] dateByAddingDays:1 toDate:startDate];
         }
@@ -197,13 +202,20 @@
         
         NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
 
-        for (EKEvent* event in systemEvents) {
-            if (![self iconForEventIdentifier:event.eventIdentifier]) {
-                [self setIcon:0 forEventIdentifier:event.eventIdentifier];
+        if (systemEvents) {
+            for (EKEvent* event in systemEvents) {
+                if (![self iconForEventIdentifier:event.eventIdentifier]) {
+                    [self setIcon:0 forEventIdentifier:event.eventIdentifier];
+                }
             }
+            self.privateDayEvents[[[SRMCalendarTool tool] dateStoreFormat:date]] = systemEvents;
+            
+        } else {
+            [self.privateDayEvents removeObjectForKey:[[SRMCalendarTool tool] dateStoreFormat:date]];
         }
+        
         [self saveChanges];
-        self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:date]] = systemEvents;
+
 
         dispatch_async(dispatch_get_main_queue(), ^{
             
@@ -215,7 +227,7 @@
 
 - (NSArray *)dayEvents:(NSDate *)date
 {
-    NSArray *sortedArray = [self.privateDayEvents[[[SRMCalendarTool tool] dateFormat:date]] sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
+    NSArray *sortedArray = [self.privateDayEvents[[[SRMCalendarTool tool] dateStoreFormat:date]] sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
         return [event1.startDate compare:event2.startDate];
     }];;
     return sortedArray;

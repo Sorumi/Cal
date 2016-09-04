@@ -408,7 +408,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)setRepeatEndDate:(NSDate *)repeatEndDate
 {
     if (repeatEndDate) {
-        _repeatEndDateLabel.text = [[SRMCalendarTool tool] dateFormat:repeatEndDate];
+        _repeatEndDateLabel.text = [[SRMCalendarTool tool] dateDisplayFormat:repeatEndDate];
     } else {
         _repeatEndDateLabel.text = @"Never";
         _repeatEndDate = repeatEndDate;
@@ -430,12 +430,12 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
-    self.startDateLabel.text = [tool dateFormat:date];
+    self.startDateLabel.text = [tool dateDisplayFormat:date];
     
     if (!self.allDaySwitch.value) { // not all day
-        self.startTimeLabel.text = [tool timeFormat:date];
+        self.startTimeLabel.text = [tool timeDisplayFormat:date];
     } else {
-        self.startTimeLabel.text = [tool weekdayFormat:date];
+        self.startTimeLabel.text = [tool weekdayDisplayFormat:date];
     }
     
     _startDate = date;
@@ -449,12 +449,12 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
-    self.endDateLabel.text = [tool dateFormat:date];
+    self.endDateLabel.text = [tool dateDisplayFormat:date];
     
     if (!self.allDaySwitch.value) { // not all day
-        self.endTimeLabel.text = [tool timeFormat:date];
+        self.endTimeLabel.text = [tool timeDisplayFormat:date];
     } else {
-        self.endTimeLabel.text = [tool weekdayFormat:date];
+        self.endTimeLabel.text = [tool weekdayDisplayFormat:date];
     }
     _endDate = date;
 }
@@ -648,10 +648,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
                                                          icon:_iconNum];
         
 //        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
-        if (self.didDismiss) {
-            self.didDismiss();
-        }
-        
+
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
     }

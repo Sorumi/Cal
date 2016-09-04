@@ -145,15 +145,15 @@
         [self cell:_noteCell setHidden:YES];
     }
     
-    _startDateLabel.text = [tool dateFormat:_event.startDate];
-    _endDateLabel.text = [tool dateFormat:_event.endDate];
+    _startDateLabel.text = [tool dateDisplayFormat:_event.startDate];
+    _endDateLabel.text = [tool dateDisplayFormat:_event.endDate];
     
     if (_event.allDay) {
-        _startTimeLabel.text = [tool weekdayFormat:_event.startDate];
-        _endTimeLabel.text = [tool weekdayFormat:_event.endDate];
+        _startTimeLabel.text = [tool weekdayDisplayFormat:_event.startDate];
+        _endTimeLabel.text = [tool weekdayDisplayFormat:_event.endDate];
     } else {
-        _startTimeLabel.text = [tool timeFormat:_event.startDate];
-        _endTimeLabel.text = [tool timeFormat:_event.endDate];
+        _startTimeLabel.text = [tool timeDisplayFormat:_event.startDate];
+        _endTimeLabel.text = [tool timeDisplayFormat:_event.endDate];
     }
     
     if (_event.hasRecurrenceRules) {
@@ -181,7 +181,7 @@
         
         if (rule.recurrenceEnd) {
             EKRecurrenceEnd *end = rule.recurrenceEnd;
-            _endRepeatLabel.text = [tool dateFormat:end.endDate];
+            _endRepeatLabel.text = [tool dateDisplayFormat:end.endDate];
         } else {
             [self cell:_endRepeatCell setHidden:YES];
         }
@@ -199,9 +199,9 @@
             NSInteger minute = alarm.relativeOffset / 60;
             date = [tool dateByAddingMinutes:minute toDate:_event.startDate];
         }
-            NSString *text = [tool dateFormat:date];
+            NSString *text = [tool dateDisplayFormat:date];
             text = [text stringByAppendingString:@" "];
-            text = [text stringByAppendingString:[tool timeFormat:date]];
+            text = [text stringByAppendingString:[tool timeDisplayFormat:date]];
             _reminderLabel.text = text;
     
     } else {
@@ -295,7 +295,9 @@
         [weakSelf cancel:nil];
     };
     
-    [self presentViewController:nvc animated:YES completion:nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:nvc animated:YES completion:nil];
+    });
 }
 
 - (void)deleteEvent

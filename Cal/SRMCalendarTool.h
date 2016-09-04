@@ -49,9 +49,12 @@
 - (NSDate *)dateByIgnoringTimeComponentsOfDate:(NSDate *)date;
 
 - (NSString *)dateAndTimeFormat:(NSDate *)date;
-- (NSString *)dateFormat:(NSDate *)date;
-- (NSString *)timeFormat:(NSDate *)date;
-- (NSString *)weekdayFormat:(NSDate *)date;
+
+- (NSString *)dateStoreFormat:(NSDate *)date;
+
+- (NSString *)dateDisplayFormat:(NSDate *)date;
+- (NSString *)timeDisplayFormat:(NSDate *)date;
+- (NSString *)weekdayDisplayFormat:(NSDate *)date;
 
 - (NSDate *)dateOnHour:(NSDate *)date;
 - (NSDate *)date:(NSDate *)date onDefiniteHour:(NSInteger)hour;

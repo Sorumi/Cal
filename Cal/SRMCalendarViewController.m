@@ -130,16 +130,19 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     _selectedYear = [[SRMCalendarTool tool] yearOfDate:_date];
     _selectedMonth = [[SRMCalendarTool tool] monthOfDate:_date];
     _selectedDay = [[SRMCalendarTool tool] dayOfDate:_date];
+    [_headerFrontView setMonthHeaderYear:_selectedYear month:_selectedMonth];
     [_headerFrontView setWeekHeaderYear:_selectedYear month:_selectedMonth day:_selectedDay weekday:[[SRMCalendarTool tool] weekdayOfDate:_date]];
     
-    if (_viewMode == SRMCalendarMonthViewMode) {
+    if (_viewMode == SRMCalendarMonthViewMode || _viewMode == SRMCalendarItemViewMode) {
         [self weekScrollToDate:self.date animated:NO];
         [_weekWeekdayHeader setCirclePos:[[SRMCalendarTool tool] weekdayOfDate:_date] animated:NO];
         
     } else if (_viewMode == SRMCalendarWeekViewMode) {
         [self monthScrollToDate:self.date animated:NO];
         [_weekWeekdayHeader setCirclePos:[[SRMCalendarTool tool] weekdayOfDate:_date] animated:YES];
+        
     }
+    
 //    NSLog(@"%@", [[SRMCalendarTool tool] dateAndTimeFormat:date]);
     [[SRMEventStore sharedStore] fetchDayEvents:date];
     [[SRMThemeStore sharedStore] setCurrentThemeYear:_selectedYear month:_selectedMonth];
@@ -252,7 +255,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     // event
     [SRMEventStore sharedStore].delegate = self;
     [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
-//    [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(eventStoreDidChanged)
@@ -285,7 +287,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)eventStoreDidChanged
 {
 //    NSLog(@"event change!");
-//    [[SRMEventStore sharedStore] fetchRecentEvents:self.today];
     [[SRMEventStore sharedStore] fetchDaysEventsInMonth:self.date];
     [[SRMEventStore sharedStore] fetchDayEvents:self.date];
 }
@@ -307,6 +308,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (void)didFetchDaysEventInMonth
 {
 //    NSLog(@"didFetchMonth%@", [[SRMCalendarTool tool] dateAndTimeFormat:_date]);
+    [_monthItemTableView reloadData];
     [_monthCollectionView reloadData];
 }
 
@@ -344,22 +346,34 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 - (IBAction)setPrevMonth:(id)sender
 {
     NSDate *date = [[SRMCalendarTool tool] dateByAddingMonths:-1 toDate:self.date];
-    [self monthScrollToDate:date animated:YES];
+    if (self.viewMode == SRMCalendarItemViewMode) {
+        [self monthScrollToDate:date animated:NO];
+    } else {
+        [self monthScrollToDate:date animated:YES];
+    }
 }
 
 - (IBAction)setNextMonth:(id)sender
 {
     NSDate *date = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:self.date];
-    [self monthScrollToDate:date animated:YES];
+    if (self.viewMode == SRMCalendarItemViewMode) {
+        [self monthScrollToDate:date animated:NO];
+    } else {
+        [self monthScrollToDate:date animated:YES];
+    }
 }
 
 - (IBAction)backToToday:(id)sender
 {
-    self.date = self.today;
+    
     if (self.viewMode == SRMCalendarMonthViewMode || self.viewMode == SRMCalendarEditViewMode) {
-        [self monthScrollToDate:self.date animated:YES];
+        [self monthScrollToDate:self.today animated:YES];
+        
+    } else if (self.viewMode == SRMCalendarItemViewMode) {
+        [self monthScrollToDate:self.today animated:NO];
+        
     } else if (self.viewMode == SRMCalendarWeekViewMode) {
-        [self weekScrollToDate:self.date animated:YES];
+        [self weekScrollToDate:self.today animated:YES];
     }
 }
 
@@ -722,16 +736,13 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqual: @"EditEvent"]) {
-        UINavigationController *nc = segue.destinationViewController;
-        SRMEventEditViewController *vc = [nc.viewControllers firstObject];
-        
-        __weak SRMCalendarViewController *weakSelf = self;
-        
-        vc.didDismiss = ^{
-            [weakSelf.monthItemTableView reloadData];
-        };
-    }
+//    if ([segue.identifier isEqual: @"EditEvent"]) {
+//        UINavigationController *nc = segue.destinationViewController;
+//        SRMEventEditViewController *vc = [nc.viewControllers firstObject];
+//
+//        
+//
+//    }
 }
 
 #pragma mark - Theme
@@ -820,6 +831,9 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         } else {
             return _monthItemTableView.contentOffset.y == 0 && velocity.y > 0;
         }
+    } else {
+        CGPoint velocity = [panGestureRecognizer velocityInView:panGestureRecognizer.view];
+        return fabs(velocity.y) > fabs(velocity.x);
     }
     
     return YES;
@@ -843,16 +857,17 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         [_dayHeader setBorderViewPos:page animated:YES];
         
     } else if (scrollView == _monthCollectionView) {
-        NSDate *date;
         SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = round(_monthCollectionView.contentOffset.x / _viewWidth);
-    
-        date = [tool dateByAddingMonths:page toDate:tool.minimumDate];
-        NSInteger year = [tool yearOfDate:date];
-        NSInteger month = [tool monthOfDate:date];
 
-        [_headerFrontView setMonthHeaderYear:year month:month];
-    
+        // set date
+        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
+        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
+        
+        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
+            self.date = currentBeginningDate;
+        }
+
     } else if (scrollView == _appearanceCollectionView) {
         NSInteger page = round(scrollView.contentOffset.x / scrollView.frame.size.width);
         self.appearancePageControl.currentPage = page;
@@ -867,7 +882,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         NSDate *nextMonth = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:_date];
         [[SRMEventStore sharedStore] fetchDaysEventsInMonth:prevMonth];
         [[SRMEventStore sharedStore] fetchDaysEventsInMonth:nextMonth];
-        
     }
 }
 
@@ -877,18 +891,17 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
     if (scrollView == _monthCollectionView) {
 
-        SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = _monthCollectionView.contentOffset.x / _viewWidth;
-        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
-        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
 
-        if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
-            self.date = currentBeginningDate;
-            //
-            [_monthItemTableView reloadData];
-        }
         self.monthPage = page;
+        [_monthItemTableView beginUpdates];
+        [_monthItemTableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+        [_monthItemTableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+        [_monthItemTableView endUpdates];
         
+        
+//        SRMMonthBoardView *board = (SRMMonthBoardView *)[_monthCollectionView supplementaryViewForElementKind:UICollectionElementKindSectionHeader atIndexPath:[NSIndexPath indexPathForRow:0 inSection:_monthPage]];
+//        [board.boardCollectionView reloadData];
         
     } else if (scrollView == _weekCollectionView) {
         
@@ -910,19 +923,26 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     if (scrollView == _monthCollectionView) {
 
-        SRMCalendarTool *tool = [SRMCalendarTool tool];
         NSInteger page = _monthCollectionView.contentOffset.x / _viewWidth;
-        NSDate *currentBeginningDate = [tool dateByAddingMonths:page toDate:tool.minimumDate];
-        NSDate *selfBeginningDate = [tool beginningOfMonthOfDate:self.date];
+
+        self.monthPage = page;
+        [_monthItemTableView beginUpdates];
+        [_monthItemTableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+        [_monthItemTableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+        [_monthItemTableView endUpdates];
+        
+    } else if (scrollView == _weekCollectionView) {
+        SRMCalendarTool *tool = [SRMCalendarTool tool];
+        NSInteger page = _weekCollectionView.contentOffset.x / _viewWidth;
+        NSDate *currentBeginningDate = [tool beginningOfWeekOfDate:tool.minimumDate];
+        currentBeginningDate = [tool dateByAddingWeeks:page toDate:currentBeginningDate];
+        NSDate *selfBeginningDate = [tool beginningOfWeekOfDate:self.date];
         
         if (![tool date:currentBeginningDate isEqualToDate:selfBeginningDate]) {
             self.date = currentBeginningDate;
-            
-            //
-            [_monthItemTableView reloadData];
         }
-        self.monthPage = page;
     }
+    
 }
 
 #pragma mark - <UITableViewDateSource>
@@ -936,7 +956,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     if (tableView == _monthItemTableView) {
         if (section == 0) {
-            return [[SRMTaskStore sharedStore] allTasks].count;
+//            return [[SRMTaskStore sharedStore] allTasks].count;
         
         } else if (section == 1) {
             return [[SRMEventStore sharedStore] monthEvents:_date].count;
@@ -967,6 +987,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         } else if (indexPath.section == 1) {
             SRMEventCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseEventCellIdentifier forIndexPath:indexPath];
             NSArray *items = [[SRMEventStore sharedStore] monthEvents:_date];
+            
+//            NSLog(@"%lu %lu", items.count, indexPath.row);
             EKEvent *item = items[indexPath.row];
             
             [cell setEvent:item];
@@ -1043,8 +1065,10 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         NSArray *items = [[SRMEventStore sharedStore] monthEvents:_date];
         vc.event = items[indexPath.row];
         
-        [self presentViewController:nvc animated:YES completion:nil];
-        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:nvc animated:YES completion:nil];
+        });
+
     } else if (tableView == _dayItemTableView && indexPath.section == 1) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"DetailNavigation"];
@@ -1052,7 +1076,9 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         NSArray *items = [[SRMEventStore sharedStore] dayEvents:self.date];
         vc.event = items[indexPath.row];
         
-        [self presentViewController:nvc animated:YES completion:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self presentViewController:nvc animated:YES completion:nil];
+        });
     }
 }
 
