@@ -51,6 +51,7 @@
 - (NSString *)dateAndTimeFormat:(NSDate *)date;
 
 - (NSString *)dateStoreFormat:(NSDate *)date;
+- (NSString *)monthStoreFormat:(NSDate *)date;
 
 - (NSString *)dateDisplayFormat:(NSDate *)date;
 - (NSString *)timeDisplayFormat:(NSDate *)date;

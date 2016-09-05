@@ -12,7 +12,7 @@
 @protocol SRMEventStoreDelegate <NSObject>
 
 @optional
-//- (void)didFetchRecentEvent;
+
 - (void)didFetchDayEvent;
 - (void)didFetchDaysEventInMonth;
 
@@ -22,16 +22,16 @@
 
 @property (nonatomic, weak) id<SRMEventStoreDelegate> delegate;
 @property (nonatomic) BOOL isGranted;
-//@property (nonatomic, readonly) NSArray *recentEvents;
 @property (nonatomic, readonly) NSArray<EKCalendar *> *allCalendars;
 
 + (instancetype)sharedStore;
 
 - (void)checkCalendarAuthorizationStatus;
 
-//- (void)fetchRecentEvents:(NSDate *)fromDate;
 - (void)fetchDayEvents:(NSDate *)date;
 - (void)fetchDaysEventsInMonth:(NSDate *)date;
+- (void)fetchDaysEventsInThreeMonths:(NSDate *)midDate;
+
 - (NSArray *)dayEvents:(NSDate *)date;
 - (NSArray *)dayEventsAllDay:(NSDate *)date;
 - (NSArray *)dayEventsNotAllDay:(NSDate *)date;

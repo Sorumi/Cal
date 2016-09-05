@@ -13,9 +13,8 @@
 
 @property (nonatomic, strong) EKEventStore *eventStore;
 
-//@property (nonatomic, strong) NSArray<EKEvent *> *privateRecentEvents;
 @property (nonatomic, strong) NSMutableDictionary *privateDayEvents;
-//@property (nonatomic, strong) NSMutableDictionary *privateMonthEvents;
+@property (nonatomic, strong) NSMutableDictionary *privateMonthEvents;
 
 @property (nonatomic, strong) NSArray<EKCalendar *> *calendars;
 
@@ -27,14 +26,6 @@
 @implementation SRMEventStore
 
 #pragma mark - Properties
-
-//- (NSArray *)recentEvents
-//{
-//    NSArray *sortedArray = [self.privateRecentEvents sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
-//        return [event1.startDate compare:event2.startDate];
-//    }];;
-//    return sortedArray;
-//}
 
 - (NSArray<EKCalendar *> *)allCalendars
 {
@@ -71,16 +62,14 @@
     if (!_privateDayEvents) {
         _privateDayEvents = [[NSMutableDictionary alloc] init];
     }
+    if (!_privateMonthEvents) {
+        _privateMonthEvents = [[NSMutableDictionary alloc] init];
+    }
     NSString *iconPath = [self iconArchivePath];
     _iconDictionary = [NSKeyedUnarchiver unarchiveObjectWithFile:iconPath];
     
     NSString *colorPath = [self colorArchivePath];
     _colorDictionary = [NSKeyedUnarchiver unarchiveObjectWithFile:colorPath];
-    
-//    for (NSString *key in _iconDictionary) {
-//        NSString *value = _iconDictionary[key];
-//        NSLog(@"%@", value);
-//    }
     
     if (!_iconDictionary) {
         _iconDictionary = [[NSMutableDictionary alloc] init];
@@ -116,75 +105,36 @@
     }
 }
 
-//- (void)fetchRecentEvents:(NSDate *)fromDate
-//{
-//    if (!self.isGranted) {
-//        return;
-//    }
-//    NSDate *endDate = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:fromDate];
-//    
-//    NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:fromDate
-//                                                                               endDate:endDate
-//                                                                             calendars:nil];
-//    
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        
-//        NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
-//        
-//        for (EKEvent* event in systemEvents) {
-//            if (![self iconForEventIdentifier:event.eventIdentifier]) {
-//                [self setIcon:0 forEventIdentifier:event.eventIdentifier];
-//            }
-//            
-//            //                NSLog(@"%@ %@", event.title, event.eventIdentifier);
-//        }
-//        [self saveChanges];
-//        self.privateRecentEvents = systemEvents;
-//        
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//
-//            [self.delegate didFetchRecentEvent];
-//        });
-//    });
-//
-//}
-
 - (void)fetchDaysEventsInMonth:(NSDate *)date
 {
-    SRMCalendarTool *tool = [SRMCalendarTool tool];
-    
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+       
+        [self getDaysEventInMonth:date];
         
-        NSDate *startDate = [tool beginningOfMonthOfDate:date];
-        NSInteger days = [tool dayCountOfMonthofDate:startDate];
-        
-        for (int i=1; i<=days; i++) {
-            
-            NSDate *endDate = [tool dateByAddingDays:1 toDate:startDate];
-            
-            NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:startDate
-                                                                                       endDate:endDate
-                                                                                     calendars:nil];
-            
-            
-            
-            NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
-            
-            if (systemEvents) {
-                self.privateDayEvents[[[SRMCalendarTool tool] dateStoreFormat:startDate]] = systemEvents;
-            } else {
-                [self.privateDayEvents removeObjectForKey:[[SRMCalendarTool tool] dateStoreFormat:startDate]];
-            }
-
-            
-            startDate = [[SRMCalendarTool tool] dateByAddingDays:1 toDate:startDate];
-        }
-    
         dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"didFetchMonth %@ %lu", [[SRMCalendarTool tool] dateAndTimeFormat:date], [self monthEvents:date].count);
             [self.delegate didFetchDaysEventInMonth];
         });
     });
+}
+
+- (void)fetchDaysEventsInThreeMonths:(NSDate *)midDate
+{
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        [self getDaysEventInMonth:midDate];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+//            NSLog(@"didFetchThreeMonths %@ %lu", [[SRMCalendarTool tool] dateAndTimeFormat:midDate], [self monthEvents:midDate].count);
+            [self.delegate didFetchDaysEventInMonth];
+        });
+
+        NSDate *prevMonth = [[SRMCalendarTool tool] dateByAddingMonths:-1 toDate:midDate];
+        [self getDaysEventInMonth:prevMonth];
+        NSDate *nextMonth = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:midDate];
+        [self getDaysEventInMonth:nextMonth];
+    });
+
 }
 
 - (void)fetchDayEvents:(NSDate *)date
@@ -261,29 +211,17 @@
 
 - (NSArray *)monthEvents:(NSDate *)date
 {
-    NSMutableArray *monthEvents = [[NSMutableArray alloc] init];
-    
     SRMCalendarTool *tool = [SRMCalendarTool tool];
-    
-    date = [tool beginningOfMonthOfDate:date];
-    NSInteger days = [tool dayCountOfMonthofDate:date];
-    
-    for (int i=1; i<=days; i++) {
-        [monthEvents addObjectsFromArray:[self dayEvents:date]];
-        date = [tool dateByAddingDays:1 toDate:date];
-    }
-    
-    return monthEvents;
 
+    NSArray *sortedArray = [self.privateMonthEvents[[tool monthStoreFormat:date]] sortedArrayUsingComparator:^NSComparisonResult(EKEvent *event1, EKEvent *event2) {
+        return [event1.startDate compare:event2.startDate];
+    }];
+    return sortedArray;
 }
 
 - (BOOL)editEvent:(EKEvent *)event title:(NSString *)title calendar:(NSInteger)calendar allDay:(BOOL)allday startDate:(NSDate *)startDate endDate:(NSDate *)endDate location:(NSString *)location note:(NSString *)note recurrenceRule:(EKRecurrenceRule *)rule alarm:(EKAlarm *)alarm icon:(NSInteger)icon
 {
-    
-//    EKEvent *event = [store eventWithIdentifier:savedEventId];
-    // Uncomment below if you want to create a new event if savedEventId no longer exists
-    // if (event == nil)
-    //   event = [EKEvent eventWithEventStore:store];
+
     if (!event) {
         event  = [EKEvent eventWithEventStore:self.eventStore];
     }
@@ -420,5 +358,59 @@
                                         }
                                     }];
 }
+
+- (void)getDaysEventInMonth:(NSDate *)date
+{
+    @synchronized(self){
+        SRMCalendarTool *tool = [[SRMCalendarTool alloc] init];
+        
+        NSDate *startDate = [tool beginningOfMonthOfDate:date];
+        NSInteger days = [tool dayCountOfMonthofDate:startDate];
+        
+        NSMutableArray *monthEvents = [[NSMutableArray alloc] init];
+        
+//        NSLog(@"start fetch %@", [[SRMCalendarTool tool] dateAndTimeFormat:startDate]);
+        
+        for (int i=1; i<=days; i++) {
+            
+            NSDate *endDate = [tool dateByAddingDays:1 toDate:startDate];
+            
+            NSPredicate *allEventsPredicate = [self.eventStore predicateForEventsWithStartDate:startDate
+                                                                                       endDate:endDate
+                                                                                     calendars:nil];
+            
+            NSArray *systemEvents = [self.eventStore eventsMatchingPredicate:allEventsPredicate];
+            
+//             NSLog(@"%@ %@ %lu", [[SRMCalendarTool tool] dateAndTimeFormat:startDate], [[SRMCalendarTool tool] dateAndTimeFormat:endDate], systemEvents.count);
+            
+            if (systemEvents) {
+                
+                [systemEvents enumerateObjectsUsingBlock:^(EKEvent *event, NSUInteger index, BOOL *stop){
+                    if (![self iconForEventIdentifier:event.eventIdentifier]) {
+                        [self setIcon:0 forEventIdentifier:event.eventIdentifier];
+                    }
+                }];
+                
+                self.privateDayEvents[[tool dateStoreFormat:startDate]] = systemEvents;
+                [monthEvents addObjectsFromArray:systemEvents];
+                
+            } else {
+                [self.privateDayEvents removeObjectForKey:[tool dateStoreFormat:startDate]];
+            }
+            
+            startDate = [tool dateByAddingDays:1 toDate:startDate];
+        }
+        
+//        NSDate *storeDate = [tool beginningOfMonthOfDate:date];
+        if (monthEvents) {
+            self.privateMonthEvents[[tool monthStoreFormat:date]] = monthEvents;
+        } else {
+            [self.privateMonthEvents removeObjectForKey:[tool monthStoreFormat:date]];
+        }
+//        NSLog(@"end fetch %@", [tool monthStoreFormat:date]);
+    }
+    
+}
+
 
 @end

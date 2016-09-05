@@ -28,15 +28,21 @@
     if (!tool) {
         tool = [[self alloc] initPrivate];
     }
-    
-    return tool;
+     @synchronized(self) {
+         return tool;
+     }
 }
 
 - (instancetype)init
 {
-    @throw [NSException exceptionWithName:@"Singleton"
-                                   reason:@"Use +[SRMCalendarTool tool]"
-                                 userInfo:nil];
+//    @throw [NSException exceptionWithName:@"Singleton"
+//                                   reason:@"Use +[SRMCalendarTool tool]"
+//                                 userInfo:nil];
+    self = [super init];
+    
+    if (self) {
+    }
+    return self;
 }
 
 - (instancetype)initPrivate
@@ -339,6 +345,13 @@
 {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"YYYY-MM-d"];
+    return [formatter stringFromDate:date];
+}
+
+- (NSString *)monthStoreFormat:(NSDate *)date
+{
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"YYYY-MM"];
     return [formatter stringFromDate:date];
 }
 
