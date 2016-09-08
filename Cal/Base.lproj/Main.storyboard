@@ -3511,7 +3511,9 @@
                                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="II7-iG-LCL" secondAttribute="trailing" constant="288" id="tPr-qk-xIR">
                                                             <variation key="widthClass=compact" constant="10"/>
                                                         </constraint>
-                                                        <constraint firstItem="II7-iG-LCL" firstAttribute="top" secondItem="hTi-Nn-PV6" secondAttribute="top" constant="10.5" id="z3U-TX-axL"/>
+                                                        <constraint firstItem="II7-iG-LCL" firstAttribute="top" secondItem="hTi-Nn-PV6" secondAttribute="top" constant="10.5" id="z3U-TX-axL">
+                                                            <variation key="widthClass=compact" constant="12"/>
+                                                        </constraint>
                                                     </constraints>
                                                     <variation key="default">
                                                         <mask key="subviews">
@@ -5348,6 +5350,9 @@
                                                     </subviews>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
+                                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="y4S-e2-hB1" secondAttribute="trailing" constant="288" id="AQb-sh-QBu">
+                                                            <variation key="widthClass=compact" constant="10"/>
+                                                        </constraint>
                                                         <constraint firstItem="y4S-e2-hB1" firstAttribute="centerY" secondItem="z0K-4Q-IxC" secondAttribute="centerY" id="F3H-AY-0L7"/>
                                                         <constraint firstItem="z0K-4Q-IxC" firstAttribute="top" secondItem="z6U-Wp-a4A" secondAttribute="top" id="FPg-HM-fW0">
                                                             <variation key="widthClass=compact" constant="2"/>
@@ -5356,6 +5361,9 @@
                                                         <constraint firstItem="y4S-e2-hB1" firstAttribute="leading" secondItem="z0K-4Q-IxC" secondAttribute="trailing" constant="20" id="ag0-JR-SLC"/>
                                                         <constraint firstItem="z0K-4Q-IxC" firstAttribute="leading" secondItem="z6U-Wp-a4A" secondAttribute="leading" constant="169" id="dnX-zA-nWE">
                                                             <variation key="widthClass=compact" constant="0.0"/>
+                                                        </constraint>
+                                                        <constraint firstItem="y4S-e2-hB1" firstAttribute="top" secondItem="z6U-Wp-a4A" secondAttribute="top" constant="12" id="pzk-9S-AsU">
+                                                            <variation key="widthClass=compact" constant="12"/>
                                                         </constraint>
                                                         <constraint firstItem="z0K-4Q-IxC" firstAttribute="centerY" secondItem="z6U-Wp-a4A" secondAttribute="centerY" id="v6k-tS-LJp"/>
                                                         <constraint firstItem="y4S-e2-hB1" firstAttribute="centerY" secondItem="z6U-Wp-a4A" secondAttribute="centerY" id="xf1-3n-tem"/>
@@ -5366,13 +5374,15 @@
                                                             <exclude reference="z0K-4Q-IxC"/>
                                                         </mask>
                                                         <mask key="constraints">
-                                                            <exclude reference="ag0-JR-SLC"/>
-                                                            <exclude reference="F3H-AY-0L7"/>
-                                                            <exclude reference="xf1-3n-tem"/>
-                                                            <exclude reference="N8L-vc-D1Q"/>
-                                                            <exclude reference="dnX-zA-nWE"/>
                                                             <exclude reference="FPg-HM-fW0"/>
+                                                            <exclude reference="dnX-zA-nWE"/>
                                                             <exclude reference="v6k-tS-LJp"/>
+                                                            <exclude reference="AQb-sh-QBu"/>
+                                                            <exclude reference="F3H-AY-0L7"/>
+                                                            <exclude reference="N8L-vc-D1Q"/>
+                                                            <exclude reference="ag0-JR-SLC"/>
+                                                            <exclude reference="pzk-9S-AsU"/>
+                                                            <exclude reference="xf1-3n-tem"/>
                                                         </mask>
                                                     </variation>
                                                     <variation key="widthClass=compact">
@@ -5381,13 +5391,15 @@
                                                             <include reference="z0K-4Q-IxC"/>
                                                         </mask>
                                                         <mask key="constraints">
-                                                            <include reference="ag0-JR-SLC"/>
-                                                            <include reference="F3H-AY-0L7"/>
-                                                            <exclude reference="xf1-3n-tem"/>
-                                                            <exclude reference="N8L-vc-D1Q"/>
-                                                            <include reference="dnX-zA-nWE"/>
                                                             <include reference="FPg-HM-fW0"/>
+                                                            <include reference="dnX-zA-nWE"/>
                                                             <exclude reference="v6k-tS-LJp"/>
+                                                            <include reference="AQb-sh-QBu"/>
+                                                            <exclude reference="F3H-AY-0L7"/>
+                                                            <exclude reference="N8L-vc-D1Q"/>
+                                                            <include reference="ag0-JR-SLC"/>
+                                                            <include reference="pzk-9S-AsU"/>
+                                                            <exclude reference="xf1-3n-tem"/>
                                                         </mask>
                                                     </variation>
                                                 </view>

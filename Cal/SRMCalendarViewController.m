@@ -425,6 +425,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         
     } else if (self.viewMode == SRMCalendarItemViewMode) {
         [self monthScrollToDate:self.today animated:NO];
+        [self downMonthItemTable];
         
     } else if (self.viewMode == SRMCalendarWeekViewMode) {
         [self weekScrollToDate:self.today animated:YES];

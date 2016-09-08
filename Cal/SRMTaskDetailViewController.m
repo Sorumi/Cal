@@ -104,7 +104,7 @@
     
     _titleLabel.text = _task.title;
     
-    if ([_task.notes isEqual:@""]) {
+    if (![_task.notes isEqual:@""]) {
         _noteLabel.text = _task.notes;
 //        [self cell:_noteCell setHeight:[self heightForLabel:_noteLabel]];
     } else {
