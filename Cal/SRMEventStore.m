@@ -164,7 +164,7 @@
             [self.privateDayEvents removeObjectForKey:[[SRMCalendarTool tool] dateStoreFormat:date]];
         }
         
-        [self saveChanges];
+        [self saveEventIconChanges];
 
 
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -242,7 +242,7 @@
 
     if ([self.eventStore saveEvent:event span:EKSpanFutureEvents commit:YES error:nil]) {
         [self setIcon:icon forEventIdentifier:event.eventIdentifier];
-        [self saveChanges];
+        [self saveEventIconChanges];
         return YES;
     } else {
         return NO;
@@ -320,13 +320,18 @@
     return [documentDirectory stringByAppendingString:@"calendarColor.archive"];
 }
 
-- (BOOL)saveChanges
+- (BOOL)saveEventIconChanges
 {
     NSString *iconPath = [self iconArchivePath];
-    NSString *colorPath = [self colorArchivePath];
-    
-    return [NSKeyedArchiver archiveRootObject:self.iconDictionary toFile:iconPath] && [NSKeyedArchiver archiveRootObject:self.colorDictionary toFile:colorPath];
+    return [NSKeyedArchiver archiveRootObject:self.iconDictionary toFile:iconPath];
 }
+
+- (BOOL)saveCalendarColorChanges
+{
+    NSString *colorPath = [self colorArchivePath];
+    return [NSKeyedArchiver archiveRootObject:self.colorDictionary toFile:colorPath];
+}
+
 
 #pragma mark - Private
 
@@ -339,7 +344,7 @@
                 [self setColor:index forCalendarIdentifier:calendar.calendarIdentifier];
             }
         }
-        [self saveChanges];
+        [self saveCalendarColorChanges];
     }
 }
 

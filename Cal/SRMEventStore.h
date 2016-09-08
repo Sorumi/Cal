@@ -49,6 +49,7 @@
 - (void)setColor:(NSInteger)colorNum forCalendarIndex:(NSInteger)calendarIndex;
 - (NSInteger)colorForCalendarIndex:(NSInteger)calendarIndex;
 
-- (BOOL)saveChanges;
+- (BOOL)saveEventIconChanges;
+- (BOOL)saveCalendarColorChanges;
 
 @end

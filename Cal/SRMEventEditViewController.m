@@ -7,6 +7,7 @@
 //
 
 #import <EventKit/EventKit.h>
+#import "SRMCalendarConstance.h"
 #import "SRMEventEditViewController.h"
 #import "SRMSelectViewController.h"
 #import "SRMSelectCalendarViewController.h"
@@ -101,11 +102,11 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.repeatType = @[@"Never", @"Every Day", @"Every Week", @"Every 2 Weeks", @"Every Month", @"Every Year"];
-    self.reminderNotAllDayType = @[@"None", @"On time of event", @"5 minutes before", @"15 minutes before", @"30 minutes before", @"1 hour before", @"1 day before"];
-    self.reminderAllDayType = @[@"None", @"On the day of event", @"1 day before", @"2 days before", @"1 week before"];
+    _repeatType = @[@"Never", @"Every Day", @"Every Week", @"Every 2 Weeks", @"Every Month", @"Every Year"];
+    _reminderNotAllDayType = @[@"None", @"On time of event", @"5 minutes before", @"15 minutes before", @"30 minutes before", @"1 hour before", @"1 day before"];
+    _reminderAllDayType = @[@"None", @"On the day of event", @"1 day before", @"2 days before", @"1 week before"];
     
-    for (UIView *view in self.blockView) {
+    for (UIView *view in _blockView) {
         // shadow
         CALayer *layer = view.layer;
         layer.shadowOffset = CGSizeMake(0, 0);
@@ -114,18 +115,20 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
         layer.shadowOpacity = 0.3;
     }
     
-    self.noteText.textContainer.lineFragmentPadding = 0;
+    _noteText.textContainer.lineFragmentPadding = 0;
     
-    [self.startLabel setHighlightedTextColor:self.view.tintColor];
-    [self.endLabel setHighlightedTextColor:self.view.tintColor];
+    [_startLabel setHighlightedTextColor:self.view.tintColor];
+    [_endLabel setHighlightedTextColor:self.view.tintColor];
     
     _datePicker.subviews[0].subviews[1].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
     _datePicker.subviews[0].subviews[2].backgroundColor = [UIColor colorWithWhite:0.8 alpha:0.5];
     [_datePicker addTarget:self action:@selector(datePickerChange:) forControlEvents:UIControlEventValueChanged];
     
     // delegate
-    self.noteText.delegate = self;
-    self.allDaySwitch.delegate = self;
+    _noteText.delegate = self;
+    _titleText.delegate = self;
+    _locationText.delegate = self;
+    _allDaySwitch.delegate = self;
     
     // static table
     self.hideSectionsWithHiddenRows = YES;
@@ -309,21 +312,8 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
         } else {
             self.reminderMode = SRMEventReminderNone;
         }
-//        } else {
-//            NSInteger minute = alarm.relativeOffset / 60;
-//            date = [tool dateByAddingMinutes:minute toDate:_event.startDate];
-//        }
-//        NSString *text = [tool dateFormat:date];
-//        text = [text stringByAppendingString:@" "];
-//        text = [text stringByAppendingString:[tool timeFormat:date]];
-//        _reminderLabel.text = text;
-//        
-//    } else {
-//        [self cell:_reminderCell setHidden:YES];
     }
 
-    
-    
     NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIndex:self.calendarNum];
     self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
     [self tintColorDidChange];
@@ -426,37 +416,37 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     }
 }
 
-- (void)setStartDate:(NSDate *)date
+- (void)setStartDate:(NSDate *)startDate
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
-    self.startDateLabel.text = [tool dateDisplayFormat:date];
+    self.startDateLabel.text = [tool dateDisplayFormat:startDate];
     
     if (!self.allDaySwitch.value) { // not all day
-        self.startTimeLabel.text = [tool timeDisplayFormat:date];
+        self.startTimeLabel.text = [tool timeDisplayFormat:startDate];
     } else {
-        self.startTimeLabel.text = [tool weekdayDisplayFormat:date];
+        self.startTimeLabel.text = [tool weekdayDisplayFormat:startDate];
     }
     
-    _startDate = date;
+    _startDate = startDate;
     
     if ([_endDate timeIntervalSinceDate: _startDate] < 0) {
         self.endDate = _startDate;
     }
 }
 
-- (void)setEndDate:(NSDate *)date
+- (void)setEndDate:(NSDate *)endDate
 {
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
-    self.endDateLabel.text = [tool dateDisplayFormat:date];
+    self.endDateLabel.text = [tool dateDisplayFormat:endDate];
     
     if (!self.allDaySwitch.value) { // not all day
-        self.endTimeLabel.text = [tool timeDisplayFormat:date];
+        self.endTimeLabel.text = [tool timeDisplayFormat:endDate];
     } else {
-        self.endTimeLabel.text = [tool weekdayDisplayFormat:date];
+        self.endTimeLabel.text = [tool weekdayDisplayFormat:endDate];
     }
-    _endDate = date;
+    _endDate = endDate;
 }
 
 #pragma mark - Segue
@@ -668,7 +658,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     
 }
 
-- (IBAction)toggleEndTime:(id)sender
+- (IBAction)toggleEndDate:(id)sender
 {
     if (self.timeSelectMode == SRMTimeSelectEnd) {
         self.timeSelectMode = SRMTimeSelectNone;
@@ -710,10 +700,10 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     NSDate *date = datePicker.date;
     
     if (self.timeSelectMode == SRMTimeSelectStart) {
-        [self setStartDate:date];
+        self.startDate = date;
         
     } else if (self.timeSelectMode == SRMTimeSelectEnd) {
-        [self setEndDate:date];
+        self.endDate = date;
     }
 }
 
@@ -772,8 +762,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     }
 
     self.reminderMode = SRMEventReminderNone;
-    
-    
+
 }
 
 #pragma mark - <UITextFieldDelegate>

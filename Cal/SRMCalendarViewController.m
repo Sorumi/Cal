@@ -39,7 +39,7 @@
 #import "SRMBoardStampCell.h"
 #import "SRMAppearanceViewLayout.h"
 
-@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate, SRMAppearanceViewLayoutDelegate>
+@interface SRMCalendarViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, SRMTaskCellDelegate, SRMEventStoreDelegate, SRMDayHeaderDelegate, SRMAppearanceViewLayoutDelegate>
 
 @property (nonatomic) BOOL isFirstTimeViewDidLayoutSubviews;
 
@@ -355,7 +355,9 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     NSInteger page = _monthCollectionView.contentOffset.x / _viewWidth;
     
     [_monthItemTableView beginUpdates];
+     [_monthItemTableView deleteSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [_monthItemTableView deleteSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
+    [_monthItemTableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationFade];
     [_monthItemTableView insertSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationFade];
     [_monthItemTableView endUpdates];
     
@@ -841,6 +843,17 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
+#pragma mark - <SRMTaskCellDelegate>
+
+- (void)taskCellDidClickCheckButton:(SRMTaskCell *)cell
+{
+    NSIndexPath *indexPath = [_monthItemTableView indexPathForCell:cell];
+    NSIndexPath *destIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    [_monthItemTableView beginUpdates];
+    [_monthItemTableView moveRowAtIndexPath:indexPath toIndexPath:destIndexPath];
+    [_monthItemTableView endUpdates];
+}
+
 #pragma mark - <SRMDayHeaderDelegate>
 
 - (void)dayHeaderBeginChange:(NSInteger)num
@@ -955,7 +968,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     if (tableView == _monthItemTableView) {
         if (section == 0) {
-//            return [[SRMTaskStore sharedStore] allTasks].count;
+            return [[SRMTaskStore sharedStore] allTasks].count;
         
         } else if (section == 1) {
             return [[SRMEventStore sharedStore] monthEvents:_date].count;
@@ -981,6 +994,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
             SRMTask *item = items[indexPath.row];
             
             [cell setTask:item];
+            cell.delegate = self;
             
             return cell;
             
@@ -1060,7 +1074,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"DetailNavigation"];
         SRMEventDetailViewController *vc = nvc.viewControllers[0];
-        NSArray *items = [[SRMEventStore sharedStore] monthEvents:_date];
+        NSArray *items = [[SRMEventStore sharedStore] monthEvents:self.date];
         vc.event = items[indexPath.row];
         
         dispatch_async(dispatch_get_main_queue(), ^{

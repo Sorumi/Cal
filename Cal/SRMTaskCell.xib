@@ -35,7 +35,7 @@
                                     <color key="titleColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="setFinished:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="cET-NI-Cha"/>
+                                    <action selector="check:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="hXa-6x-O25"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="juf-1V-BPE">

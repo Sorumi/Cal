@@ -13,11 +13,12 @@
 @property (nonatomic, strong) NSString *taskIdentifier;
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic) NSInteger colorNum;
+@property (nonatomic, strong) NSDate *startDate;
 @property (nonatomic, strong) NSDate *dueDate;
 @property (nonatomic, strong) NSDate *finishDate;
 @property (nonatomic, strong) NSString *notes;
 
 - (instancetype)initWithTitle:(NSString *)title;
-- (instancetype)initWithTitle:(NSString *)title dueDate:(NSDate *)dueDate;
+- (instancetype)initWithTitle:(NSString *)title startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate;
 
 @end

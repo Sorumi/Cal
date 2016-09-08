@@ -29,7 +29,7 @@
     layer.shadowColor = [UIColor darkGrayColor].CGColor;
     layer.shadowOpacity = 0.5;
     
-    IFIcon mainIFIcon[] = {IFPaintRoll, IFAdd};
+    IFIcon mainIFIcon[] = {IFPaintRoll, IFAdd, IFSquareCheck};
     IFIcon appearanceIFIcon[] = {IFArrowLeft, IFGhost, IFPalette};
     
     for (UIButton *button in _mainButtons) {

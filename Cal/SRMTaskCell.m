@@ -47,10 +47,10 @@
     // Configure the view for the selected state
 }
 
-- (IBAction)setFinished:(id)sender {
+- (IBAction)check:(id)sender {
     
-    
-    _task.finishDate = _task.finishDate ? nil : [NSDate date];
+    [_delegate taskCellDidClickCheckButton:self];
+//    _task.finishDate = _task.finishDate ? nil : [NSDate date];
     
 }
 

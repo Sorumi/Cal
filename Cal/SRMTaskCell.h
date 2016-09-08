@@ -9,8 +9,17 @@
 #import <UIKit/UIKit.h>
 
 @class SRMTask;
+@class SRMTaskCell;
+
+@protocol SRMTaskCellDelegate <NSObject>
+
+- (void)taskCellDidClickCheckButton:(SRMTaskCell *)cell;
+
+@end
 
 @interface SRMTaskCell : UITableViewCell
+
+@property (nonatomic, weak) id<SRMTaskCellDelegate> delegate;
 
 - (void)setTask:(SRMTask *)task;
 

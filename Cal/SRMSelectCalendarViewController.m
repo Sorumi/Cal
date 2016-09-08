@@ -30,7 +30,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     
     [self.tableView registerNib:[UINib nibWithNibName:@"SRMSelectCalendarCell" bundle:nil] forCellReuseIdentifier:reuseCalendarCellIdentifier];
     
-    // icon select
+    // color select
     CGRect newframe = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
     _overlay = [[UIView alloc] initWithFrame:newframe];
     _overlay.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
@@ -45,8 +45,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     layout.minimumInteritemSpacing = 15;
     layout.minimumLineSpacing = 15;
     layout.sectionInset = UIEdgeInsetsMake(30, 30, 30, 30);
-    
-//    CGFloat width = 30;
+
     layout.itemSize = CGSizeMake(width, width);
     _colorSelectView = [[UICollectionView alloc] initWithFrame:frame collectionViewLayout:layout];
     _colorSelectView.backgroundColor = [UIColor whiteColor];
@@ -68,14 +67,13 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     [super viewWillDisappear:animated];
     [self hideColorKeyboard];
-    [[SRMEventStore sharedStore] saveChanges];
+    [[SRMEventStore sharedStore] saveCalendarColorChanges];
 }
 
 #pragma mark - Action
 
 - (void)showColorKeyboard
 {
-    
     CGRect frame = _colorSelectView.frame;
     if (frame.origin.y == self.view.frame.size.height) {
         frame.origin.y -= frame.size.height;
@@ -121,7 +119,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     
     cell.titleLabel.text = self.titleArray[indexPath.row];
     NSInteger color = [[SRMEventStore sharedStore] colorForCalendarIndex:indexPath.row];
-    cell.colorButton.backgroundColor = [[SRMColorStore sharedStore] colorForNum:color];;
+    cell.colorButton.backgroundColor = [[SRMColorStore sharedStore] colorForNum:color];
     cell.buttonAction = ^{
         [self showColorKeyboard];
         self.selectColorRow = indexPath.row;

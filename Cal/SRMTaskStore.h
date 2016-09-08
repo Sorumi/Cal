@@ -8,10 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class SRMTask;
+
 @interface SRMTaskStore : NSObject
 
 @property (nonatomic, readonly) NSArray *allTasks;
 
 + (instancetype)sharedStore;
+
+- (BOOL)editTask:(SRMTask *)task title:(NSString *)title note:(NSString *)note startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate colorNum:(NSInteger)colorNum;
 
 @end
