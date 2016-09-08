@@ -539,7 +539,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 - (IBAction)done:(id)sender
 {
-    if ([self.titleText.text isEqual: @""]) {
+    if ([_titleText.text isEqual: @""]) {
         // popover
     } else {
         EKRecurrenceRule *rule;

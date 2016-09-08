@@ -21,4 +21,6 @@
 - (instancetype)initWithTitle:(NSString *)title;
 - (instancetype)initWithTitle:(NSString *)title startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate;
 
+//- (void)setCheck;
+
 @end

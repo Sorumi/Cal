@@ -66,6 +66,7 @@
 		4DB2A9E81D549FC600DE9693 /* SRMSelectCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E61D549FC600DE9693 /* SRMSelectCell.m */; };
 		4DB2A9E91D549FC600DE9693 /* SRMSelectCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */; };
 		4DB2A9EC1D555C8200DE9693 /* SRMRepeatEndViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DB2A9EB1D555C8200DE9693 /* SRMRepeatEndViewController.m */; };
+		4DD4521E1D81837400395B97 /* SRMTaskDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD4521D1D81837400395B97 /* SRMTaskDetailViewController.m */; };
 		4DD6CF9D1D5C412F009A686A /* SRMStamp.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CF9C1D5C412F009A686A /* SRMStamp.m */; };
 		4DD6CFA41D5EB732009A686A /* SRMBoardStampCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DD6CFA21D5EB732009A686A /* SRMBoardStampCell.m */; };
 		4DD6CFA51D5EB732009A686A /* SRMBoardStampCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4DD6CFA31D5EB732009A686A /* SRMBoardStampCell.xib */; };
@@ -209,6 +210,8 @@
 		4DB2A9E71D549FC600DE9693 /* SRMSelectCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SRMSelectCell.xib; sourceTree = "<group>"; };
 		4DB2A9EA1D555C8200DE9693 /* SRMRepeatEndViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMRepeatEndViewController.h; sourceTree = "<group>"; };
 		4DB2A9EB1D555C8200DE9693 /* SRMRepeatEndViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMRepeatEndViewController.m; sourceTree = "<group>"; };
+		4DD4521C1D81837400395B97 /* SRMTaskDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMTaskDetailViewController.h; sourceTree = "<group>"; };
+		4DD4521D1D81837400395B97 /* SRMTaskDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMTaskDetailViewController.m; sourceTree = "<group>"; };
 		4DD6CF9B1D5C412F009A686A /* SRMStamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMStamp.h; sourceTree = "<group>"; };
 		4DD6CF9C1D5C412F009A686A /* SRMStamp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRMStamp.m; sourceTree = "<group>"; };
 		4DD6CFA11D5EB732009A686A /* SRMBoardStampCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRMBoardStampCell.h; sourceTree = "<group>"; };
@@ -300,6 +303,8 @@
 				4D1E5D611D46F95A0057DC76 /* SRMCalendarTool.m */,
 				4D1E5D691D4891880057DC76 /* SRMCalendarViewController.h */,
 				4D95A9B11D5B5E9E00526D78 /* SRMCalendarViewController.m */,
+				4DD4521C1D81837400395B97 /* SRMTaskDetailViewController.h */,
+				4DD4521D1D81837400395B97 /* SRMTaskDetailViewController.m */,
 				4D2E892F1D7E582E0003279D /* SRMTaskEditViewController.h */,
 				4D2E89301D7E582E0003279D /* SRMTaskEditViewController.m */,
 				4DD6CFAB1D6189B0009A686A /* SRMEventDetailViewController.h */,
@@ -671,6 +676,7 @@
 				4DB2A9D41D5328CB00DE9693 /* StaticDataTableViewController.m in Sources */,
 				4D6783E51D7058C1008513D1 /* SRMIconCell.m in Sources */,
 				4D6783FB1D7275DD008513D1 /* SRMColorStore.m in Sources */,
+				4DD4521E1D81837400395B97 /* SRMTaskDetailViewController.m in Sources */,
 				4DD6CF9D1D5C412F009A686A /* SRMStamp.m in Sources */,
 				4DB2A9CE1D52F3C200DE9693 /* SRMTimeDecoration.m in Sources */,
 				4DD6CFB41D65DB7F009A686A /* SRMThemeStore.m in Sources */,

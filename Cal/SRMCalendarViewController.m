@@ -29,7 +29,7 @@
 #import "SRMTaskStore.h"
 #import "SRMTaskCell.h"
 #import "SRMDayScheduleCell.h"
-#import "SRMEventEditViewController.h"
+#import "SRMTaskDetailViewController.h"
 #import "SRMEventDetailViewController.h"
 
 #import "SRMStampStore.h"
@@ -260,6 +260,10 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(eventStoreDidChanged)
                                                  name:EKEventStoreChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(taskStoreDidChanged)
+                                                name:@"SRMTaskStoreChangedNotification"
+                                               object:nil];
     
     [[SRMEventStore sharedStore] fetchDaysEventsInThreeMonths:_date];
 
@@ -285,7 +289,12 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     }
 }
 
-#pragma mark - Event
+#pragma mark - Item
+
+- (void)taskStoreDidChanged
+{
+    [_monthItemTableView reloadData];
+}
 
 - (void)eventStoreDidChanged
 {
@@ -847,11 +856,26 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)taskCellDidClickCheckButton:(SRMTaskCell *)cell
 {
+    SRMTask *task = cell.task;
     NSIndexPath *indexPath = [_monthItemTableView indexPathForCell:cell];
-    NSIndexPath *destIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
-    [_monthItemTableView beginUpdates];
-    [_monthItemTableView moveRowAtIndexPath:indexPath toIndexPath:destIndexPath];
-    [_monthItemTableView endUpdates];
+    [[SRMTaskStore sharedStore] setCheck:task];
+
+    NSUInteger destRow = [[[SRMTaskStore sharedStore] monthTasks:_date] indexOfObject:task];
+    
+    if (destRow == NSNotFound) {
+        [_monthItemTableView beginUpdates];
+        [_monthItemTableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [_monthItemTableView endUpdates];
+        
+    } else {
+        
+        NSIndexPath *destIndexPath = [NSIndexPath indexPathForRow:destRow inSection:0];
+        
+        [_monthItemTableView beginUpdates];
+        [_monthItemTableView moveRowAtIndexPath:indexPath toIndexPath:destIndexPath];
+        [_monthItemTableView endUpdates];
+    }
+
 }
 
 #pragma mark - <SRMDayHeaderDelegate>
@@ -968,7 +992,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 {
     if (tableView == _monthItemTableView) {
         if (section == 0) {
-            return [[SRMTaskStore sharedStore] allTasks].count;
+            return [[SRMTaskStore sharedStore] monthTasks:_date].count;
         
         } else if (section == 1) {
             return [[SRMEventStore sharedStore] monthEvents:_date].count;
@@ -990,7 +1014,8 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     if (tableView == _monthItemTableView) {
         if (indexPath.section == 0) {
             SRMTaskCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseTaskCellIdentifier forIndexPath:indexPath];
-            NSArray *items = [[SRMTaskStore sharedStore] allTasks];
+            NSArray *items = [[SRMTaskStore sharedStore] monthTasks:_date];
+//            NSArray *items = [[SRMTaskStore sharedStore] allTasks];
             SRMTask *item = items[indexPath.row];
             
             [cell setTask:item];
@@ -1070,20 +1095,35 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {    
-    if (tableView == _monthItemTableView && indexPath.section == 1) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"DetailNavigation"];
-        SRMEventDetailViewController *vc = nvc.viewControllers[0];
-        NSArray *items = [[SRMEventStore sharedStore] monthEvents:self.date];
-        vc.event = items[indexPath.row];
+    if (tableView == _monthItemTableView) {
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self presentViewController:nvc animated:YES completion:nil];
-        });
+        if (indexPath.section == 0) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"TaskDetailNavigation"];
+            SRMTaskDetailViewController *vc = nvc.viewControllers[0];
+            NSArray *items = [[SRMTaskStore sharedStore] monthTasks:self.date];
+            vc.task = items[indexPath.row];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:nvc animated:YES completion:nil];
+            });
+
+        } else if (indexPath.section == 1) {
+            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+            UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"EventDetailNavigation"];
+            SRMEventDetailViewController *vc = nvc.viewControllers[0];
+            NSArray *items = [[SRMEventStore sharedStore] monthEvents:self.date];
+            vc.event = items[indexPath.row];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self presentViewController:nvc animated:YES completion:nil];
+            });
+        }
+        
 
     } else if (tableView == _dayItemTableView && indexPath.section == 1) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"DetailNavigation"];
+        UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"EventDetailNavigation"];
         SRMEventDetailViewController *vc = nvc.viewControllers[0];
         NSArray *items = [[SRMEventStore sharedStore] dayEvents:self.date];
         vc.event = items[indexPath.row];

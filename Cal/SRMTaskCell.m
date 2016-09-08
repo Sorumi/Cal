@@ -9,13 +9,12 @@
 #import "SRMTaskCell.h"
 #import "SRMTask.h"
 #import "SRMCalendarTool.h"
+#import "SRMColorStore.h"
 
 #import "NSString+IconFont.h"
 #import "UIFont+IconFont.h"
 
 @interface SRMTaskCell ()
-
-@property (nonatomic, strong) SRMTask *task;
 
 @property (nonatomic) IBOutlet UIView *blockView;
 @property (nonatomic) IBOutlet UIView *categoryColorView;
@@ -50,17 +49,33 @@
 - (IBAction)check:(id)sender {
     
     [_delegate taskCellDidClickCheckButton:self];
-//    _task.finishDate = _task.finishDate ? nil : [NSDate date];
-    
+
+    [_checkButton setTitle:[NSString iconfontIconStringForEnum:_task.finishDate == nil ? IFSquareBlank : IFSquareCheck] forState:UIControlStateNormal];
 }
 
 - (void)setTask:(SRMTask *)task
 {
     _task = task;
     _titleLable.text = task.title;
-    _dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateDisplayFormat:task.dueDate];
+    _categoryColorView.backgroundColor = [[SRMColorStore sharedStore] colorForNum:task.colorNum];
     
+
+
     [_checkButton setTitle:[NSString iconfontIconStringForEnum:task.finishDate == nil ? IFSquareBlank : IFSquareCheck] forState:UIControlStateNormal];
+    
+     if ([task.startDate timeIntervalSinceNow] > 0){
+         [_checkButton setTitleColor:[UIColor colorWithWhite:0.95 alpha:1] forState:UIControlStateNormal];
+         
+         _dateLabel.textColor = [UIColor colorWithWhite:0.95 alpha:1];
+         _dateLabel.text = task.startDate == nil ? @"" : [[SRMCalendarTool tool] dateDisplayFormat:task.startDate];
+         
+         
+     } else {
+         [_checkButton setTitleColor:[UIColor colorWithWhite:0.8 alpha:1] forState:UIControlStateNormal];
+         
+         _dateLabel.textColor = [UIColor colorWithWhite:0.8 alpha:1];
+         _dateLabel.text = task.dueDate == nil ? @"" : [[SRMCalendarTool tool] dateDisplayFormat:task.dueDate];
+     }
 }
 
 @end

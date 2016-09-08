@@ -105,7 +105,7 @@
     
     // icon
     NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier:_event.calendar.calendarIdentifier];
-    self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:num];;
+    self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
     UIColor *color = self.view.tintColor;
     
     self.navigationController.navigationBar.barTintColor = color;
@@ -140,7 +140,6 @@
     
     if (_event.hasNotes) {
         _noteLabel.text = _event.notes;
-         [self cell:_noteCell setHeight:[self heightForLabel:_noteLabel]];
     } else {
         [self cell:_noteCell setHidden:YES];
     }
@@ -287,7 +286,7 @@
 - (void)editEvent
 {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"EditNavigation"];
+    UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"EventEditNavigation"];
     SRMEventEditViewController *vc = nvc.viewControllers[0];
     vc.event = _event;
     __weak SRMEventDetailViewController *weakSelf = self;

@@ -19,6 +19,7 @@
 
 @interface SRMTaskCell : UITableViewCell
 
+@property (nonatomic, strong) SRMTask *task;
 @property (nonatomic, weak) id<SRMTaskCellDelegate> delegate;
 
 - (void)setTask:(SRMTask *)task;

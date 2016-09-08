@@ -16,6 +16,10 @@
 
 + (instancetype)sharedStore;
 
+- (void)fetchMonthTasks:(NSDate *)date;
+- (NSArray *)monthTasks:(NSDate *)date;
+
 - (BOOL)editTask:(SRMTask *)task title:(NSString *)title note:(NSString *)note startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate colorNum:(NSInteger)colorNum;
+- (void)setCheck:(SRMTask *)task;
 
 @end

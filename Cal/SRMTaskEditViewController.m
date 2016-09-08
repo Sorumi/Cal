@@ -55,7 +55,6 @@
 @property (weak, nonatomic) IBOutlet UILabel *dateIcon;
 @property (weak, nonatomic) IBOutlet UILabel *reminderIcon;
 
-
 #pragma mark - IBOutlet Cell
 
 @property (weak, nonatomic) IBOutlet UITableViewCell *datePickerCell;
@@ -143,7 +142,6 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     _colorSelectView.delegate = self;
     [_colorSelectView registerNib:[UINib nibWithNibName:@"SRMIconCell" bundle:nil] forCellWithReuseIdentifier:reuseIconCellIdentifier];
     [self.navigationController.view insertSubview:_colorSelectView belowSubview:self.navigationController.navigationBar];
-    
     
     /////
     [self initWithNew];
@@ -247,6 +245,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 - (IBAction)showColorKeyboard
 {
+    [self.view endEditing:YES];
     CGRect frame = _colorSelectView.frame;
     if (frame.origin.y == self.view.frame.size.height) {
         frame.origin.y -= frame.size.height;
@@ -291,14 +290,18 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
 - (IBAction)done:(id)sender
 {
-    [[SRMTaskStore sharedStore] editTask:nil
-                                   title:_titleText.text
-                                    note:_noteText.text
-                               startDate:_startDate
-                                 dueDate:_dueDate
-                                colorNum:_colorNum];
-    [self.presentingViewController dismissViewControllerAnimated:YES
-                                                      completion:nil];
+    if ([_titleText isEqual:@""]) {
+        // popover
+    } else {
+        [[SRMTaskStore sharedStore] editTask:nil
+                                       title:_titleText.text
+                                        note:_noteText.text
+                                   startDate:_startDateSwitch.value ? _startDate : nil
+                                     dueDate:_dueDateSwitch.value ? _dueDate : nil
+                                    colorNum:_colorNum];
+        [self.presentingViewController dismissViewControllerAnimated:YES
+                                                          completion:nil];
+    }
 }
 
 - (IBAction)toggleStartDate:(id)sender
