@@ -298,6 +298,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)taskStoreDidChanged
 {
+//    NSLog(@"task change!");
     [[SRMTaskStore sharedStore] fetchThreeMonthsTasks:_date];
     [_monthItemTableView reloadData];
 }
@@ -614,7 +615,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     self.viewMode = SRMCalendarMonthViewMode;
     
     // animation
-
     _monthWeekdayViewTop.constant = 0;
     _weekViewBottom.constant = 0;
     _monthItemTableTop.constant = 0;
@@ -828,7 +828,6 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     
     _dayHeader.tintColor = [themeStore colorForName:@"HeaderColor"];
     _weekWeekdayHeader.circleColor = [themeStore colorForName:@"WeekCircleColor"];
-
 }
 
 - (void)selectTheme
@@ -868,6 +867,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     SRMTask *task = cell.task;
     NSIndexPath *indexPath = [_monthItemTableView indexPathForCell:cell];
     [[SRMTaskStore sharedStore] setCheck:task];
+    [[SRMTaskStore sharedStore] fetchMonthTasks:_date];
 
     NSUInteger destRow = [[[SRMTaskStore sharedStore] monthTasks:_date] indexOfObject:task];
     

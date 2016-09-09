@@ -235,9 +235,18 @@
     event.notes = note;
     if (rule) {
         [event addRecurrenceRule:rule];
+    } else {
+        [event.recurrenceRules enumerateObjectsUsingBlock:^(EKRecurrenceRule *rule, NSUInteger index, BOOL *stop) {
+            [event removeRecurrenceRule:rule];
+        }];
+
     }
     if (alarm) {
         [event addAlarm:alarm];
+    } else {
+        [event.alarms enumerateObjectsUsingBlock:^(EKAlarm *alarm, NSUInteger index, BOOL *stop) {
+            [event removeAlarm:alarm];
+        }];
     }
 
     if ([self.eventStore saveEvent:event span:EKSpanFutureEvents commit:YES error:nil]) {

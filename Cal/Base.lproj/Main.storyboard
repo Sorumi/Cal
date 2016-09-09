@@ -468,6 +468,7 @@
                                 </variation>
                                 <connections>
                                     <outlet property="appearanceToolbar" destination="t6V-LD-mhP" id="o6Z-OX-NhF"/>
+                                    <outlet property="mainToolbar" destination="08M-Vb-D8N" id="Z0H-go-QX0"/>
                                     <outletCollection property="appearanceButtons" destination="MXs-DQ-6UQ" id="zB5-kR-ffV"/>
                                     <outletCollection property="appearanceButtons" destination="JVX-Ku-JtM" id="Zob-rY-D37"/>
                                     <outletCollection property="appearanceButtons" destination="EGe-fi-fO5" id="eBE-Yg-Vvf"/>
@@ -4144,10 +4145,10 @@
             <objects>
                 <navigationController storyboardIdentifier="EventDetailNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" toolbarHidden="NO" id="cNu-gN-V8W" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="lNc-jH-uQF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="barTintColor" red="0.81960784310000001" green="0.90196078430000004" blue="0.8862745098" alpha="1" colorSpace="calibratedRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -5837,9 +5838,9 @@
         <!--Navigation Controller-->
         <scene sceneID="qrw-NE-xbD">
             <objects>
-                <navigationController storyboardIdentifier="TaskDetailNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="QhR-AH-0jX" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="TaskDetailNavigation" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" toolbarHidden="NO" id="QhR-AH-0jX" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="v5F-kg-Edg">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="v5F-kg-Edg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -5849,6 +5850,11 @@
                         </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="D7O-RB-N76">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="barTintColor" red="0.81960784310000001" green="0.90196078430000004" blue="0.8862745098" alpha="1" colorSpace="calibratedRGB"/>
+                    </toolbar>
                     <connections>
                         <segue destination="GwF-JX-O4W" kind="relationship" relationship="rootViewController" id="zum-8t-weV"/>
                     </connections>

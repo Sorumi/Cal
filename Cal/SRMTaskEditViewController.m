@@ -143,13 +143,18 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     [_colorSelectView registerNib:[UINib nibWithNibName:@"SRMIconCell" bundle:nil] forCellWithReuseIdentifier:reuseIconCellIdentifier];
     [self.navigationController.view insertSubview:_colorSelectView belowSubview:self.navigationController.navigationBar];
     
-    /////
-    [self initWithNew];
-    
+    // init
+    if (_task) {
+        [self initWithEdit];
+    } else {
+        [self initWithNew];
+    }
 }
 
 - (void)initWithNew
 {
+    self.title = @"New Task";
+    
     _startDateSwitch.value = NO;
     _dueDateSwitch.value = NO;
     [self switchView:_startDateSwitch didEndToggleWithValue:NO];
@@ -160,6 +165,21 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     
     self.colorNum = 0;
     self.timeSelectMode = SRMTimeSelectNone;
+}
+
+- (void)initWithEdit
+{
+    self.title = @"Edit Task";
+    _startDateSwitch.value = (_task.startDate != nil);
+    _dueDateSwitch.value = (_task.dueDate != nil);
+    [self switchView:_startDateSwitch didEndToggleWithValue:NO];
+    [self switchView:_dueDateSwitch didEndToggleWithValue:NO];
+    
+    _titleText.text = _task.title;
+    _noteText.text = _task.notes;
+    _noteLabel.hidden = ![_task.notes isEqual:@""];
+    self.colorNum = _task.colorNum;
+    
 }
 
 #pragma mark - Properties
@@ -286,6 +306,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 {
     [self.presentingViewController dismissViewControllerAnimated:YES
                                                       completion:nil];
+    
 }
 
 - (IBAction)done:(id)sender
@@ -293,14 +314,21 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     if ([_titleText isEqual:@""]) {
         // popover
     } else {
-        [[SRMTaskStore sharedStore] editTask:nil
-                                       title:_titleText.text
-                                        note:_noteText.text
-                                   startDate:_startDateSwitch.value ? _startDate : nil
-                                     dueDate:_dueDateSwitch.value ? _dueDate : nil
-                                    colorNum:_colorNum];
+        BOOL isSuccess = [[SRMTaskStore sharedStore] editTask:_task
+                                                        title:_titleText.text
+                                                         note:_noteText.text
+                                                    startDate:_startDateSwitch.value ? _startDate : nil
+                                                      dueDate:_dueDateSwitch.value ? _dueDate : nil
+                                                     colorNum:_colorNum];
+        
+//        NSLog(isSuccess ? @"Event added in calendar" : @"Fail");
+        
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
+        
+        if (_didEdit) {
+            _didEdit();
+        }
     }
 }
 

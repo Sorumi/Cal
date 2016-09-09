@@ -39,7 +39,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *endDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *endTimeLabel;
 
-#pragma mark - IBOutlet Icon
+#pragma mark - Icon
 
 @property (weak, nonatomic) IBOutlet UILabel *eventIcon;
 @property (weak, nonatomic) IBOutlet UILabel *calendarIcon;
@@ -103,22 +103,12 @@
         layer.shadowOpacity = 0.3;
     }
     
-    // icon
-    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier:_event.calendar.calendarIdentifier];
-    self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:num];
-    UIColor *color = self.view.tintColor;
-    
-    self.navigationController.navigationBar.barTintColor = color;
-    self.navigationController.toolbar.barTintColor = color;
-    
+    //icon
     for (UILabel *icon in _icons) {
         icon.font = [UIFont iconfontOfSize:20];
-        icon.highlightedTextColor = color;
         icon.highlighted = YES;
     }
-
-    NSInteger iconNum = [[SRMEventStore sharedStore] iconForEventIdentifier:_event.eventIdentifier];
-    _eventIcon.text = [NSString iconfontIconStringForEnum:[[SRMIconStore sharedStore] iconForNum:iconNum]];
+    
     _calendarIcon.text = [NSString iconfontIconStringForEnum:IFCalendar];
     _locationIcon.text = [NSString iconfontIconStringForEnum:IFLocation];
     _noteIcon.text = [NSString iconfontIconStringForEnum:IFNote];
@@ -126,6 +116,36 @@
     _repeatIcon.text = [NSString iconfontIconStringForEnum:IFRepeat];
     _reminderIcon.text = [NSString iconfontIconStringForEnum:IFBell];
     
+    // delete alert
+    CGRect newframe = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    _overlay = [[UIView alloc] initWithFrame:newframe];
+    _overlay.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    _overlay.hidden = YES;
+    [self.navigationController.view insertSubview:_overlay belowSubview:self.navigationController.navigationBar];
+    UITapGestureRecognizer *tapOverlay = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDeleteAlert)];
+    [_overlay addGestureRecognizer:tapOverlay];
+    
+    //
+    [self initWithEvent];
+}
+
+- (void)initWithEvent
+{
+    // color
+    NSInteger num = [[SRMEventStore sharedStore] colorForCalendarIdentifier:_event.calendar.calendarIdentifier];
+    UIColor *color = [[SRMColorStore sharedStore] colorForNum:num];
+
+    self.view.tintColor = color;
+    self.navigationController.navigationBar.barTintColor = color;
+    self.navigationController.toolbar.barTintColor = color;
+    
+    for (UILabel *icon in _icons) {
+        icon.highlightedTextColor = color;
+    }
+    
+    NSInteger iconNum = [[SRMEventStore sharedStore] iconForEventIdentifier:_event.eventIdentifier];
+    _eventIcon.text = [NSString iconfontIconStringForEnum:[[SRMIconStore sharedStore] iconForNum:iconNum]];
+
     // information
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
@@ -134,12 +154,14 @@
     
     if (![_event.location isEqual:@""]) {
         _locationLabel.text = _event.location;
+        [self cell:_noteCell setHidden:NO];
     } else {
         [self cell:_locationCell setHidden:YES];
     }
     
     if (_event.hasNotes) {
         _noteLabel.text = _event.notes;
+        [self cell:_noteCell setHidden:NO];
     } else {
         [self cell:_noteCell setHidden:YES];
     }
@@ -181,9 +203,11 @@
         if (rule.recurrenceEnd) {
             EKRecurrenceEnd *end = rule.recurrenceEnd;
             _endRepeatLabel.text = [tool dateDisplayFormat:end.endDate];
+            [self cell:_endRepeatCell setHidden:NO];
         } else {
             [self cell:_endRepeatCell setHidden:YES];
         }
+        [self cell:_repeatCell setHidden:NO];
     } else {
         [self cell:_repeatCell setHidden:YES];
         [self cell:_endRepeatCell setHidden:YES];
@@ -198,35 +222,29 @@
             NSInteger minute = alarm.relativeOffset / 60;
             date = [tool dateByAddingMinutes:minute toDate:_event.startDate];
         }
-            NSString *text = [tool dateDisplayFormat:date];
-            text = [text stringByAppendingString:@" "];
-            text = [text stringByAppendingString:[tool timeDisplayFormat:date]];
-            _reminderLabel.text = text;
-    
+        NSString *text = [tool dateDisplayFormat:date];
+        text = [text stringByAppendingString:@" "];
+        text = [text stringByAppendingString:[tool timeDisplayFormat:date]];
+        _reminderLabel.text = text;
+        [self cell:_reminderCell setHidden:NO];
     } else {
         [self cell:_reminderCell setHidden:YES];
     }
     
     [self reloadDataAnimated:NO];
     
+    
     // delete alert
-    CGRect newframe = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
-    _overlay = [[UIView alloc] initWithFrame:newframe];
-    _overlay.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
-    _overlay.hidden = YES;
-    [self.navigationController.view insertSubview:_overlay belowSubview:self.navigationController.navigationBar];
-    UITapGestureRecognizer *tapOverlay = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDeleteAlert)];
-    [_overlay addGestureRecognizer:tapOverlay];
+    [_deleteAlertView removeFromSuperview];
     
     if (_event.recurrenceRules.count > 0) {
         _deleteAlertView = [[SRMSlideAlertView alloc] initWithTitle:@"This is a repeating event." normalButton:@[@"Delete this event only", @"Delete all future events"] warnButton:@[@"Cancel"]];
     } else {
         _deleteAlertView = [[SRMSlideAlertView alloc] initWithTitle:nil normalButton:@[@"Delete"] warnButton:@[@"Cancel"]];
     }
-
+    
     _deleteAlertView.delegate = self;
     [self.navigationController.view addSubview:_deleteAlertView];
-    
 }
 
 - (UIBarButtonItem*)barButtonSystemItem:(UIBarButtonSystemItem)systemItem
@@ -290,8 +308,9 @@
     SRMEventEditViewController *vc = nvc.viewControllers[0];
     vc.event = _event;
     __weak SRMEventDetailViewController *weakSelf = self;
-    vc.didDismiss = ^{
-        [weakSelf cancel:nil];
+    
+    vc.didEdit = ^{
+        [weakSelf initWithEvent];
     };
     
     dispatch_async(dispatch_get_main_queue(), ^{

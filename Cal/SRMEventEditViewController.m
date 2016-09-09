@@ -224,7 +224,10 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
     self.endDate = _event.endDate;
     _titleText.text = _event.title;
     _locationText.text = _event.location;
+    _locationIcon.highlighted = ![_event.location isEqual:@""];
     _noteText.text = _event.notes;
+    _noteIcon.highlighted = _event.hasNotes;
+    _noteLabel.hidden = _event.hasNotes;
     self.calendarNum = [[[SRMEventStore sharedStore] allCalendars] indexOfObject:_event.calendar];
     self.iconNum = [[SRMEventStore sharedStore] iconForEventIdentifier:_event.eventIdentifier];
     
@@ -641,6 +644,10 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
+        
+        if (_didEdit) {
+            _didEdit();
+        }
     }
 }
 
@@ -867,6 +874,7 @@ static NSString * const reuseIconCellIdentifier = @"IconCell";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self hideIconKeyboard];
+    [self.view endEditing:YES];
     if (self.timeSelectMode != SRMTimeSelectNone) {
         self.timeSelectMode = SRMTimeSelectNone;
     }

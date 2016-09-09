@@ -86,10 +86,7 @@
 #pragma mark - Public
 
 - (NSArray *)monthTasks:(NSDate *)date
-{
-    /////
-//    [self fetchMonthTasks:date];
-    
+{    
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
     NSArray *sortedArray = self.privateMonthTasks[[tool monthStoreFormat:date]];
@@ -156,9 +153,10 @@
         [_tasks removeObject:task];
         
     } else {
-        task = [[SRMTask alloc] initWithTitle:title];
+        task = [[SRMTask alloc] init];
     }
     
+    task.title = title;
     task.notes = note;
     task.startDate = startDate;
     task.dueDate = dueDate;
@@ -176,7 +174,20 @@
     };
 }
 
-#pragma mark - Public
+- (BOOL)deleteTask:(SRMTask *)task
+{
+    [_tasks removeObject:task];
+    
+    if ([self saveChanges]) {
+        [self.privateMonthTasks removeAllObjects];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"SRMTaskStoreChangedNotification"
+                                                            object:nil];
+        return YES;
+    } else {
+        return NO;
+    };
+
+}
 
 - (void)setCheck:(SRMTask *)task
 {
@@ -197,12 +208,22 @@
 - (void)addTask:(SRMTask *)addTask
 {
     __block NSUInteger addIndex = _tasks.count;
-    [_tasks enumerateObjectsUsingBlock:^(SRMTask *task, NSUInteger index, BOOL *stop){
-        if ([task.startDate timeIntervalSinceDate:addTask.startDate] > 0) {
-            addIndex = index;
-            *stop = YES;
-        }
-    }];
+    if (addTask.startDate) {
+        [_tasks enumerateObjectsUsingBlock:^(SRMTask *task, NSUInteger index, BOOL *stop){
+            if ([task.startDate timeIntervalSinceDate:addTask.startDate] > 0) {
+                addIndex = index;
+                *stop = YES;
+            }
+        }];
+    } else {
+        [_tasks enumerateObjectsUsingBlock:^(SRMTask *task, NSUInteger index, BOOL *stop){
+            if (task.startDate) {
+                addIndex = index;
+                *stop = YES;
+            }
+        }];
+    }
+
     if (addIndex == _tasks.count) {
         [_tasks addObject:addTask];
     } else {

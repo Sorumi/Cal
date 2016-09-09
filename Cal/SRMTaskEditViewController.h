@@ -9,6 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "StaticDataTableViewController.h"
 
+@class SRMTask;
+
 @interface SRMTaskEditViewController : StaticDataTableViewController
+
+@property (nonatomic, strong) SRMTask *task;
+@property (nonatomic, copy) void (^didEdit)();
 
 @end

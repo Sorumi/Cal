@@ -8,14 +8,16 @@
 
 #import "SRMTaskDetailViewController.h"
 #import "SRMTaskEditViewController.h"
+#import "SRMTaskStore.h"
 #import "SRMCalendarTool.h"
 #import "SRMTask.h"
 #import "SRMColorStore.h"
+#import "SRMSlideAlertView.h"
 
 #import "NSString+IconFont.h"
 #import "UIFont+IconFont.h"
 
-@interface SRMTaskDetailViewController ()
+@interface SRMTaskDetailViewController () <SRMSlideAlertDelegate>
 
 #pragma mark - IBOutlet
 
@@ -29,16 +31,19 @@
 @property (weak, nonatomic) IBOutlet UILabel *startDateLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dueDateLabel;
 
-#pragma marl - Cell
-
-@property (weak, nonatomic) IBOutlet UITableViewCell *noteCell;
-
 #pragma mark - Icon
 
 @property (weak, nonatomic) IBOutlet UILabel *colorLabel;
 @property (weak, nonatomic) IBOutlet UILabel *noteIcon;
 @property (weak, nonatomic) IBOutlet UILabel *dateIcon;
 @property (weak, nonatomic) IBOutlet UILabel *reminderIcon;
+
+#pragma marl - Cell
+
+@property (weak, nonatomic) IBOutlet UITableViewCell *noteCell;
+
+@property (nonatomic, strong) SRMSlideAlertView *deleteAlertView;
+@property (nonatomic, strong) UIView *overlay;
 
 @end
 
@@ -81,23 +86,46 @@
     }
     
     // icon
-    self.view.tintColor = [[SRMColorStore sharedStore] colorForNum:_task.colorNum];
-    UIColor *color = self.view.tintColor;
-    
-    self.navigationController.navigationBar.barTintColor = color;
-    self.navigationController.toolbar.barTintColor = color;
-    
     for (UILabel *icon in _icons) {
         icon.font = [UIFont iconfontOfSize:20];
-        icon.highlightedTextColor = color;
         icon.highlighted = YES;
     }
-    
-    _colorLabel.backgroundColor = color;
     
     _noteIcon.text = [NSString iconfontIconStringForEnum:IFNote];
     _dateIcon.text = [NSString iconfontIconStringForEnum:IFClock];
     _reminderIcon.text = [NSString iconfontIconStringForEnum:IFBell];
+    
+    // delete alert
+    CGRect newframe = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height);
+    _overlay = [[UIView alloc] initWithFrame:newframe];
+    _overlay.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    _overlay.hidden = YES;
+    [self.navigationController.view insertSubview:_overlay belowSubview:self.navigationController.navigationBar];
+    UITapGestureRecognizer *tapOverlay = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideDeleteAlert)];
+    [_overlay addGestureRecognizer:tapOverlay];
+    
+    _deleteAlertView = [[SRMSlideAlertView alloc] initWithTitle:nil normalButton:@[@"Delete"] warnButton:@[@"Cancel"]];
+    
+    _deleteAlertView.delegate = self;
+    [self.navigationController.view addSubview:_deleteAlertView];
+
+    
+    //
+    [self initWithTask];
+}
+
+- (void)initWithTask
+{
+    // color
+    UIColor *color = [[SRMColorStore sharedStore] colorForNum:_task.colorNum];
+    self.view.tintColor = color;
+    self.navigationController.navigationBar.barTintColor = color;
+    self.navigationController.toolbar.barTintColor = color;
+    
+    for (UILabel *icon in _icons) {
+        icon.highlightedTextColor = color;
+    }
+    _colorLabel.backgroundColor = color;
     
     // information
     SRMCalendarTool *tool = [SRMCalendarTool tool];
@@ -106,7 +134,7 @@
     
     if (![_task.notes isEqual:@""]) {
         _noteLabel.text = _task.notes;
-//        [self cell:_noteCell setHeight:[self heightForLabel:_noteLabel]];
+        [self cell:_noteCell setHidden:NO];
     } else {
         [self cell:_noteCell setHidden:YES];
     }
@@ -123,6 +151,46 @@
 
 #pragma mark - Action
 
+- (void)showDeleteAlert
+{
+    CGRect frame = _deleteAlertView.frame;
+    CGFloat toolBarHeight = self.navigationController.toolbar.frame.size.height;
+    if (frame.origin.y == self.view.frame.size.height + toolBarHeight) {
+        frame.origin.y -= frame.size.height;
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             _deleteAlertView.frame = frame;
+                         }];
+        [UIView transitionWithView:_overlay
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            _overlay.hidden = NO;
+                        }
+                        completion:nil];
+    }
+}
+
+- (void)hideDeleteAlert
+{
+    CGRect frame = _deleteAlertView.frame;
+    CGFloat toolBarHeight = self.navigationController.toolbar.frame.size.height;
+    if (frame.origin.y == self.view.frame.size.height + toolBarHeight - frame.size.height) {
+        frame.origin.y += frame.size.height;
+        [UIView animateWithDuration:0.5
+                         animations:^{
+                             _deleteAlertView.frame = frame;
+                         }];
+        [UIView transitionWithView:_overlay
+                          duration:0.5
+                           options:UIViewAnimationOptionTransitionCrossDissolve
+                        animations:^{
+                            _overlay.hidden = YES;
+                        }
+                        completion:nil];
+    }
+}
+
 - (IBAction)cancel:(id)sender
 {
     [self.presentingViewController dismissViewControllerAnimated:YES
@@ -134,26 +202,46 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     UINavigationController *nvc = [storyboard instantiateViewControllerWithIdentifier:@"TaskEditNavigation"];
     SRMTaskEditViewController *vc = nvc.viewControllers[0];
-//    vc.task = _task;
-//    __weak SRMTaskDetailViewController *weakSelf = self;
-//    vc.didDismiss = ^{
-//        [weakSelf cancel:nil];
-//    };
-//    
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self presentViewController:nvc animated:YES completion:nil];
-//    });
+    vc.task = _task;
+    __weak SRMTaskDetailViewController *weakSelf = self;
+    
+    vc.didEdit = ^{
+        [weakSelf initWithTask];
+    };
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self presentViewController:nvc animated:YES completion:nil];
+    });
 }
 
 - (void)deleteEvent
 {
-//    [self showDeleteAlert];
+    [self showDeleteAlert];
 }
 
 - (CGFloat)heightForLabel:(UILabel *)label
 {
     CGSize neededSize = [label sizeThatFits:CGSizeMake(self.view.frame.size.width - 80, FLT_MAX)];
     return neededSize.height;
+}
+
+#pragma mark - <SRMSlideAlertDelegate>
+
+- (void)didClickOnButton:(NSInteger)buttonNum
+{
+    BOOL isSuccess = NO;
+    
+    if (buttonNum == 0) {
+        isSuccess = [[SRMTaskStore sharedStore] deleteTask:_task];
+        
+    } else {
+        [self hideDeleteAlert];
+    }
+    
+    if (isSuccess) {
+        [self.presentingViewController dismissViewControllerAnimated:YES
+                                                          completion:nil];
+    }
 }
 
 #pragma mark - <UITableViewDelegate>

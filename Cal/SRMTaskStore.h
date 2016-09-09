@@ -21,6 +21,7 @@
 - (NSArray *)monthTasks:(NSDate *)date;
 
 - (BOOL)editTask:(SRMTask *)task title:(NSString *)title note:(NSString *)note startDate:(NSDate *)startDate dueDate:(NSDate *)dueDate colorNum:(NSInteger)colorNum;
+- (BOOL)deleteTask:(SRMTask *)task;
 - (void)setCheck:(SRMTask *)task;
 
 @end

@@ -14,6 +14,6 @@
 @interface SRMEventEditViewController : StaticDataTableViewController
 
 @property (nonatomic, strong) EKEvent *event;
-@property (nonatomic, copy) void (^didDismiss)();
+@property (nonatomic, copy) void (^didEdit)();
 
 @end
