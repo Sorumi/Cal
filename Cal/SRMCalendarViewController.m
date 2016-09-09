@@ -253,6 +253,15 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     
     _isFirstTimeViewDidLayoutSubviews = YES;
 
+    // task
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(taskStoreDidChanged)
+                                                 name:@"SRMTaskStoreChangedNotification"
+                                               object:nil];
+    
+    [[SRMTaskStore sharedStore] fetchThreeMonthsTasks:_date];
+    
     // event
     [SRMEventStore sharedStore].delegate = self;
     [[SRMEventStore sharedStore] checkCalendarAuthorizationStatus];
@@ -260,11 +269,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(eventStoreDidChanged)
                                                  name:EKEventStoreChangedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(taskStoreDidChanged)
-                                                name:@"SRMTaskStoreChangedNotification"
-                                               object:nil];
-    
+
     [[SRMEventStore sharedStore] fetchDaysEventsInThreeMonths:_date];
 
 }
@@ -293,6 +298,7 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
 
 - (void)taskStoreDidChanged
 {
+    [[SRMTaskStore sharedStore] fetchThreeMonthsTasks:_date];
     [_monthItemTableView reloadData];
 }
 
@@ -372,10 +378,12 @@ static NSString * const reuseBoardStampCellIdentifier = @"BoardStampCell";
     
     if (page < self.monthPage) {
         NSDate *prevMonth = [[SRMCalendarTool tool] dateByAddingMonths:-1 toDate:_date];
+        [[SRMTaskStore sharedStore] fetchMonthTasks:prevMonth];
         [[SRMEventStore sharedStore] fetchDaysEventsInMonth:prevMonth];
         
     } else {
         NSDate *nextMonth = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:_date];
+        [[SRMTaskStore sharedStore] fetchMonthTasks:nextMonth];
         [[SRMEventStore sharedStore] fetchDaysEventsInMonth:nextMonth];
     }
     

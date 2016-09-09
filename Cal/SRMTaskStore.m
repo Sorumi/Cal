@@ -88,12 +88,23 @@
 - (NSArray *)monthTasks:(NSDate *)date
 {
     /////
-    [self fetchMonthTasks:date];
+//    [self fetchMonthTasks:date];
     
     SRMCalendarTool *tool = [SRMCalendarTool tool];
     
     NSArray *sortedArray = self.privateMonthTasks[[tool monthStoreFormat:date]];
     return sortedArray;
+}
+
+- (void)fetchThreeMonthsTasks:(NSDate *)date
+{
+    [self fetchMonthTasks:date];
+    
+    NSDate *prevMonth = [[SRMCalendarTool tool] dateByAddingMonths:-1 toDate:date];
+    [self fetchMonthTasks:prevMonth];
+    
+    NSDate *nextMonth = [[SRMCalendarTool tool] dateByAddingMonths:1 toDate:date];
+    [self fetchMonthTasks:nextMonth];
 }
 
 - (void)fetchMonthTasks:(NSDate *)date
@@ -156,6 +167,7 @@
     [self addTask:task];
     
     if ([self saveChanges]) {
+        [self.privateMonthTasks removeAllObjects];
         [[NSNotificationCenter defaultCenter] postNotificationName:@"SRMTaskStoreChangedNotification"
                                                             object:nil];
         return YES;
